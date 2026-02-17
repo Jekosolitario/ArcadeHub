@@ -1,0 +1,140 @@
+2026-02-17T10:05:08.200+01:00  INFO 16392 --- [app-arcade] [restartedMain] i.p.app_arcade.AppArcadeApplication      : Starting AppArcadeApplication using Java 21.0.9 with PID 16392 (C:\Users\31127\OneDrive\Desktop\java\progetto\PJ\ProjectWorkGroup4\target\classes started by 31127 in C:\Users\31127\OneDrive\Desktop\java\progetto\PJ\ProjectWorkGroup4)
+2026-02-17T10:05:08.203+01:00  INFO 16392 --- [app-arcade] [restartedMain] i.p.app_arcade.AppArcadeApplication      : No active profile set, falling back to 1 default profile: "default"
+2026-02-17T10:05:08.248+01:00  INFO 16392 --- [app-arcade] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-02-17T10:05:08.249+01:00  INFO 16392 --- [app-arcade] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-02-17T10:05:08.810+01:00  INFO 16392 --- [app-arcade] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-02-17T10:05:08.832+01:00  INFO 16392 --- [app-arcade] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 12 ms. Found 0 JPA repository interfaces.
+2026-02-17T10:05:09.333+01:00  INFO 16392 --- [app-arcade] [restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-02-17T10:05:09.347+01:00  INFO 16392 --- [app-arcade] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-02-17T10:05:09.348+01:00  INFO 16392 --- [app-arcade] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.15]
+2026-02-17T10:05:09.385+01:00  INFO 16392 --- [app-arcade] [restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1135 ms
+2026-02-17T10:05:09.555+01:00  INFO 16392 --- [app-arcade] [restartedMain] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-02-17T10:05:09.612+01:00  INFO 16392 --- [app-arcade] [restartedMain] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.2.1.Final
+2026-02-17T10:05:10.027+01:00  INFO 16392 --- [app-arcade] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-02-17T10:05:10.054+01:00  INFO 16392 --- [app-arcade] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-02-17T10:05:10.190+01:00  INFO 16392 --- [app-arcade] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@7a37e864
+2026-02-17T10:05:10.191+01:00  INFO 16392 --- [app-arcade] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-02-17T10:05:10.242+01:00  WARN 16392 --- [app-arcade] [restartedMain] org.hibernate.orm.deprecation            : HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-02-17T10:05:10.256+01:00  INFO 16392 --- [app-arcade] [restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:mysql://localhost:3306/arcadehub?useSSL=false&serverTimezone=UTC]
+	Database driver: MySQL Connector/J
+	Database dialect: MySQLDialect
+	Database version: 8.0.44
+	Default catalog/schema: arcadehub/undefined
+	Autocommit mode: undefined/unknown
+	Isolation level: REPEATABLE_READ [default REPEATABLE_READ]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-02-17T10:05:10.369+01:00 ERROR 16392 --- [app-arcade] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Failed to initialize JPA EntityManagerFactory: Entity 'it.project_work.app_arcade.models.User' has no identifier (every '@Entity' class must declare or inherit at least one '@Id' or '@EmbeddedId' property)
+2026-02-17T10:05:10.371+01:00  WARN 16392 --- [app-arcade] [restartedMain] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/hibernate/autoconfigure/HibernateJpaConfiguration.class]: Entity 'it.project_work.app_arcade.models.User' has no identifier (every '@Entity' class must declare or inherit at least one '@Id' or '@EmbeddedId' property)
+2026-02-17T10:05:10.371+01:00  INFO 16392 --- [app-arcade] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-02-17T10:05:10.396+01:00  INFO 16392 --- [app-arcade] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2026-02-17T10:05:10.398+01:00  INFO 16392 --- [app-arcade] [restartedMain] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2026-02-17T10:05:10.405+01:00  INFO 16392 --- [app-arcade] [restartedMain] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-02-17T10:05:10.416+01:00 ERROR 16392 --- [app-arcade] [restartedMain] o.s.boot.SpringApplication               : Application run failed
+
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/hibernate/autoconfigure/HibernateJpaConfiguration.class]: Entity 'it.project_work.app_arcade.models.User' has no identifier (every '@Entity' class must declare or inherit at least one '@Id' or '@EmbeddedId' property)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1817) ~[spring-beans-7.0.3.jar:7.0.3]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:603) ~[spring-beans-7.0.3.jar:7.0.3]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:525) ~[spring-beans-7.0.3.jar:7.0.3]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:333) ~[spring-beans-7.0.3.jar:7.0.3]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:371) ~[spring-beans-7.0.3.jar:7.0.3]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:331) ~[spring-beans-7.0.3.jar:7.0.3]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:201) ~[spring-beans-7.0.3.jar:7.0.3]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:976) ~[spring-context-7.0.3.jar:7.0.3]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:620) ~[spring-context-7.0.3.jar:7.0.3]
+	at org.springframework.boot.web.server.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:143) ~[spring-boot-web-server-4.0.2.jar:4.0.2]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:756) ~[spring-boot-4.0.2.jar:4.0.2]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:445) ~[spring-boot-4.0.2.jar:4.0.2]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:321) ~[spring-boot-4.0.2.jar:4.0.2]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1365) ~[spring-boot-4.0.2.jar:4.0.2]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1354) ~[spring-boot-4.0.2.jar:4.0.2]
+	at it.project_work.app_arcade.AppArcadeApplication.main(AppArcadeApplication.java:10) ~[classes/:na]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[na:na]
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:52) ~[spring-boot-devtools-4.0.2.jar:4.0.2]
+Caused by: org.hibernate.AnnotationException: Entity 'it.project_work.app_arcade.models.User' has no identifier (every '@Entity' class must declare or inherit at least one '@Id' or '@EmbeddedId' property)
+	at org.hibernate.boot.model.internal.InheritanceState.determineDefaultAccessType(InheritanceState.java:282) ~[hibernate-core-7.2.1.Final.jar:7.2.1.Final]
+	at org.hibernate.boot.model.internal.InheritanceState.getElementsToProcess(InheritanceState.java:233) ~[hibernate-core-7.2.1.Final.jar:7.2.1.Final]
+	at org.hibernate.boot.model.internal.InheritanceState.postProcess(InheritanceState.java:166) ~[hibernate-core-7.2.1.Final.jar:7.2.1.Final]
+	at org.hibernate.boot.model.internal.EntityBinder.handleIdentifier(EntityBinder.java:371) ~[hibernate-core-7.2.1.Final.jar:7.2.1.Final]
+	at org.hibernate.boot.model.internal.EntityBinder.bindEntityClass(EntityBinder.java:217) ~[hibernate-core-7.2.1.Final.jar:7.2.1.Final]
+	at org.hibernate.boot.model.internal.AnnotationBinder.bindClass(AnnotationBinder.java:247) ~[hibernate-core-7.2.1.Final.jar:7.2.1.Final]
+	at org.hibernate.boot.model.source.internal.annotations.AnnotationMetadataSourceProcessorImpl.processEntityHierarchies(AnnotationMetadataSourceProcessorImpl.java:190) ~[hibernate-core-7.2.1.Final.jar:7.2.1.Final]
+	at org.hibernate.boot.model.process.spi.MetadataBuildingProcess$1.processEntityHierarchies(MetadataBuildingProcess.java:291) ~[hibernate-core-7.2.1.Final.jar:7.2.1.Final]
+	at org.hibernate.boot.model.process.spi.MetadataBuildingProcess.coordinateProcessors(MetadataBuildingProcess.java:325) ~[hibernate-core-7.2.1.Final.jar:7.2.1.Final]
+	at org.hibernate.boot.model.process.spi.MetadataBuildingProcess.complete(MetadataBuildingProcess.java:199) ~[hibernate-core-7.2.1.Final.jar:7.2.1.Final]
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.metadata(EntityManagerFactoryBuilderImpl.java:1392) ~[hibernate-core-7.2.1.Final.jar:7.2.1.Final]
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.populateSessionFactoryBuilder(EntityManagerFactoryBuilderImpl.java:1472) ~[hibernate-core-7.2.1.Final.jar:7.2.1.Final]
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1454) ~[hibernate-core-7.2.1.Final.jar:7.2.1.Final]
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:66) ~[spring-orm-7.0.3.jar:7.0.3]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:433) ~[spring-orm-7.0.3.jar:7.0.3]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:416) ~[spring-orm-7.0.3.jar:7.0.3]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:396) ~[spring-orm-7.0.3.jar:7.0.3]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:409) ~[spring-orm-7.0.3.jar:7.0.3]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1864) ~[spring-beans-7.0.3.jar:7.0.3]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1813) ~[spring-beans-7.0.3.jar:7.0.3]
+	... 18 common frames omitted
+
+2026-02-17T10:06:55.746+01:00  INFO 8732 --- [app-arcade] [restartedMain] i.p.app_arcade.AppArcadeApplication      : Starting AppArcadeApplication using Java 21.0.9 with PID 8732 (C:\Users\31127\OneDrive\Desktop\java\progetto\PJ\ProjectWorkGroup4\target\classes started by 31127 in C:\Users\31127\OneDrive\Desktop\java\progetto\PJ\ProjectWorkGroup4)
+2026-02-17T10:06:55.751+01:00  INFO 8732 --- [app-arcade] [restartedMain] i.p.app_arcade.AppArcadeApplication      : No active profile set, falling back to 1 default profile: "default"
+2026-02-17T10:06:55.795+01:00  INFO 8732 --- [app-arcade] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-02-17T10:06:55.796+01:00  INFO 8732 --- [app-arcade] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-02-17T10:06:56.326+01:00  INFO 8732 --- [app-arcade] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-02-17T10:06:56.344+01:00  INFO 8732 --- [app-arcade] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 9 ms. Found 0 JPA repository interfaces.
+2026-02-17T10:06:56.853+01:00  INFO 8732 --- [app-arcade] [restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-02-17T10:06:56.871+01:00  INFO 8732 --- [app-arcade] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-02-17T10:06:56.871+01:00  INFO 8732 --- [app-arcade] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.15]
+2026-02-17T10:06:56.905+01:00  INFO 8732 --- [app-arcade] [restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1108 ms
+2026-02-17T10:06:57.094+01:00  INFO 8732 --- [app-arcade] [restartedMain] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-02-17T10:06:57.128+01:00  INFO 8732 --- [app-arcade] [restartedMain] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.2.1.Final
+2026-02-17T10:06:57.508+01:00  INFO 8732 --- [app-arcade] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-02-17T10:06:57.528+01:00  INFO 8732 --- [app-arcade] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-02-17T10:06:57.644+01:00  INFO 8732 --- [app-arcade] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@31d906fc
+2026-02-17T10:06:57.645+01:00  INFO 8732 --- [app-arcade] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-02-17T10:06:57.683+01:00  WARN 8732 --- [app-arcade] [restartedMain] org.hibernate.orm.deprecation            : HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-02-17T10:06:57.696+01:00  INFO 8732 --- [app-arcade] [restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:mysql://localhost:3306/arcadehub?useSSL=false&serverTimezone=UTC]
+	Database driver: MySQL Connector/J
+	Database dialect: MySQLDialect
+	Database version: 8.0.44
+	Default catalog/schema: arcadehub/undefined
+	Autocommit mode: undefined/unknown
+	Isolation level: REPEATABLE_READ [default REPEATABLE_READ]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-02-17T10:06:58.341+01:00  INFO 8732 --- [app-arcade] [restartedMain] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-02-17T10:06:58.385+01:00 DEBUG 8732 --- [app-arcade] [restartedMain] org.hibernate.SQL                        : create table avatars (id bigint not null auto_increment, image_url varchar(255) not null, is_active bit not null, name varchar(60) not null, unlock_level integer not null, primary key (id)) engine=InnoDB
+2026-02-17T10:06:58.408+01:00 DEBUG 8732 --- [app-arcade] [restartedMain] org.hibernate.SQL                        : create table game (id bigint not null auto_increment, code varchar(255) not null, is_active bit not null, name varchar(255) not null, primary key (id)) engine=InnoDB
+2026-02-17T10:06:58.418+01:00 DEBUG 8732 --- [app-arcade] [restartedMain] org.hibernate.SQL                        : create table game_score (id bigint not null auto_increment, created_at datetime(6) not null, meta json, score integer not null, game_id bigint not null, user_id bigint not null, primary key (id)) engine=InnoDB
+2026-02-17T10:06:58.430+01:00 DEBUG 8732 --- [app-arcade] [restartedMain] org.hibernate.SQL                        : create table user_stats (user_id bigint not null, level integer not null, total_points integer not null, updated_at datetime(6) not null, selected_avatar_id bigint, primary key (user_id)) engine=InnoDB
+2026-02-17T10:06:58.445+01:00 DEBUG 8732 --- [app-arcade] [restartedMain] org.hibernate.SQL                        : create table users (id bigint not null auto_increment, created_at datetime(6) not null, email varchar(255) not null, is_active bit not null, last_login_at datetime(6), password_hash varchar(255) not null, username varchar(30) not null, primary key (id)) engine=InnoDB
+2026-02-17T10:06:58.460+01:00 DEBUG 8732 --- [app-arcade] [restartedMain] org.hibernate.SQL                        : alter table game drop index UKq3tu80gjneqixlguktt38fd93
+2026-02-17T10:06:58.808+01:00 DEBUG 8732 --- [app-arcade] [restartedMain] org.hibernate.SQL                        : alter table game add constraint UKq3tu80gjneqixlguktt38fd93 unique (code)
+2026-02-17T10:06:58.824+01:00 DEBUG 8732 --- [app-arcade] [restartedMain] org.hibernate.SQL                        : create index IDX6qxlf2bywhulak0h0aqev25sn on game_score (game_id, score)
+2026-02-17T10:06:58.834+01:00 DEBUG 8732 --- [app-arcade] [restartedMain] org.hibernate.SQL                        : create index IDX3bsp2qjuw77k4q8t3a4mb6pb5 on game_score (user_id, game_id, created_at)
+2026-02-17T10:06:58.845+01:00 DEBUG 8732 --- [app-arcade] [restartedMain] org.hibernate.SQL                        : alter table users drop index UK6dotkott2kjsp8vw4d0m25fb7
+2026-02-17T10:06:58.847+01:00 DEBUG 8732 --- [app-arcade] [restartedMain] org.hibernate.SQL                        : alter table users add constraint UK6dotkott2kjsp8vw4d0m25fb7 unique (email)
+2026-02-17T10:06:58.857+01:00 DEBUG 8732 --- [app-arcade] [restartedMain] org.hibernate.SQL                        : alter table users drop index UKr43af9ap4edm43mmtq01oddj6
+2026-02-17T10:06:58.859+01:00 DEBUG 8732 --- [app-arcade] [restartedMain] org.hibernate.SQL                        : alter table users add constraint UKr43af9ap4edm43mmtq01oddj6 unique (username)
+2026-02-17T10:06:58.869+01:00 DEBUG 8732 --- [app-arcade] [restartedMain] org.hibernate.SQL                        : alter table game_score add constraint FKi6n7osvt9yxwwfltnmf76dgc0 foreign key (game_id) references game (id)
+2026-02-17T10:06:58.910+01:00 DEBUG 8732 --- [app-arcade] [restartedMain] org.hibernate.SQL                        : alter table game_score add constraint FKlnwcdf8k3ujkpfr88k71ie06c foreign key (user_id) references users (id)
+2026-02-17T10:06:58.947+01:00 DEBUG 8732 --- [app-arcade] [restartedMain] org.hibernate.SQL                        : alter table user_stats add constraint FK702prcmk4pcg3j4mrgehhwp1i foreign key (selected_avatar_id) references avatars (id)
+2026-02-17T10:06:58.978+01:00 DEBUG 8732 --- [app-arcade] [restartedMain] org.hibernate.SQL                        : alter table user_stats add constraint FKj277c5rcqlsvwkk3hj39e2b74 foreign key (user_id) references users (id)
+2026-02-17T10:06:59.014+01:00  INFO 8732 --- [app-arcade] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-02-17T10:06:59.064+01:00  WARN 8732 --- [app-arcade] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-02-17T10:06:59.322+01:00  WARN 8732 --- [app-arcade] [restartedMain] .s.a.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: a01ce211-af78-4392-a2fa-06e2f2821c1c
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-02-17T10:06:59.366+01:00  INFO 8732 --- [app-arcade] [restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-02-17T10:06:59.565+01:00  INFO 8732 --- [app-arcade] [restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-02-17T10:06:59.571+01:00  INFO 8732 --- [app-arcade] [restartedMain] i.p.app_arcade.AppArcadeApplication      : Started AppArcadeApplication in 4.173 seconds (process running for 4.526)
