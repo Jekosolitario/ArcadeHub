@@ -21,19 +21,37 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // Lambda DSL
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
+                        // pagine pubbliche
                         .requestMatchers(
-                                "/auth/register",
-                                "/css/**",
-                                "/js/**",
-                                "/partials/**",
-                                "/images/**")
+                                "/",
+                                "/index.html",
+                                "/play.html",
+                                "/auth/",
+                                "/css/",
+                                "/js/",
+                                "/images/",
+                                "/partials/")
                         .permitAll()
-                        .requestMatchers("/flappy/**").permitAll()
+
+                        // API pubbliche (se ne avete)
+                        .requestMatchers("/api/leaderboard").permitAll()
+
+                        // API che richiedono login
+                        .requestMatchers("/api/game/score").authenticated()
+                        .requestMatchers("/api/profile/").authenticated()
+
+                        // tutto il resto autenticato
                         .anyRequest().authenticated())
-                .formLogin(form -> form.permitAll())
-                .logout(logout -> logout.permitAll());
+                .formLogin(form -> form
+                        .loginPage("/auth.html")
+                        .loginProcessingUrl("/login")
+                        .defaultSuccessUrl("/play.html", true)
+                        .permitAll())
+                .logout(logout -> logout
+                        .logoutSuccessUrl("/")
+                        .permitAll());
 
         return http.build();
     }
