@@ -1,32 +1,28 @@
 package it.project_work.app_arcade.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
-@Table(name = "avatars")
+@Table(
+    name = "avatars"
+)
 public class Avatar {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 60)
+    @Column(nullable = false, length = 80)
     private String name;
 
-    @Column(nullable = false)
+    @Column(name = "image_url", nullable = false, length = 255)
     private String imageUrl;
 
-    @Column(nullable = false)
-    private int unlockLevel;
+    @Column(name = "required_level", nullable = false)
+    private Integer requiredLevel = 1;
 
     @Column(nullable = false)
-    private boolean isActive = true;
+    private Boolean active = true;
 
     // getters & setters
 }
-

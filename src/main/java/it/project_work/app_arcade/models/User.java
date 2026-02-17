@@ -1,45 +1,64 @@
 package it.project_work.app_arcade.models;
 
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
-
 @Entity
-@Table(name = "users")
+@Table(
+    name = "users"
+)
 public class User {
+
+    public enum Role {
+        USER, ADMIN
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true, length = 30)
+    @Column(nullable = false, length = 50)
     private String username;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, length = 255)
     private String email;
 
-    @Column(name = "password_hash", nullable = false)
+    @Column(name = "password_hash", nullable = false, length = 255)
     private String passwordHash;
 
-    @Column(nullable = false)
-    private boolean isActive = true;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 10)
+    private Role role;
 
     @Column(nullable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private Boolean enabled = true;
 
-    private LocalDateTime lastLoginAt;
+    @Column(nullable = false)
+    private Integer level = 1;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private UserStats userStats;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+        name = "selected_avatar_id",
+        foreignKey = @ForeignKey(name = "fk_users_selected_avatar")
+    )
+    private Avatar selectedAvatar;
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt;
+
+    @PrePersist
+    void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = createdAt;
+    }
+
+    @PreUpdate
+    void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 
     // getters & setters
 }
-
