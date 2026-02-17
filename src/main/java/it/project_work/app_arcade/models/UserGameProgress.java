@@ -1,9 +1,12 @@
 package it.project_work.app_arcade.models;
 
 import jakarta.persistence.*;
+import lombok.Data;
+
 import java.time.LocalDateTime;
 
 @Entity
+@Data
 @Table(
     name = "user_game_progress"
 )
@@ -44,3 +47,4 @@ public class UserGameProgress {
 
     // getters & setters
 }
+
