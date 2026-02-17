@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- SEO base -->
+    <title>ArcadeHub - Home</title>
+    <meta name="description" content="ArcadeHub: un’app di intrattenimento che offre giochi 2D divertenti." />
+    <meta name="author" content="Zuhir, Gilda, Yuchen, Marco" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Social preview (OK anche se poi li aggiornate) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="ArcadeHub" />
+    <meta property="og:title" content="ArcadeHub - Home" />
+    <meta property="og:description" content="Giochi 2D e quiz: entra in ArcadeHub e gioca subito." />
+    <!-- TODO: inserire URL assoluto quando avete dominio -->
+    <!-- <meta property="og:url" content="https://example.com/index.html" /> -->
+    <!-- TODO: inserire immagine social quando pronta -->
+    <!-- <meta property="og:image" content="https://example.com/assets/og/arcadehub.png" /> -->
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="ArcadeHub - Home" />
+    <meta name="twitter:description" content="Giochi 2D e quiz: entra in ArcadeHub e gioca subito." />
+    <!-- <meta name="twitter:image" content="https://example.com/assets/og/arcadehub.png" /> -->
+
+    <!-- PWA/Icons (placeholder, aggiungete quando pronti) -->
+    <!-- <link rel="icon" href="./assets/favicon.ico" /> -->
+    <!-- <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png" /> -->
+    <!-- <link rel="manifest" href="./site.webmanifest" /> -->
+    <meta name="theme-color" content="#000000" />
+
+    <!-- CSS: per ora lo lasciamo commentato (solo HTML) -->
+    <!-- <link rel="stylesheet" href="./css/style.css" /> -->
+</head>
+
+<body>
+    <div class="layout">
+        <header class="header">
+            <nav class="top-menu" aria-label="Navigazione principale">
+                <ul class="top-ul-menu">
+                    <li><a href="index.html" aria-current="page">Home</a></li>
+                    <li><a href="play.html">Gioca</a></li>
+                    <li><a href="auth.html">Accedi / Registrati</a></li>
+                    <li><a href="leaderboard.html">Classifica</a></li>
+                    <li><a href="profile.html">Profilo</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main class="main-home" id="main-content">
+            <!-- HERO -->
+            <section class="hero" aria-label="Presentazione ArcadeHub">
+                <header class="hero-header">
+                    <h1>ArcadeHub</h1>
+                    <p>
+                        Un hub di intrattenimento con giochi 2D e quiz: scegli cosa giocare, fai punti e scala la
+                        classifica.
+                    </p>
+                </header>
+
+                <div class="hero-actions" aria-label="Azioni principali">
+                    <a href="play.html">Gioca ora</a>
+                    <a href="auth.html">Accedi / Registrati</a>
+                </div>
+
+                <!-- TODO: qui in futuro immagine/hero media -->
+            </section>
+
+            <!-- COME FUNZIONA -->
+            <section class="how-it-works" aria-label="Come funziona">
+                <header>
+                    <h2>Come funziona</h2>
+                    <p>In tre step: semplice, veloce, arcade.</p>
+                </header>
+
+                <ol>
+                    <li>Scegli un gioco o una modalità.</li>
+                    <li>Gioca e accumula punteggio.</li>
+                    <li>Controlla la classifica e migliora il tuo record.</li>
+                </ol>
+            </section>
+
+            <!-- TOP 5 (PLACEHOLDER) -->
+            <section class="leaderboard-preview" aria-label="Anteprima classifica">
+                <header>
+                    <h2>Top 5 di oggi</h2>
+                    <p>Anteprima (dati finti). La classifica reale arriverà dal backend.</p>
+                </header>
+
+                <div class="table-wrap" role="region" aria-label="Tabella classifica Top 5">
+                    <table>
+                        <caption class="sr-only">Classifica Top 5</caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Utente</th>
+                                <th scope="col">Punteggio</th>
+                                <th scope="col">Livello</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">1</th>
+                                <td>PlayerOne</td>
+                                <td>9800</td>
+                                <td>Hard</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">2</th>
+                                <td>ArcadeNinja</td>
+                                <td>8700</td>
+                                <td>Hard</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3</th>
+                                <td>QuizMaster</td>
+                                <td>7600</td>
+                                <td>Medium</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">4</th>
+                                <td>PixelHero</td>
+                                <td>6900</td>
+                                <td>Medium</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">5</th>
+                                <td>CasualGG</td>
+                                <td>5400</td>
+                                <td>Easy</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p>
+                    <a href="leaderboard.html">Vedi classifica completa</a>
+                </p>
+            </section>
+
+            <!-- NOTE TECNICHE -->
+            <!-- TODO: qui andranno fragments (header/footer), auth state (mostra/nascondi link), e dati via API -->
+        </main>
+
+        <footer class="footer">
+            <section aria-label="Info e contatti">
+                <h2>Info</h2>
+                <p>ArcadeHub — App di intrattenimento 2D.</p>
+                <ul>
+                    <li>Email: <a href="mailto:info@arcadehub.example">info@arcadehub.example</a></li>
+                    <li>Repository: <a href="#" rel="noopener">GitHub (placeholder)</a></li>
+                </ul>
+            </section>
+
+            <p>© <time datetime="2026">2026</time> ArcadeHub</p>
+        </footer>
+    </div>
+
+    <!-- Accessibilità: helper class da definire poi in CSS -->
+    <!--
+    .sr-only { ... }
+  -->
+</body>
+
+</html>
