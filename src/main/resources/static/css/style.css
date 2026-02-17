@@ -1,0 +1,96 @@
+:root {
+    font-size: 62.5%;
+
+
+    /* spazi */
+    --gap-m: 1rem;
+    --padding-m: .5rem;
+
+    /* ombre */
+    --shadow-text-soft: 1px 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+*,
+::after,
+::before {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* layout grid flessibile */
+.layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--gap-m);
+}
+
+body {
+    font-size: 1.6rem;
+    width: 100%;
+
+    min-height: 100vh;
+}
+
+header,
+main,
+footer {
+    padding: var(--padding-m);
+}
+
+/* header comune */
+.header {
+    width: 100%;
+}
+
+.top-menu {
+    width: 100%;
+    font-size: clamp(1.4rem, 4vw, 2rem);
+}
+
+.top-ul-menu {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-areas: "home gioca"
+        "accedi classifica"
+        "profilo profilo";
+}
+
+/* liste menu */
+.top-li {
+    text-align: center;
+    list-style: none;
+}
+
+.top-li.home {
+    grid-area: home;
+}
+
+.top-li.gioca {
+    grid-area: gioca;
+}
+
+.top-li.accedi {
+    grid-area: accedi;
+}
+
+.top-li.classifica {
+    grid-area: classifica;
+}
+
+.top-li.profilo {
+    grid-area: profilo;
+}
+
+/* Stato pagina attiva (metti aria-current="page" nel link) */
+.top-ul-menu a[aria-current="page"] {
+    text-decoration: underline;
+    font-weight: bold;
+
+    text-shadow: var(--shadow-text-soft);
+}
+
+/* link menu */
+.top-li>a {
+    text-decoration: none;
+}
