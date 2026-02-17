@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
+@Data
 @Table(
     name = "users"
 )
@@ -62,6 +63,7 @@ public class User {
     void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
-
-    // getters & setters
+    
 }
+
+
