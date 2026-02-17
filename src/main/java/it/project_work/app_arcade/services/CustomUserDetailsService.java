@@ -1,4 +1,4 @@
-package it.project_work.app_arcade.service;
+package it.project_work.app_arcade.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

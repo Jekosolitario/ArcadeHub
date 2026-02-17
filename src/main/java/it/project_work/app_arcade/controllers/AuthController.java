@@ -1,4 +1,4 @@
-package it.project_work.app_arcade.controller;
+package it.project_work.app_arcade.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
