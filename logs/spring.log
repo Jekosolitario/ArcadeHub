@@ -1386,3 +1386,169 @@ Caused by: java.sql.SQLException: Access denied for user 'root'@'localhost' (usi
 2026-02-17T14:53:01.434+01:00 TRACE 24872 --- [arcadehub] [http-nio-8080-exec-2] org.hibernate.orm.jdbc.bind              : binding parameter (1:VARCHAR) <- []
 2026-02-17T14:53:01.440+01:00 DEBUG 24872 --- [arcadehub] [http-nio-8080-exec-3] org.hibernate.SQL                        : select u1_0.id,u1_0.created_at,u1_0.email,u1_0.enabled,u1_0.level,u1_0.password_hash,u1_0.role,u1_0.selected_avatar_id,u1_0.updated_at,u1_0.username from users u1_0 where u1_0.username=?
 2026-02-17T14:53:01.442+01:00 TRACE 24872 --- [arcadehub] [http-nio-8080-exec-3] org.hibernate.orm.jdbc.bind              : binding parameter (1:VARCHAR) <- []
+2026-02-17T15:25:19.938+01:00  INFO 39296 --- [arcadehub] [restartedMain] i.p.app_arcade.AppArcadeApplication      : Starting AppArcadeApplication using Java 21.0.9 with PID 39296 (C:\Users\96and\Desktop\ProjectWork\ProjectWorkGroup4\target\classes started by 96and in C:\Users\96and\Desktop\ProjectWork\ProjectWorkGroup4)
+2026-02-17T15:25:19.946+01:00  INFO 39296 --- [arcadehub] [restartedMain] i.p.app_arcade.AppArcadeApplication      : No active profile set, falling back to 1 default profile: "default"
+2026-02-17T15:25:20.033+01:00  INFO 39296 --- [arcadehub] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-02-17T15:25:20.034+01:00  INFO 39296 --- [arcadehub] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-02-17T15:25:20.927+01:00  INFO 39296 --- [arcadehub] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-02-17T15:25:20.993+01:00  INFO 39296 --- [arcadehub] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 51 ms. Found 3 JPA repository interfaces.
+2026-02-17T15:25:21.853+01:00  INFO 39296 --- [arcadehub] [restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-02-17T15:25:21.871+01:00  INFO 39296 --- [arcadehub] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-02-17T15:25:21.873+01:00  INFO 39296 --- [arcadehub] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.15]
+2026-02-17T15:25:21.922+01:00  INFO 39296 --- [arcadehub] [restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1887 ms
+2026-02-17T15:25:22.204+01:00  INFO 39296 --- [arcadehub] [restartedMain] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-02-17T15:25:22.280+01:00  INFO 39296 --- [arcadehub] [restartedMain] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.2.1.Final
+2026-02-17T15:25:22.904+01:00  INFO 39296 --- [arcadehub] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-02-17T15:25:22.951+01:00  INFO 39296 --- [arcadehub] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-02-17T15:25:23.155+01:00  INFO 39296 --- [arcadehub] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@6e1b7344
+2026-02-17T15:25:23.157+01:00  INFO 39296 --- [arcadehub] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-02-17T15:25:23.227+01:00  WARN 39296 --- [arcadehub] [restartedMain] org.hibernate.orm.deprecation            : HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-02-17T15:25:23.254+01:00  INFO 39296 --- [arcadehub] [restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:mysql://localhost:3306/arcadehub?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC]
+	Database driver: MySQL Connector/J
+	Database dialect: MySQLDialect
+	Database version: 8.0.44
+	Default catalog/schema: arcadehub/undefined
+	Autocommit mode: undefined/unknown
+	Isolation level: REPEATABLE_READ [default REPEATABLE_READ]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-02-17T15:25:24.100+01:00  INFO 39296 --- [arcadehub] [restartedMain] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-02-17T15:25:24.158+01:00  INFO 39296 --- [arcadehub] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-02-17T15:25:24.254+01:00  INFO 39296 --- [arcadehub] [restartedMain] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-02-17T15:25:24.593+01:00  WARN 39296 --- [arcadehub] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-02-17T15:25:24.685+01:00  INFO 39296 --- [arcadehub] [restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2026-02-17T15:25:25.015+01:00  INFO 39296 --- [arcadehub] [restartedMain] o.s.b.w.a.WelcomePageHandlerMapping      : Adding welcome page: class path resource [static/index.html]
+2026-02-17T15:25:25.491+01:00  INFO 39296 --- [arcadehub] [restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-02-17T15:25:25.496+01:00  INFO 39296 --- [arcadehub] [restartedMain] i.p.app_arcade.AppArcadeApplication      : Started AppArcadeApplication in 6.067 seconds (process running for 6.564)
+2026-02-17T15:25:41.318+01:00  INFO 39296 --- [arcadehub] [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-02-17T15:25:41.318+01:00  INFO 39296 --- [arcadehub] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-02-17T15:25:41.321+01:00  INFO 39296 --- [arcadehub] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2026-02-17T15:35:30.629+01:00  INFO 36316 --- [arcadehub] [restartedMain] i.p.app_arcade.AppArcadeApplication      : Starting AppArcadeApplication using Java 21.0.9 with PID 36316 (C:\Users\96and\Desktop\ProjectWork\ProjectWorkGroup4\target\classes started by 96and in C:\Users\96and\Desktop\ProjectWork\ProjectWorkGroup4)
+2026-02-17T15:35:30.637+01:00  INFO 36316 --- [arcadehub] [restartedMain] i.p.app_arcade.AppArcadeApplication      : No active profile set, falling back to 1 default profile: "default"
+2026-02-17T15:35:30.723+01:00  INFO 36316 --- [arcadehub] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-02-17T15:35:30.723+01:00  INFO 36316 --- [arcadehub] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-02-17T15:35:31.637+01:00  INFO 36316 --- [arcadehub] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-02-17T15:35:31.712+01:00  INFO 36316 --- [arcadehub] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 61 ms. Found 3 JPA repository interfaces.
+2026-02-17T15:35:32.783+01:00  INFO 36316 --- [arcadehub] [restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-02-17T15:35:32.809+01:00  INFO 36316 --- [arcadehub] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-02-17T15:35:32.810+01:00  INFO 36316 --- [arcadehub] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.15]
+2026-02-17T15:35:32.905+01:00  INFO 36316 --- [arcadehub] [restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 2181 ms
+2026-02-17T15:35:33.361+01:00  INFO 36316 --- [arcadehub] [restartedMain] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-02-17T15:35:33.483+01:00  INFO 36316 --- [arcadehub] [restartedMain] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.2.1.Final
+2026-02-17T15:35:34.496+01:00  INFO 36316 --- [arcadehub] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-02-17T15:35:34.712+01:00  INFO 36316 --- [arcadehub] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-02-17T15:35:35.396+01:00  INFO 36316 --- [arcadehub] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@6e1b7344
+2026-02-17T15:35:35.412+01:00  INFO 36316 --- [arcadehub] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-02-17T15:35:35.678+01:00  WARN 36316 --- [arcadehub] [restartedMain] org.hibernate.orm.deprecation            : HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-02-17T15:35:35.783+01:00  INFO 36316 --- [arcadehub] [restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:mysql://localhost:3306/arcadehub?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC]
+	Database driver: MySQL Connector/J
+	Database dialect: MySQLDialect
+	Database version: 8.0.44
+	Default catalog/schema: arcadehub/undefined
+	Autocommit mode: undefined/unknown
+	Isolation level: REPEATABLE_READ [default REPEATABLE_READ]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-02-17T15:35:39.554+01:00  INFO 36316 --- [arcadehub] [restartedMain] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-02-17T15:35:39.827+01:00  INFO 36316 --- [arcadehub] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-02-17T15:35:40.025+01:00  INFO 36316 --- [arcadehub] [restartedMain] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-02-17T15:35:40.558+01:00  WARN 36316 --- [arcadehub] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-02-17T15:35:40.695+01:00  INFO 36316 --- [arcadehub] [restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2026-02-17T15:35:41.100+01:00  INFO 36316 --- [arcadehub] [restartedMain] o.s.b.w.a.WelcomePageHandlerMapping      : Adding welcome page: class path resource [static/index.html]
+2026-02-17T15:35:41.755+01:00  INFO 36316 --- [arcadehub] [restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-02-17T15:35:41.768+01:00  INFO 36316 --- [arcadehub] [restartedMain] i.p.app_arcade.AppArcadeApplication      : Started AppArcadeApplication in 11.72 seconds (process running for 12.253)
+2026-02-17T15:36:11.372+01:00  INFO 36316 --- [arcadehub] [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-02-17T15:36:11.377+01:00  INFO 36316 --- [arcadehub] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-02-17T15:36:11.386+01:00  INFO 36316 --- [arcadehub] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 6 ms
+2026-02-17T15:39:15.954+01:00  INFO 36316 --- [arcadehub] [File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+2026-02-17T15:39:15.960+01:00  INFO 36316 --- [arcadehub] [Thread-1] o.s.boot.tomcat.GracefulShutdown         : Commencing graceful shutdown. Waiting for active requests to complete
+2026-02-17T15:39:15.969+01:00  INFO 36316 --- [arcadehub] [tomcat-shutdown] o.s.boot.tomcat.GracefulShutdown         : Graceful shutdown complete
+2026-02-17T15:39:15.974+01:00  INFO 36316 --- [arcadehub] [Thread-1] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-02-17T15:39:15.980+01:00  INFO 36316 --- [arcadehub] [Thread-1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-02-17T15:39:15.995+01:00  INFO 36316 --- [arcadehub] [Thread-1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2026-02-17T15:39:16.165+01:00  INFO 36316 --- [arcadehub] [restartedMain] i.p.app_arcade.AppArcadeApplication      : Starting AppArcadeApplication using Java 21.0.9 with PID 36316 (C:\Users\96and\Desktop\ProjectWork\ProjectWorkGroup4\target\classes started by 96and in C:\Users\96and\Desktop\ProjectWork\ProjectWorkGroup4)
+2026-02-17T15:39:16.168+01:00  INFO 36316 --- [arcadehub] [restartedMain] i.p.app_arcade.AppArcadeApplication      : No active profile set, falling back to 1 default profile: "default"
+2026-02-17T15:39:16.500+01:00  INFO 36316 --- [arcadehub] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-02-17T15:39:16.530+01:00  INFO 36316 --- [arcadehub] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 28 ms. Found 3 JPA repository interfaces.
+2026-02-17T15:39:16.656+01:00  INFO 36316 --- [arcadehub] [restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-02-17T15:39:16.657+01:00  INFO 36316 --- [arcadehub] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-02-17T15:39:16.659+01:00  INFO 36316 --- [arcadehub] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.15]
+2026-02-17T15:39:16.689+01:00  INFO 36316 --- [arcadehub] [restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 512 ms
+2026-02-17T15:39:16.765+01:00  INFO 36316 --- [arcadehub] [restartedMain] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-02-17T15:39:16.807+01:00  INFO 36316 --- [arcadehub] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-02-17T15:39:16.808+01:00  INFO 36316 --- [arcadehub] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Starting...
+2026-02-17T15:39:16.820+01:00  INFO 36316 --- [arcadehub] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-2 - Added connection com.mysql.cj.jdbc.ConnectionImpl@1da3f6df
+2026-02-17T15:39:16.820+01:00  INFO 36316 --- [arcadehub] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Start completed.
+2026-02-17T15:39:16.823+01:00  WARN 36316 --- [arcadehub] [restartedMain] org.hibernate.orm.deprecation            : HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-02-17T15:39:16.824+01:00  INFO 36316 --- [arcadehub] [restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:mysql://localhost:3306/arcadehub?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC]
+	Database driver: MySQL Connector/J
+	Database dialect: MySQLDialect
+	Database version: 8.0.44
+	Default catalog/schema: arcadehub/undefined
+	Autocommit mode: undefined/unknown
+	Isolation level: REPEATABLE_READ [default REPEATABLE_READ]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-02-17T15:39:16.948+01:00  INFO 36316 --- [arcadehub] [restartedMain] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-02-17T15:39:16.963+01:00  INFO 36316 --- [arcadehub] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-02-17T15:39:17.101+01:00  WARN 36316 --- [arcadehub] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-02-17T15:39:17.127+01:00  INFO 36316 --- [arcadehub] [restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2026-02-17T15:39:17.184+01:00  INFO 36316 --- [arcadehub] [restartedMain] o.s.b.w.a.WelcomePageHandlerMapping      : Adding welcome page: class path resource [static/index.html]
+2026-02-17T15:39:17.225+01:00  INFO 36316 --- [arcadehub] [restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-02-17T15:39:17.227+01:00  INFO 36316 --- [arcadehub] [restartedMain] i.p.app_arcade.AppArcadeApplication      : Started AppArcadeApplication in 1.127 seconds (process running for 227.712)
+2026-02-17T15:39:17.231+01:00  INFO 36316 --- [arcadehub] [restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2026-02-17T15:39:18.641+01:00  INFO 36316 --- [arcadehub] [File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+2026-02-17T15:39:18.642+01:00  INFO 36316 --- [arcadehub] [Thread-5] o.s.boot.tomcat.GracefulShutdown         : Commencing graceful shutdown. Waiting for active requests to complete
+2026-02-17T15:39:18.650+01:00  INFO 36316 --- [arcadehub] [tomcat-shutdown] o.s.boot.tomcat.GracefulShutdown         : Graceful shutdown complete
+2026-02-17T15:39:18.655+01:00  INFO 36316 --- [arcadehub] [Thread-5] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-02-17T15:39:18.656+01:00  INFO 36316 --- [arcadehub] [Thread-5] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Shutdown initiated...
+2026-02-17T15:39:18.659+01:00  INFO 36316 --- [arcadehub] [Thread-5] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Shutdown completed.
+2026-02-17T15:39:18.740+01:00  INFO 36316 --- [arcadehub] [restartedMain] i.p.app_arcade.AppArcadeApplication      : Starting AppArcadeApplication using Java 21.0.9 with PID 36316 (C:\Users\96and\Desktop\ProjectWork\ProjectWorkGroup4\target\classes started by 96and in C:\Users\96and\Desktop\ProjectWork\ProjectWorkGroup4)
+2026-02-17T15:39:18.741+01:00  INFO 36316 --- [arcadehub] [restartedMain] i.p.app_arcade.AppArcadeApplication      : No active profile set, falling back to 1 default profile: "default"
+2026-02-17T15:39:18.890+01:00  INFO 36316 --- [arcadehub] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-02-17T15:39:18.908+01:00  INFO 36316 --- [arcadehub] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 15 ms. Found 3 JPA repository interfaces.
+2026-02-17T15:39:18.970+01:00  INFO 36316 --- [arcadehub] [restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-02-17T15:39:18.972+01:00  INFO 36316 --- [arcadehub] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-02-17T15:39:18.972+01:00  INFO 36316 --- [arcadehub] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.15]
+2026-02-17T15:39:18.987+01:00  INFO 36316 --- [arcadehub] [restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 244 ms
+2026-02-17T15:39:19.013+01:00  INFO 36316 --- [arcadehub] [restartedMain] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-02-17T15:39:19.034+01:00  INFO 36316 --- [arcadehub] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-02-17T15:39:19.035+01:00  INFO 36316 --- [arcadehub] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Starting...
+2026-02-17T15:39:19.043+01:00  INFO 36316 --- [arcadehub] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-3 - Added connection com.mysql.cj.jdbc.ConnectionImpl@5294e077
+2026-02-17T15:39:19.043+01:00  INFO 36316 --- [arcadehub] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Start completed.
+2026-02-17T15:39:19.045+01:00  WARN 36316 --- [arcadehub] [restartedMain] org.hibernate.orm.deprecation            : HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-02-17T15:39:19.046+01:00  INFO 36316 --- [arcadehub] [restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:mysql://localhost:3306/arcadehub?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC]
+	Database driver: MySQL Connector/J
+	Database dialect: MySQLDialect
+	Database version: 8.0.44
+	Default catalog/schema: arcadehub/undefined
+	Autocommit mode: undefined/unknown
+	Isolation level: REPEATABLE_READ [default REPEATABLE_READ]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-02-17T15:39:19.120+01:00  INFO 36316 --- [arcadehub] [restartedMain] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-02-17T15:39:19.136+01:00  INFO 36316 --- [arcadehub] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-02-17T15:39:19.226+01:00  WARN 36316 --- [arcadehub] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-02-17T15:39:19.249+01:00  INFO 36316 --- [arcadehub] [restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2026-02-17T15:39:19.279+01:00  INFO 36316 --- [arcadehub] [restartedMain] o.s.b.w.a.WelcomePageHandlerMapping      : Adding welcome page: class path resource [static/index.html]
+2026-02-17T15:39:19.322+01:00  INFO 36316 --- [arcadehub] [restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-02-17T15:39:19.324+01:00  INFO 36316 --- [arcadehub] [restartedMain] i.p.app_arcade.AppArcadeApplication      : Started AppArcadeApplication in 0.613 seconds (process running for 229.809)
+2026-02-17T15:39:19.325+01:00  INFO 36316 --- [arcadehub] [restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2026-02-17T15:39:40.350+01:00  INFO 36316 --- [arcadehub] [File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+2026-02-17T15:39:40.353+01:00  INFO 36316 --- [arcadehub] [Thread-9] o.s.boot.tomcat.GracefulShutdown         : Commencing graceful shutdown. Waiting for active requests to complete
+2026-02-17T15:39:40.368+01:00  INFO 36316 --- [arcadehub] [tomcat-shutdown] o.s.boot.tomcat.GracefulShutdown         : Graceful shutdown complete
+2026-02-17T15:39:40.373+01:00  INFO 36316 --- [arcadehub] [Thread-9] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-02-17T15:39:40.375+01:00  INFO 36316 --- [arcadehub] [Thread-9] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Shutdown initiated...
+2026-02-17T15:39:40.390+01:00  INFO 36316 --- [arcadehub] [Thread-9] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Shutdown completed.
