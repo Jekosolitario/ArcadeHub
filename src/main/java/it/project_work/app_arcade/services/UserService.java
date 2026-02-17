@@ -23,6 +23,11 @@ public class UserService extends GenericService<Long, User, UserRepository> {
         return progressRepository.findByUserId(userId);
     }
 
+    public User getProfiloUser(Long userId) {
+        return getRepository().findById(userId)
+            .orElseThrow(() -> new IllegalArgumentException("Utente non trovato"));
+    }
+
 
     public User updateAvatar(Long userId, Long avatarId) {
         User user = getRepository().findById(userId)
