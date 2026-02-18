@@ -1,0 +1,318 @@
+/* =========================================================
+   auth.css
+   - Stili SOLO per la pagina login/register
+   - Coerente con tema scuro ArcadeHub (variabili già definite in :root)
+========================================================= */
+
+/* Contenitore main: centra e gestisce header fisso */
+.main-login {
+    min-height: calc(100vh - var(--header-h));
+    padding: calc(var(--header-h) + var(--sp-4)) var(--sp-3) var(--sp-4);
+    display: grid;
+    place-items: start center;
+}
+
+/* Wrapper auth (login + register) */
+.auth {
+    width: min(96vw, 54rem);
+    display: grid;
+    gap: var(--sp-3);
+}
+
+/* Header sezione */
+.auth-header {
+    text-align: center;
+    display: grid;
+    gap: 0.8rem;
+}
+
+.auth-title {
+    font-size: var(--fs-h1);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--colore-testo);
+    text-wrap: balance;
+}
+
+.auth-subtitle {
+    font-size: var(--fs-body);
+    color: rgba(255, 255, 254, 0.78);
+    text-wrap: pretty;
+}
+
+/* Card */
+.auth-card {
+    background: linear-gradient(180deg,
+            var(--superficie-2),
+            var(--superficie-1));
+    border: 1px solid var(--bordo-1);
+    border-radius: var(--radius);
+    box-shadow: var(--ombra-1);
+    padding: var(--sp-4);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Glow decorativo leggero */
+.auth-card::before {
+    content: "";
+    position: absolute;
+    inset: -40% -30% auto -30%;
+    height: 220px;
+    background: radial-gradient(circle,
+            rgba(249, 220, 53, 0.18),
+            rgba(254, 152, 0, 0.08),
+            transparent 60%);
+    filter: blur(10px);
+    pointer-events: none;
+}
+
+.form {
+    display: grid;
+    gap: var(--sp-3);
+    position: relative;
+}
+
+/* Group */
+.form-group {
+    display: grid;
+    gap: 0.8rem;
+}
+
+.form-label {
+    font-size: 1.4rem;
+    color: rgba(255, 255, 254, 0.88);
+    letter-spacing: 0.02em;
+}
+
+/* Input base */
+.form-input {
+    width: 100%;
+    font-size: var(--fs-body);
+    color: var(--colore-testo);
+    background: rgba(0, 0, 1, 0.35);
+    border: 1px solid rgba(255, 255, 254, 0.14);
+    border-radius: 14px;
+    padding: 1.2rem 1.4rem;
+    outline: none;
+    transition: border-color 160ms ease, box-shadow 160ms ease,
+        transform 160ms ease, background 160ms ease;
+}
+
+.form-input::placeholder {
+    color: rgba(255, 255, 254, 0.45);
+}
+
+.form-input:focus {
+    border-color: rgba(249, 220, 53, 0.7);
+    box-shadow: 0 0 0 4px rgba(249, 220, 53, 0.14);
+    background: rgba(0, 0, 1, 0.5);
+}
+
+.form-hint {
+    font-size: var(--fs-small);
+    color: rgba(255, 255, 254, 0.62);
+    line-height: 1.35;
+}
+
+.form-error {
+    font-size: var(--fs-small);
+    color: #ff6b6b;
+    line-height: 1.35;
+}
+
+/* Riga input + bottone (toggle password) */
+.form-input-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.8rem;
+    align-items: center;
+}
+
+/* Azioni */
+.form-actions {
+    display: grid;
+    gap: 1rem;
+    margin-top: 0.4rem;
+}
+
+/* Link sotto */
+.auth-small {
+    margin-top: 0.6rem;
+    font-size: var(--fs-small);
+    color: rgba(255, 255, 254, 0.72);
+    text-align: center;
+}
+
+.link {
+    color: var(--colore-link);
+    text-decoration: none;
+    font-weight: 700;
+    transition: color 140ms ease, text-shadow 140ms ease;
+}
+
+.link:hover,
+.link:focus-visible {
+    color: var(--colore-link-hover);
+    text-shadow: 0 0 18px rgba(254, 152, 0, 0.25);
+}
+
+/* Alert */
+.auth-alert {
+    border: 1px solid rgba(255, 255, 254, 0.14);
+    background: rgba(0, 0, 1, 0.35);
+    border-radius: 14px;
+    padding: 1.2rem 1.4rem;
+    color: rgba(255, 255, 254, 0.9);
+}
+
+/* Avatar grid */
+.avatar-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--sp-2);
+    margin-top: 0.6rem;
+}
+
+.avatar-option {
+    display: block;
+    cursor: pointer;
+}
+
+/* Nascondo radio ma resta accessibile */
+.avatar-option>input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.avatar-card {
+    display: grid;
+    gap: 0.8rem;
+    padding: 1.2rem;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 254, 0.14);
+    background: rgba(0, 0, 1, 0.28);
+    transition: transform 160ms ease, border-color 160ms ease,
+        box-shadow 160ms ease, background 160ms ease;
+}
+
+.avatar-img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 254, 0.12);
+}
+
+.avatar-name {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: rgba(255, 255, 254, 0.9);
+}
+
+.avatar-badge {
+    font-size: 1.2rem;
+    color: rgba(255, 255, 254, 0.7);
+}
+
+/* Hover */
+.avatar-option:hover .avatar-card {
+    transform: translateY(-2px);
+    border-color: rgba(255, 255, 254, 0.22);
+    box-shadow: 0 12px 30px rgba(0, 0, 1, 0.45);
+}
+
+/* Selezionato */
+.avatar-option>input[type="radio"]:checked+.avatar-card {
+    border-color: rgba(249, 220, 53, 0.75);
+    box-shadow: 0 0 0 4px rgba(249, 220, 53, 0.12),
+        0 14px 34px rgba(0, 0, 1, 0.55);
+    background: rgba(249, 220, 53, 0.06);
+}
+
+/* Locked */
+.avatar-option.is-locked {
+    cursor: not-allowed;
+}
+
+.avatar-option.is-locked .avatar-card {
+    opacity: 0.6;
+    filter: grayscale(1);
+}
+
+.avatar-option.is-locked:hover .avatar-card {
+    transform: none;
+    box-shadow: none;
+}
+
+/* Bottoni: se i vostri .btn sono globali, qui non li tocco.
+   Se NON lo sono, ti lascio una base minimal per non rompere la UI. */
+.btn {
+    border: 0;
+    border-radius: 14px;
+    padding: 1.2rem 1.6rem;
+    font-size: var(--fs-body);
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background: linear-gradient(90deg, var(--colore-primario), var(--colore-accento));
+    color: #000001;
+    box-shadow: 0 10px 24px rgba(254, 152, 0, 0.18);
+    transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
+}
+
+.btn-primary:hover,
+.btn-primary:focus-visible {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 34px rgba(254, 152, 0, 0.26);
+    filter: brightness(1.02);
+}
+
+.btn-ghost {
+    background: rgba(255, 255, 254, 0.06);
+    color: rgba(255, 255, 254, 0.9);
+    border: 1px solid rgba(255, 255, 254, 0.14);
+    transition: background 160ms ease, border-color 160ms ease, transform 160ms ease;
+}
+
+.btn-ghost:hover,
+.btn-ghost:focus-visible {
+    background: rgba(255, 255, 254, 0.10);
+    border-color: rgba(255, 255, 254, 0.22);
+    transform: translateY(-1px);
+}
+
+.btn-icon {
+    padding: 1.2rem 1.2rem;
+    width: 4.4rem;
+    display: grid;
+    place-items: center;
+}
+
+/* Desktop: respiro maggiore */
+@media (min-width: 900px) {
+    .main-login {
+        padding: calc(var(--header-h) + var(--sp-4)) var(--sp-4) var(--sp-4);
+    }
+}
+
+/* Preferenze utente */
+@media (prefers-reduced-motion: reduce) {
+
+    .form-input,
+    .avatar-card,
+    .btn {
+        transition: none;
+    }
+}
+
+@media (max-width: 360px) {
+    .avatar-grid {
+        grid-template-columns: 1fr;
+    }
+}
