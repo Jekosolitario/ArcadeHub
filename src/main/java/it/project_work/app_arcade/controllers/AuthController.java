@@ -92,16 +92,36 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<ApiResponse<Void>> logout(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        request.logout(); // invalida auth/session secondo config
-        return ResponseEntity.ok(new ApiResponse<>("Logout OK", null));
+    public ResponseEntity<ApiResponse<Void>> logout(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            // 1) invalida sessione (server-side)
+            var session = request.getSession(false);
+            if (session != null) {
+                session.invalidate(); // -> distrugge la sessione sul server → l’utente non è più autenticato.
+            }
+
+            // 2) pulisci SecurityContext (thread-local)
+            SecurityContextHolder.clearContext(); // -> pulisce l’autenticazione dal thread corrente
+
+            // 3) scade il cookie JSESSIONID (client-side) -> evita "cookie zombie"
+            jakarta.servlet.http.Cookie cookie = new jakarta.servlet.http.Cookie("JSESSIONID", "");
+            cookie.setMaxAge(0); // -> dice al browser “cancella questo cookie” → niente residui.
+            cookie.setPath("/"); // stesso path del cookie originale
+            cookie.setHttpOnly(true);
+            response.addCookie(cookie);
+
+            return ResponseEntity.ok(new ApiResponse<>("Logout OK", null));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(new ApiResponse<>("Logout failed", null));
+        }
     }
 
     // Profilo dell’utente loggato
     @GetMapping("/me")
     public ResponseEntity<ApiResponse<UserResponse>> me(@AuthenticationPrincipal UserDetails userDetails) {
+        // guest => 200 con data null (niente "rosso" in console)
         if (userDetails == null) {
-            return ResponseEntity.status(401).body(new ApiResponse<>("Non loggato", null));
+            return ResponseEntity.ok(new ApiResponse<>("GUEST", null));
         }
 
         String username = userDetails.getUsername();

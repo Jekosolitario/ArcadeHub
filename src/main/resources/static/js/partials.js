@@ -21,39 +21,40 @@ async function getMe() {
             cache: "no-store",
         });
 
-        // non loggato
+        // guest (se mantenete 401/403)
         if (res.status === 401 || res.status === 403) return null;
 
-        if (!res.ok) throw new Error(`ME failed: ${res.status}`);
+        if (!res.ok) return null;
 
-        // può essere ApiResponse o string semplice: gestiamo entrambi
         const data = await res.json().catch(() => null);
+        if (!data) return null;
 
-        // Se backend risponde ApiResponse { message, data }
-        if (data && typeof data === "object") {
-            return data.data ?? data; // data.data (UserResponse) oppure raw
+        // ApiResponse { message, data } -> ritorna data (anche se null)
+        if (typeof data === "object" && data !== null && "data" in data) {
+            return data.data; // <-- niente fallback!
         }
 
         return data;
     } catch (e) {
-        console.warn("getMe():", e);
         return null;
     }
 }
 
-async function logout() {
-    // Non usiamo api.js qui: fetch diretto
-    const res = await fetch("/auth/logout", {
-        method: "POST",
-        credentials: "include",
-        headers: { "Accept": "application/json" },
-        cache: "no-store",
-    });
 
-    // Anche se non OK, lato UX forziamo comunque "stato guest"
-    // (session potrebbe già essere scaduta)
-    return res.ok;
+async function logout() {
+    try {
+        await fetch("/auth/logout", {
+            method: "POST",
+            credentials: "include",
+            headers: { "Accept": "application/json" },
+            cache: "no-store",
+        });
+    } finally {
+        // forzo stato guest lato UX
+        window.location.replace("/index.html");
+    }
 }
+
 
 function setLogoutLink() {
     // link "Accedi/Registrati" nel partial
@@ -73,6 +74,7 @@ function setLogoutLink() {
 
         try {
             await logout();
+            setNavVisibility(false);
         } finally {
             // torni guest: reload soft su home (o pagina corrente)
             window.location.replace("/index.html");
@@ -81,20 +83,25 @@ function setLogoutLink() {
 }
 
 function hideHeroAuthLinkIfPresent() {
-    // Solo in home: nasconde il link "Accedi/Registrati" nella hero
+    // Solo in home: rimuove il link "Accedi / Registrati" nella hero
     const hero = document.querySelector(".hero-actions");
     if (!hero) return;
 
-    const links = hero.querySelectorAll("a");
-    links.forEach((a) => {
-        const href = a.getAttribute("href") || "";
-        if (href.includes("auth.html")) {
-            a.hidden = true;
-            a.setAttribute("aria-hidden", "true");
-            a.setAttribute("tabindex", "-1");
-        }
-    });
+    // prende sia /auth.html che auth.html
+    const authLink = hero.querySelector('a[href$="auth.html"], a[href="/auth.html"], a[href="auth.html"]');
+    if (!authLink) return;
+
+    // "togliere" davvero = rimuovo dal DOM
+    authLink.remove();
+
+    // (opzionale) se vuoi lasciare 2 CTA, puoi sostituirlo con Profilo:
+    // const profile = document.createElement("a");
+    // profile.className = "btn btn-ghost";
+    // profile.href = "/profile.html";
+    // profile.textContent = "Profilo";
+    // hero.appendChild(profile);
 }
+
 
 (async function initLayout() {
     await loadPartial("#site-header", "./partials/header.html");
@@ -107,13 +114,15 @@ function hideHeroAuthLinkIfPresent() {
     });
 
     // check login state e aggiorna UI
-    const me = await getMe();
+    setNavVisibility(false);
+    const me = window.api ? await api.me() : await getMe();
     setNavVisibility(!!me);
 
     if (me) {
         setLogoutLink();
         hideHeroAuthLinkIfPresent();
     }
+
 
 })();
 

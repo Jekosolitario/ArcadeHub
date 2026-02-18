@@ -16,15 +16,20 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                // Per far funzionare subito fetch/session senza CSRF token
+                // fetch + session cookie, senza CSRF token
                 .csrf(csrf -> csrf.disable())
-                // Se FE e BE sono su origin diverse serve un bean CorsConfigurationSource
+                // se FE e BE sono su origin diverse serve poi CorsConfigurationSource
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
-                // pagine + asset pubblici
+                // Pagine HTML pubbliche: così il guard.js può gestire redirect UX
                 .requestMatchers(
                         "/",
-                        "/**/*.html", 
+                        "/index.html",
+                        "/play.html",
+                        "/auth.html",
+                        "/leaderboard.html",
+                        "/profile.html",
+                        // assets statici
                         "/css/**",
                         "/js/**",
                         "/assets/**",
@@ -32,20 +37,19 @@ public class SecurityConfig {
                         "/partials/**",
                         "/audio/**"
                 ).permitAll()
-                // AUTH API
-                .requestMatchers("/auth/login", "/auth/register").permitAll()
-                .requestMatchers("/auth/me", "/auth/logout").authenticated()
+                // AUTH API pubbliche (così /auth/me non fa 403 "brutto" da Security)
+                .requestMatchers("/auth/login", "/auth/register", "/auth/me", "/auth/logout").permitAll()
                 // API pubbliche
                 .requestMatchers("/api/leaderboard").permitAll()
-                // API protette
+                // API protette (qui si applica la vera sicurezza)
                 .requestMatchers("/api/game/score").authenticated()
                 .requestMatchers("/api/profile/**").authenticated()
                 // tutto il resto autenticato
                 .anyRequest().authenticated()
                 )
-                //  non usare formLogin se fai login JSON custom
+                // login JSON custom, quindi niente formLogin
                 .formLogin(form -> form.disable())
-                // Logout lo gestisci via controller (/auth/logout) con request.logout()
+                // logout gestito dal controller
                 .logout(logout -> logout.disable());
 
         return http.build();

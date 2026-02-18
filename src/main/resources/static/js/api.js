@@ -12,7 +12,7 @@ const api = (() => {
     const BASE_URL = ""; // oppure "http://localhost:8080"
 
     // Richiesta utente corrente (come da specifica)
-    const ME_PATH = "/auth/me"; 
+    const ME_PATH = "/auth/me";
 
     /**
      * Errore API standard.
@@ -123,13 +123,29 @@ const api = (() => {
      * - altrimenti ritorna il JSON dell'utente corrente
      */
     async function me() {
-        try {
-            return await get(ME_PATH);
-        } catch (err) {
-            if (err instanceof ApiError && err.status === 401) return null;
-            throw err;
+        const res = await fetch(ME_PATH, {
+            method: "GET",
+            credentials: "include",
+            headers: { "Accept": "application/json" },
+            cache: "no-store",
+        });
+
+        // se in futuro lo rimettete a 401/403, siamo coperti
+        if (res.status === 401 || res.status === 403) return null;
+
+        if (!res.ok) return null;
+
+        const json = await res.json().catch(() => null);
+        if (!json) return null;
+
+        // supporta ApiResponse { message, data }
+        if (typeof json === "object" && json !== null && "data" in json) {
+            return json.data ?? null; // <-- QUI la differenza: data=null => guest
         }
+
+        return json;
     }
+
 
     return {
         // methods
