@@ -30,21 +30,23 @@ public class UserService extends GenericService<Long, User, UserRepository> {
         User user = getRepository().findById(userId)
             .orElseThrow(() -> new IllegalArgumentException("Utente non trovato"));
         List<UserGameProgress> progress = progressRepository.findByUserId(userId);
-        Integer bestScore = progress.stream()
+        return MeResponse.fromEntity(user, progress.stream()
             .filter(p -> p.getGameCode().equals("flappy"))
-            .map(UserGameProgress::getBestScore)
-            .max(Integer::compareTo)
-            .orElse(0);
-        return MeResponse.fromEntity(user, bestScore);
+            .findFirst()
+            .orElse(null));
     }
 
 
     @Transactional
-    public UserResponse updateAvatar(Long userId, Long avatarId) {
+    public MeResponse updateAvatar(Long userId, Long avatarId) {
         User user = getRepository().findById(userId)
             .orElseThrow(() -> new IllegalArgumentException("Utente non trovato"));
         user.setSelectedAvatar(avatarRepository.findById(avatarId)
             .orElseThrow(() -> new IllegalArgumentException("Avatar non trovato")));
-        return UserResponse.fromEntity(getRepository().save(user));
+        List<UserGameProgress> progress = progressRepository.findByUserId(userId);
+        return MeResponse.fromEntity(getRepository().save(user), progress.stream()
+            .filter(p -> p.getGameCode().equals("flappy"))
+            .findFirst()
+            .orElse(null));
     }
 }
