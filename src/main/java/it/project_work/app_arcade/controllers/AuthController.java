@@ -50,7 +50,8 @@ public class AuthController {
     // Registrazione
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<UserResponse>> register(@Valid @RequestBody RegisterRequest dto) {
-        var user = authService.register(dto);
+        UserResponse user = authService.register(dto);
+
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(new ApiResponse<>("Utente registrato", user));
