@@ -19,6 +19,5 @@ public record RegisterRequest(
         @NotNull(message = "Avatar obbligatorio")
         Long avatarId
         ) {
-
                 
 }

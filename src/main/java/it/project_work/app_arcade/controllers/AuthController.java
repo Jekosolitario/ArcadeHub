@@ -93,10 +93,15 @@ public class AuthController {
 
     // Profilo dell’utente loggato
     @GetMapping("/me")
-    public ResponseEntity<?> me(@AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<ApiResponse<UserResponse>> me(@AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails == null) {
-            return ResponseEntity.status(401).body("Non loggato");
+            return ResponseEntity.status(401).body(new ApiResponse<>("Non loggato", null));
         }
-        return ResponseEntity.ok(userDetails.getUsername());
+
+        // TODO: se vuoi info vere, recupera User dal DB e fai UserResponse.fromEntity(user)
+        UserResponse u = new UserResponse(null, userDetails.getUsername(), null, null, 1, true, null);
+
+        return ResponseEntity.ok(new ApiResponse<>("OK", u));
     }
+
 }
