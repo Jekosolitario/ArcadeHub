@@ -21,6 +21,8 @@ import it.project_work.app_arcade.dto.ApiResponse;
 import it.project_work.app_arcade.dto.LoginRequest;
 import it.project_work.app_arcade.dto.RegisterRequest;
 import it.project_work.app_arcade.dto.UserResponse;
+import it.project_work.app_arcade.exceptions.BadRequestException;
+import it.project_work.app_arcade.repositories.UserRepository;
 import it.project_work.app_arcade.services.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -33,13 +35,16 @@ public class AuthController {
     private final AuthService authService;
     private final AuthenticationManager authenticationManager;
     private final SecurityContextRepository securityContextRepository;
+    private final UserRepository userRepository;
 
     public AuthController(AuthService authService,
             AuthenticationManager authenticationManager,
-            SecurityContextRepository securityContextRepository) {
+            SecurityContextRepository securityContextRepository,
+            UserRepository userRepository) {
         this.authService = authService;
         this.authenticationManager = authenticationManager;
         this.securityContextRepository = securityContextRepository;
+        this.userRepository = userRepository;
     }
 
     // Registrazione
@@ -67,20 +72,20 @@ public class AuthController {
             context.setAuthentication(auth);
             SecurityContextHolder.setContext(context);
 
-            // salva in sessione (fondamentale per session+cookie)
+            // salva in sessione (fondamentale per session+cookie JSESSIONID)
             securityContextRepository.saveContext(context, request, response);
 
-            // qui puoi anche ritornare info utente dal DB se vuoi
-            // per ora ritorniamo username dalla principal
+            // recupero l'utente reale dal DB per risposta completa
             String username = auth.getName();
+            var user = userRepository.findByUsername(username)
+                    .orElseThrow(() -> new BadRequestException("USER_NOT_FOUND", "Utente non trovato"));
 
             return ResponseEntity.ok(
-                    new ApiResponse<>("Login OK",
-                            new UserResponse(null, username, null, null, 1, true, null))
+                    new ApiResponse<>("Login OK", UserResponse.fromEntity(user))
             );
 
         } catch (BadCredentialsException ex) {
-            // verrà gestita dall'exception handler (Step 3.3) se preferisci
+            // gestita dal GlobalExceptionHandler -> 401 JSON
             throw ex;
         }
     }
@@ -98,10 +103,11 @@ public class AuthController {
             return ResponseEntity.status(401).body(new ApiResponse<>("Non loggato", null));
         }
 
-        // TODO: se vuoi info vere, recupera User dal DB e fai UserResponse.fromEntity(user)
-        UserResponse u = new UserResponse(null, userDetails.getUsername(), null, null, 1, true, null);
+        String username = userDetails.getUsername();
 
-        return ResponseEntity.ok(new ApiResponse<>("OK", u));
+        var user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new BadRequestException("USER_NOT_FOUND", "Utente non trovato"));
+
+        return ResponseEntity.ok(new ApiResponse<>("OK", UserResponse.fromEntity(user)));
     }
-
 }
