@@ -418,3 +418,41 @@ button[disabled] {
         padding: 1.0rem 1.6rem;
     }
 }
+
+/* ==========================
+   FIX AUTOFILL (Chrome/Edge/Safari)
+   Mantiene lo stile scuro sugli input quando il browser compila i campi
+========================== */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--colore-testo) !important;
+    caret-color: var(--colore-testo);
+
+    /* “vernice” interna per coprire il bianco dell’autofill */
+    -webkit-box-shadow: 0 0 0 1000px rgba(255, 255, 254, 0.06) inset !important;
+    box-shadow: 0 0 0 1000px rgba(255, 255, 254, 0.06) inset !important;
+
+    border: 1px solid rgba(255, 255, 254, 0.14) !important;
+    background-clip: padding-box !important;
+
+    /* evita flash di background giallo/bianco */
+    transition: background-color 9999s ease-out 0s, color 9999s ease-out 0s;
+}
+
+/* ==========================
+   Firefox (supporto moderno)
+========================== */
+input:autofill,
+textarea:autofill,
+select:autofill {
+    box-shadow: 0 0 0 1000px rgba(255, 255, 254, 0.06) inset !important;
+    color: var(--colore-testo) !important;
+    border: 1px solid rgba(255, 255, 254, 0.14) !important;
+}
