@@ -32,18 +32,7 @@ build/
 ### VS Code ###
 .vscode/
 src/main/resources/application.properties
-src/main/resources/application.properties
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 logs/
 *.log
-=======
-=======
->>>>>>> dd5c83b23ae8a6ed74752f038555bb5b4a1dc200
 
-=======
->>>>>>> 4364e1f (aggiunto git ignore)
-logs/
-*.log
->>>>>>> d5ae69e687d8978dabc5b8445837c65ea8aa2f41
