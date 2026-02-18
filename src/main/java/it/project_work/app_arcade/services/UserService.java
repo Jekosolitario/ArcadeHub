@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import it.project_work.app_arcade.dto.MeResponse;
+import it.project_work.app_arcade.dto.UserResponse;
 import it.project_work.app_arcade.models.User;
 import it.project_work.app_arcade.models.UserGameProgress;
 import it.project_work.app_arcade.repositories.AvatarRepository;
@@ -24,22 +26,25 @@ public class UserService extends GenericService<Long, User, UserRepository> {
         this.progressRepository = progressRepository;
     }
 
-    public List<UserGameProgress> me(Long userId) {
-        return progressRepository.findByUserId(userId);
-    }
-
-    public User getProfiloUser(Long userId) {
-        return getRepository().findById(userId)
+    public MeResponse me(Long userId) {
+        User user = getRepository().findById(userId)
             .orElseThrow(() -> new IllegalArgumentException("Utente non trovato"));
+        List<UserGameProgress> progress = progressRepository.findByUserId(userId);
+        Integer bestScore = progress.stream()
+            .filter(p -> p.getGameCode().equals("flappy"))
+            .map(UserGameProgress::getBestScore)
+            .max(Integer::compareTo)
+            .orElse(0);
+        return MeResponse.fromEntity(user, bestScore);
     }
 
 
     @Transactional
-    public User updateAvatar(Long userId, Long avatarId) {
+    public UserResponse updateAvatar(Long userId, Long avatarId) {
         User user = getRepository().findById(userId)
             .orElseThrow(() -> new IllegalArgumentException("Utente non trovato"));
         user.setSelectedAvatar(avatarRepository.findById(avatarId)
             .orElseThrow(() -> new IllegalArgumentException("Avatar non trovato")));
-        return getRepository().save(user);
+        return UserResponse.fromEntity(getRepository().save(user));
     }
 }

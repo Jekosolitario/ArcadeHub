@@ -48,7 +48,7 @@ public class AuthController {
         var user = authService.register(dto);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(new ApiResponse<>("Utente registrato", UserResponse.fromEntity(user)));
+                .body(new ApiResponse<>("Utente registrato", user));
     }
 
     // LOGIN custom: crea sessione + cookie JSESSIONID

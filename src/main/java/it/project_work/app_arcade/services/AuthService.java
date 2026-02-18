@@ -4,6 +4,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import it.project_work.app_arcade.dto.RegisterRequest;
+import it.project_work.app_arcade.dto.UserResponse;
 import it.project_work.app_arcade.exceptions.BadRequestException;
 import it.project_work.app_arcade.exceptions.ConflictException;
 import it.project_work.app_arcade.models.Avatar;
@@ -29,7 +30,7 @@ public class AuthService extends GenericService<Long, User, UserRepository> {
     il front manda JSON unico e stabile
      */
     @Transactional
-    public User register(RegisterRequest dto) {
+    public UserResponse register(RegisterRequest dto) {
 
         // Business checks (unique)
         if (getRepository().existsByEmail(dto.email().trim().toLowerCase())) {
@@ -52,6 +53,6 @@ public class AuthService extends GenericService<Long, User, UserRepository> {
         user.setLevel(1);
         user.setSelectedAvatar(avatar);
 
-        return getRepository().save(user);
+        return UserResponse.fromEntity(getRepository().save(user));
     }
 }

@@ -20,5 +20,13 @@ public record RegisterRequest(
         Long avatarId
         ) {
 
-                
+        
+        public static RegisterRequest fromEntity(it.project_work.app_arcade.models.User u) {
+                return new RegisterRequest(
+                        u.getUsername(),
+                        u.getEmail(),
+                        null, // password non viene restituita mai
+                        u.getSelectedAvatar() != null ? u.getSelectedAvatar().getId() : null
+                );
+        }
 }
