@@ -1,10 +1,14 @@
 package it.project_work.app_arcade.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import it.project_work.app_arcade.dto.RegisterRequest;
+import it.project_work.app_arcade.exceptions.BadRequestException;
+import it.project_work.app_arcade.exceptions.ConflictException;
+import it.project_work.app_arcade.models.Avatar;
 import it.project_work.app_arcade.models.User;
+import it.project_work.app_arcade.repositories.AvatarRepository;
 import it.project_work.app_arcade.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 
@@ -12,38 +16,41 @@ import jakarta.transaction.Transactional;
 public class AuthService extends GenericService<Long, User, UserRepository> {
 
     private final PasswordEncoder passwordEncoder;
+    private final AvatarRepository avatarRepository;
 
-    public AuthService(PasswordEncoder passwordEncoder) {
+    public AuthService(PasswordEncoder passwordEncoder, AvatarRepository avatarRepository) {
         this.passwordEncoder = passwordEncoder;
+        this.avatarRepository = avatarRepository;
     }
-    
-    @Transactional
-    public User register(String username, String email, String password) {
 
-        if (username == null || username.trim().isEmpty()) {
-        throw new IllegalArgumentException("Username obbligatorio");
+    /* 
+    eviti 3 parametri “sciolti” che crescono (oggi aggiungi avatarId, domani altro)
+    controller e service parlano lo stesso linguaggio (DTO)
+    il front manda JSON unico e stabile
+     */
+    @Transactional
+    public User register(RegisterRequest dto) {
+
+        // Business checks (unique)
+        if (getRepository().existsByEmail(dto.email().trim().toLowerCase())) {
+            throw new ConflictException("EMAIL_TAKEN", "Email già in uso");
         }
-        String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
-        if (email == null || !email.matches(emailRegex)) {
-            throw new IllegalArgumentException("Formato email non valido");
+        if (getRepository().existsByUsername(dto.username().trim())) {
+            throw new ConflictException("USERNAME_TAKEN", "Username già in uso");
         }
-        if (password == null || password.length() < 6) {
-            throw new IllegalArgumentException("Password troppo corta (min 6 caratteri)");
-        }
-        
-        if (getRepository().existsByEmail(email)) {
-            throw new IllegalArgumentException("Email già in uso");
-        }
-        if (getRepository().existsByUsername(username)) {
-            throw new IllegalArgumentException("Username già in uso");
-        }
+
+        // Avatar FK check
+        Avatar avatar = avatarRepository.findById(dto.avatarId())
+                .orElseThrow(() -> new BadRequestException("AVATAR_INVALID", "Avatar non valido"));
 
         User user = new User();
-        user.setUsername(username.trim().toLowerCase());
-        user.setEmail(email.trim().toLowerCase());
-        user.setPasswordHash(passwordEncoder.encode(password));
+        user.setUsername(dto.username().trim());                 // non forzo lowercase
+        user.setEmail(dto.email().trim().toLowerCase());         // ok lowercase
+        user.setPasswordHash(passwordEncoder.encode(dto.password()));
         user.setRole(User.Role.USER);
         user.setEnabled(true);
+        user.setLevel(1);
+        user.setSelectedAvatar(avatar);
 
         return getRepository().save(user);
     }
