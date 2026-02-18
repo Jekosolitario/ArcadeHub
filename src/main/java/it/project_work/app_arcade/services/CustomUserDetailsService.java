@@ -26,7 +26,7 @@ public class CustomUserDetailsService implements UserDetailsService {
             .withUsername(user.getUsername())
             .password(user.getPasswordHash())
             .roles(user.getRole().name()) // ruoli Spring Security
-            .disabled(!user.getEnabled())  // abilita/disabilita login
+            .disabled(!user.isEnabled())  // abilita/disabilita login
             .build();
     }
 }
