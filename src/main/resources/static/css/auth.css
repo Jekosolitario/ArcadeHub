@@ -261,3 +261,46 @@ fieldset.form-group {
         grid-template-columns: repeat(4, 1fr);
     }
 }
+
+/* =========================================================
+   AUTOFILL LOCK (Chrome/Edge/Safari) + repaint quando ri-mostri la sezione
+========================================================= */
+
+@keyframes ah-autofill-fix {
+    from {}
+
+    to {}
+}
+
+/* i tuoi input */
+.form-input:-webkit-autofill,
+.form-input:-webkit-autofill:hover,
+.form-input:-webkit-autofill:focus,
+.input:-webkit-autofill,
+.input:-webkit-autofill:hover,
+.input:-webkit-autofill:focus,
+.select:-webkit-autofill,
+.select:-webkit-autofill:hover,
+.select:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--colore-testo) !important;
+    caret-color: var(--colore-testo) !important;
+
+    -webkit-box-shadow: 0 0 0 1000px var(--field-bg) inset !important;
+    box-shadow: 0 0 0 1000px var(--field-bg) inset !important;
+
+    border: 1px solid var(--field-border) !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    filter: none !important;
+    animation: ah-autofill-fix 1ms both;
+}
+
+
+/* Firefox */
+.form-input:autofill,
+.input:autofill,
+.select:autofill {
+    box-shadow: 0 0 0 1000px var(--field-bg) inset !important;
+    color: var(--colore-testo) !important;
+    border: 1px solid var(--field-border) !important;
+}

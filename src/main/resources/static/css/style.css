@@ -16,6 +16,8 @@
     font-size: 62.5%;
     /* 1rem = 10px */
 
+    color-scheme: dark;
+
     /* Colori */
     --colore-sfondo: #000001;
     --colore-testo: #FFFFFE;
@@ -452,7 +454,7 @@ select:-webkit-autofill:focus {
 input:autofill,
 textarea:autofill,
 select:autofill {
-    box-shadow: 0 0 0 1000px rgba(255, 255, 254, 0.06) inset !important;
+    box-shadow: 0 0 0 1000px var(--field-bg) inset !important;
     color: var(--colore-testo) !important;
-    border: 1px solid rgba(255, 255, 254, 0.14) !important;
+    border: 1px solid var(--field-border) !important;
 }
