@@ -3,7 +3,6 @@ package it.project_work.app_arcade.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import it.project_work.app_arcade.models.User;
 import it.project_work.app_arcade.models.UserGameProgress;
 import it.project_work.app_arcade.repositories.ProgressRepository;
 import it.project_work.app_arcade.repositories.UserRepository;

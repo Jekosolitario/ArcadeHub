@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!-- SEO base -->
-    <title>ArcadeHub - Game</title>
+    <title>ArcadeHub - Games</title>
     <meta name="description" content="ArcadeHub: un’app di intrattenimento che offre giochi 2D divertenti." />
     <meta name="author" content="Zuhir, Gilda, Yuchen, Marco" />
     <meta name="robots" content="index, follow" />
@@ -33,6 +33,7 @@
     <meta name="theme-color" content="#000000" />
 
     <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/play.css" />
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 
@@ -40,16 +41,124 @@
     <div class="layout">
         <div id="site-header"></div>
 
-        <main class="main-game">
-            <canvas id="canvas"></canvas>
-        </main>
+        <main class="main-game" id="main-content">
+            <!-- GRID GIOCHI -->
+            <section class="games" aria-label="Seleziona un gioco">
+                <header class="games-header">
+                    <h1>Gioca</h1>
+                    <p>Scegli un gioco e inizia subito.</p>
+                </header>
 
-        <div id="site-footer"></div>
+                <div class="games-grid">
+                    <!-- Card 1: Flappy -->
+                    <button class="game-card" type="button" data-game="flappy" aria-label="Avvia Flappy Bird">
+                        <img src="/images/flappy-card.png" alt="" />
+                        <div class="game-card-body">
+                            <h2>Flappy Bird</h2>
+                            <p>Schiva i tubi e fai il miglior punteggio.</p>
+                        </div>
+                    </button>
+
+                    <!-- Placeholder card per futuri giochi -->
+                    <button class="game-card" type="button" data-game="soon" disabled>
+                        <img src="/images/coming-soon.png" alt="" />
+                        <div class="game-card-body">
+                            <h2>Coming soon</h2>
+                            <p>Nuovi giochi in arrivo.</p>
+                        </div>
+                    </button>
+                </div>
+            </section>
+
+            <!-- OVERLAY GIOCO -->
+            <section class="game-overlay" id="gameOverlay" aria-hidden="true">
+                <div class="game-shell" role="dialog" aria-modal="true" aria-label="Gioco in esecuzione">
+                    <button class="game-close" id="btnCloseGame" type="button" aria-label="Chiudi gioco">✕</button>
+
+                    <div class="game-stage">
+                        <canvas id="canvas"></canvas>
+                    </div>
+                </div>
+            </section>
+            <!-- MODAL CONFERMA USCITA (custom) -->
+            <div class="modal" id="exitModal" aria-hidden="true">
+                <div class="modal-backdrop" data-close="true"></div>
+
+                <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="exitTitle">
+                    <h2 id="exitTitle" class="modal-title">Uscire dal gioco?</h2>
+                    <p class="modal-text">Se esci ora, il progresso verrà perso.</p>
+
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-ghost" id="btnExitCancel">Annulla</button>
+                        <button type="button" class="btn btn-primary" id="btnExitConfirm">Esci</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- OVERLAY: ruota dispositivo (solo mobile portrait) -->
+            <div class="rotate" id="rotateOverlay" aria-hidden="true">
+                <div class="rotate-panel" role="dialog" aria-modal="true" aria-labelledby="rotateTitle">
+                    <h2 id="rotateTitle" class="rotate-title">Ruota il telefono</h2>
+                    <p class="rotate-text">Per giocare, usa la modalità <strong>orizzontale</strong> (landscape).</p>
+
+                    <div class="rotate-actions">
+                        <button type="button" class="btn btn-primary" id="btnRotateCheck">Ho ruotato</button>
+                        <button type="button" class="btn btn-ghost" id="btnRotateBack">Torna ai giochi</button>
+                    </div>
+                </div>
+            </div>
+
+        </main>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.8.0/gsap.min.js"
         integrity="sha512-eP6ippJojIKXKO8EPLtsUMS+/sAGHGo1UN/38swqZa1ypfcD4I0V/ac5G3VzaHfDaklFmQLEs51lhkkVaqg60Q=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="/js/partials.js"></script>
     <script src="/js/game/flappy.js"></script>
+    <script src="/js/partials.js"></script>
+    <script src="/js/play.js"></script>
 </body>
+
+<!-- 
+Cosa devi fare quando aggiungi un nuovo gioco
+1) Aggiungi una card
+<button class="game-card" type="button" data-game="pong">
+  ...
+</button>
+
+2) Carica lo script del gioco esempio
+<script src="/js/game/pong.js"></script>
+
+3) In pong.js implementi:
+window.Pong = {
+  start() { /* init + loop */ },
+  stop()  { /* cancelAnimationFrame + reset */ }
+};
+
+4) Nel play.js aggiungi il mapping (pulito)
+Consiglio: invece di mille if, usa una mappa:
+
+const GAMES = {
+  flappy: () => window.Flappy,
+  pong:   () => window.Pong,
+  // snake: () => window.Snake,
+};
+
+function getGameApi(id){
+  return GAMES[id]?.();
+}
+
+E in openOverlay:
+const api = getGameApi(gameId);
+api?.start?.();
+
+E in closeOverlay:
+const api = getGameApi(currentGame);
+api?.stop?.();
+
+Se i giochi hanno logiche diverse, fai in modo che:
+tutti disegnino sul canvas #canvas
+tutti abbiano un solo loop (requestAnimationFrame) stoppabile
+nessun gioco si auto-avvii al load (niente animate() “nudo”)
+Così il launcher rimane invariato e aggiungere giochi è solo “plug-in”.
+-->

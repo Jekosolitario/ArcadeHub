@@ -34,5 +34,11 @@ build/
 src/main/resources/application.properties
 src/main/resources/application.properties
 
+<<<<<<< HEAD
 logs/
 *.log
+=======
+
+logs/
+*.log
+>>>>>>> d5ae69e687d8978dabc5b8445837c65ea8aa2f41

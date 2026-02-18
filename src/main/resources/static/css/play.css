@@ -1,0 +1,278 @@
+/* main della pagina gioco: prende tutto lo spazio utile */
+.main-game {
+    flex: 1;
+    padding: 0;
+    width: 100%;
+    max-width: var(--container);
+    margin-inline: auto;
+}
+
+/* contenitore canvas: evita overflow e mantiene rapporto pulito */
+#canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* area gioco: altezza = viewport - header */
+.main-game {
+    height: calc(100dvh - var(--header-h));
+
+}
+
+/* se vuoi evitare scrolling */
+body {
+    overflow: hidden;
+}
+
+/* GRID */
+.games {
+    padding-top: calc(var(--header-h) + var(--sp-3));
+    padding-inline: var(--sp-3);
+    padding-bottom: var(--sp-4);
+}
+
+.games-header h1 {
+    font-size: clamp(2.4rem, 2.4vw + 1.2rem, 3.6rem);
+    margin-bottom: .8rem;
+}
+
+.games-header p {
+    opacity: .9;
+    margin-bottom: var(--sp-3);
+}
+
+.games-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-3);
+}
+
+@media (min-width: 768px) {
+    .games-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .games-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.game-card {
+    text-align: left;
+    border-radius: var(--radius);
+    border: 1px solid rgba(255, 255, 254, .16);
+    background: rgba(255, 255, 254, .06);
+    overflow: hidden;
+    box-shadow: var(--ombra-1);
+    cursor: pointer;
+    padding: 0;
+}
+
+.game-card:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+}
+
+.game-card img {
+    width: 100%;
+    height: clamp(140px, 22vw, 200px);
+    object-fit: cover;
+    display: block;
+}
+
+.game-card-body {
+    padding: var(--sp-3);
+    color: var(--colore-testo);
+}
+
+.game-card-body h2 {
+    margin: 0 0 .6rem;
+    font-size: clamp(1.6rem, 1.2vw + 1.2rem, 2.0rem);
+}
+
+.game-card-body p {
+    margin: 0;
+    opacity: .9;
+}
+
+/* OVERLAY */
+.game-overlay {
+    position: fixed;
+    inset: 0;
+    display: none;
+    z-index: 2000;
+    background: rgba(0, 0, 1, .72);
+    backdrop-filter: blur(8px);
+}
+
+.game-overlay.is-open {
+    display: grid;
+    place-items: stretch;
+}
+
+.game-shell {
+    position: relative;
+    width: 100%;
+    height: calc(100dvh - var(--header-h));
+
+    /* sotto header */
+    margin-top: var(--header-h);
+}
+
+.game-close {
+    position: absolute;
+    top: var(--sp-2);
+    right: var(--sp-2);
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 254, .22);
+    background: rgba(0, 0, 1, .55);
+    color: var(--colore-testo);
+    font-size: 2rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.game-stage {
+    width: 100%;
+    height: 100%;
+}
+
+/* ============ MODAL CUSTOM ============ */
+.modal {
+    position: fixed;
+    inset: 0;
+    display: none;
+    z-index: 3000;
+}
+
+.modal.is-open {
+    display: grid;
+    place-items: center;
+}
+
+.modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 1, .72);
+    backdrop-filter: blur(8px);
+}
+
+.modal-panel {
+    position: relative;
+    width: min(520px, calc(100vw - 2 * var(--sp-3)));
+    border-radius: clamp(1.4rem, 2vw, 2rem);
+    padding: clamp(1.8rem, 2.4vw, 2.8rem);
+
+    background: linear-gradient(180deg, rgba(255, 255, 254, .12), rgba(255, 255, 254, .06));
+    border: 1px solid rgba(255, 255, 254, .18);
+    box-shadow: 0 18px 50px rgba(0, 0, 1, .60);
+}
+
+.modal-title {
+    margin: 0 0 .8rem;
+    font-size: clamp(1.8rem, 1.2vw + 1.4rem, 2.2rem);
+}
+
+.modal-text {
+    margin: 0 0 var(--sp-3);
+    opacity: .9;
+}
+
+.modal-actions {
+    display: flex;
+    gap: var(--sp-2);
+    justify-content: flex-end;
+}
+
+/* Bottoni coerenti */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.0rem 1.4rem;
+    border-radius: 999px;
+    font-weight: 800;
+    border: 1px solid rgba(255, 255, 254, .18);
+    background: rgba(255, 255, 254, .08);
+    color: var(--colore-testo);
+    cursor: pointer;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+.btn-primary {
+    background: rgba(249, 220, 53, .92);
+    border-color: rgba(249, 220, 53, .95);
+    color: #000001;
+}
+
+.btn-primary:hover {
+    background: rgba(254, 152, 0, .92);
+    border-color: rgba(254, 152, 0, .95);
+}
+
+.btn-ghost {
+    background: rgba(0, 0, 1, .35);
+    border-color: rgba(255, 255, 254, .20);
+}
+
+.btn-ghost:hover {
+    background: rgba(255, 255, 254, .10);
+}
+
+
+/* ============ ROTATE OVERLAY ============ */
+.rotate {
+    position: fixed;
+    inset: 0;
+    display: none;
+    z-index: 3500;
+    background: rgba(0, 0, 1, .80);
+    backdrop-filter: blur(10px);
+}
+
+.rotate.is-open {
+    display: grid;
+    place-items: center;
+}
+
+.rotate-panel {
+    width: min(520px, calc(100vw - 2 * var(--sp-3)));
+    border-radius: clamp(1.4rem, 2vw, 2rem);
+    padding: clamp(1.8rem, 2.4vw, 2.8rem);
+    background: linear-gradient(180deg, rgba(255, 255, 254, .12), rgba(255, 255, 254, .06));
+    border: 1px solid rgba(255, 255, 254, .18);
+    box-shadow: 0 18px 50px rgba(0, 0, 1, .60);
+    text-align: center;
+}
+
+.rotate-title {
+    margin: 0 0 .8rem;
+    font-size: clamp(1.8rem, 1.2vw + 1.4rem, 2.2rem);
+}
+
+.rotate-text {
+    margin: 0 0 var(--sp-3);
+    opacity: .95;
+}
+
+.rotate-actions {
+    display: flex;
+    gap: var(--sp-2);
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* Mostra il rotate overlay solo su device piccoli in portrait */
+@media (max-width: 900px) and (orientation: portrait) {
+    .rotate.auto-show {
+        display: grid;
+    }
+}

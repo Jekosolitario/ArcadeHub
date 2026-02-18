@@ -2,7 +2,6 @@ package it.project_work.app_arcade.models;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +9,6 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Data
 @Entity
 @Table(
     name = "users",
