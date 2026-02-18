@@ -2,6 +2,7 @@ package it.project_work.app_arcade.services;
 
 import org.springframework.stereotype.Service;
 
+import it.project_work.app_arcade.dto.SubmitScoreRequest;
 import it.project_work.app_arcade.models.User;
 import it.project_work.app_arcade.models.UserGameProgress;
 import it.project_work.app_arcade.repositories.ProgressRepository;
@@ -17,7 +18,7 @@ public class ProgressService extends GenericService<Long, UserGameProgress, Prog
     }
 
     @Transactional
-    public UserGameProgress submitScore(Long userId, String gamecode, Integer scoreRun){
+    public SubmitScoreRequest submitScore(Long userId, String gamecode, Integer scoreRun){
 
         UserGameProgress progress = getRepository().findByUserIdAndGameCode(userId, gamecode).orElse(null);
 
@@ -34,7 +35,7 @@ public class ProgressService extends GenericService<Long, UserGameProgress, Prog
             newProgress.setGameCode(gamecode);
             newProgress.setBestScore(scoreRun);
             newProgress.setLastScore(scoreRun);
-            return getRepository().save(newProgress);
+            return SubmitScoreRequest.fromEntity(getRepository().save(newProgress));
         }
 
         progress.setLastScore(scoreRun);
@@ -42,7 +43,7 @@ public class ProgressService extends GenericService<Long, UserGameProgress, Prog
         if (scoreRun > progress.getBestScore()) {
             progress.setBestScore(scoreRun);
         }
-        return getRepository().save(progress);
+        return SubmitScoreRequest.fromEntity(getRepository().save(progress));
     }
 
     private boolean levelUp(User user, int score) {
