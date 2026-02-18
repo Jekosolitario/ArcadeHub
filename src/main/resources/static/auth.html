@@ -33,6 +33,9 @@
     <meta name="theme-color" content="#000000" />
 
     <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/auth.css" />
+
+    <script src="/js/auth.js" defer></script>
 </head>
 
 
@@ -40,9 +43,192 @@
     <div class="layout">
         <div id="site-header"></div>
 
-        <main class="main-login">
+        <main class="main-login" role="main">
+            <div class="auth" aria-label="Autenticazione">
+                <!-- LOGIN -->
+                <section id="login-section" aria-labelledby="auth-title">
+                    <header class="auth-header">
+                        <h1 id="auth-title" class="auth-title">Accedi</h1>
+                        <p class="auth-subtitle">Entra in ArcadeHub e riprendi a giocare.</p>
+                    </header>
 
+                    <article class="card auth-card" aria-label="Form di login">
+                        <div class="auth-alert" role="status" aria-live="polite" hidden></div>
+
+                        <form id="login-form" class="form" method="post" novalidate autocomplete="off">
+                            <!-- Username -->
+                            <div class="form-group">
+                                <label class="form-label" for="login-username">Username</label>
+                                <input id="login-username" name="username" class="form-input" type="text"
+                                    inputmode="text" autocomplete="username" required minlength="3"
+                                    placeholder="Es. SkyLander99"" />
+                                <p class=" form-hint">Usa lo username con cui ti sei registrato.</p>
+                                <p class="form-error" data-error-for="login-username" hidden></p>
+                            </div>
+
+                            <!-- Password -->
+                            <div class="form-group">
+                                <label class="form-label" for="login-password">Password</label>
+
+                                <div class="form-input-row">
+                                    <input id="login-password" name="password" class="form-input" type="password"
+                                        autocomplete="current-password" required minlength="6" placeholder="••••••••" />
+                                    <button type="button" class="btn btn-ghost btn-icon" id="toggle-password"
+                                        aria-label="Mostra o nascondi password" aria-pressed="false">
+                                        👁️
+                                    </button>
+                                </div>
+
+                                <p class="form-error" data-error-for="login-password" hidden></p>
+                            </div>
+
+                            <!-- Azioni -->
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary" id="login-submit">
+                                    Accedi
+                                </button>
+
+                                <!-- (Opzionale) link recupero password se lo farete -->
+                                <!-- <a class="link" href="#" aria-disabled="true">Password dimenticata?</a> -->
+                            </div>
+
+                            <!-- Micro-copy registrazione -->
+                            <p class="auth-small">
+                                Non sei ancora registrato?
+                                <a href="#" class="link" id="show-register"
+                                    aria-controls="register-section">Registrati</a>
+                            </p>
+                        </form>
+                    </article>
+                </section>
+
+
+                <!-- REGISTRAZIONE -->
+                <section id="register-section" aria-labelledby="register-title" hidden>
+                    <header class="auth-header">
+                        <h2 id="register-title" class="auth-title">Registrati</h2>
+                        <p class="auth-subtitle">Crea il tuo profilo ArcadeHub in pochi secondi.</p>
+                    </header>
+
+                    <article class="card auth-card" aria-label="Form di registrazione">
+                        <div class="auth-alert" role="status" aria-live="polite" hidden></div>
+
+                        <form id="register-form" class="form" method="post" novalidate>
+                            <!-- Username -->
+                            <div class="form-group">
+                                <label class="form-label" for="reg-username">Username</label>
+                                <input id="reg-username" name="username" class="form-input" type="text" inputmode="text"
+                                    autocomplete="username" required minlength="3" maxlength="50"
+                                    placeholder="Es. SkyLander99" />
+                                <p class="form-hint">Max 50 caratteri. Deve essere unico.</p>
+                                <p class="form-error" data-error-for="reg-username" hidden></p>
+                            </div>
+
+                            <!-- Email -->
+                            <div class="form-group">
+                                <label class="form-label" for="reg-email">Email</label>
+                                <input id="reg-email" name="email" class="form-input" type="email" inputmode="email"
+                                    autocomplete="email" required maxlength="255" placeholder="nome@email.com" />
+                                <p class="form-hint">Deve essere un’email valida e unica.</p>
+                                <p class="form-error" data-error-for="reg-email" hidden></p>
+                            </div>
+
+                            <!-- Password -->
+                            <div class="form-group">
+                                <label class="form-label" for="reg-password">Password</label>
+
+                                <div class="form-input-row">
+                                    <input id="reg-password" name="password" class="form-input" type="password"
+                                        autocomplete="new-password" required minlength="6" maxlength="72"
+                                        placeholder="••••••••" />
+                                    <button type="button" class="btn btn-ghost btn-icon" id="toggle-reg-password"
+                                        aria-label="Mostra o nascondi password" aria-pressed="false">
+                                        👁️
+                                    </button>
+                                </div>
+
+                                <p class="form-hint">Min 6 caratteri. (Hashata lato backend)</p>
+                                <p class="form-error" data-error-for="reg-password" hidden></p>
+                            </div>
+
+                            <!-- Avatar picker -->
+                            <fieldset class="form-group" aria-describedby="avatar-help">
+                                <legend class="form-label">Scegli il tuo avatar</legend>
+                                <p id="avatar-help" class="form-hint">
+                                    Per ora disponibili solo 2 avatar. Gli altri saranno sbloccabili più avanti.
+                                </p>
+
+                                <div class="avatar-grid" role="radiogroup" aria-label="Selezione avatar">
+                                    <!-- Disponibile 1 -->
+                                    <label class="avatar-option">
+                                        <input type="radio" name="avatarId" value="1" required />
+                                        <span class="avatar-card">
+                                            <!-- /assets/avatars/avatar-1.png -->
+                                            <img src="#" alt="Avatar 1" class="avatar-img" loading="lazy" />
+                                            <span class="avatar-name">Avatar 1</span>
+                                            <span class="avatar-badge">Disponibile</span>
+                                        </span>
+                                    </label>
+
+                                    <!-- Disponibile 2 -->
+                                    <label class="avatar-option">
+                                        <input type="radio" name="avatarId" value="2" />
+                                        <span class="avatar-card">
+                                            <!-- /assets/avatars/avatar-2.png -->
+                                            <img src="#" alt="Avatar 2" class="avatar-img" loading="lazy" />
+                                            <span class="avatar-name">Avatar 2</span>
+                                            <span class="avatar-badge">Disponibile</span>
+                                        </span>
+                                    </label>
+
+                                    <!-- Bloccato (esempi) -->
+                                    <label class="avatar-option is-locked" aria-disabled="true">
+                                        <input type="radio" name="avatarId" value="3" disabled />
+                                        <span class="avatar-card">
+                                            <!-- /assets/avatars/avatar-locked.png -->
+                                            <img src="#" alt="Avatar bloccato" class="avatar-img" loading="lazy" />
+                                            <span class="avatar-name">Bloccato</span>
+                                            <span class="avatar-badge">🔒</span>
+                                        </span>
+                                    </label>
+
+                                    <label class="avatar-option is-locked" aria-disabled="true">
+                                        <input type="radio" name="avatarId" value="4" disabled />
+                                        <span class="avatar-card">
+                                            <!-- /assets/avatars/avatar-locked.png -->
+                                            <img src="#" alt="Avatar bloccato" class="avatar-img" loading="lazy" />
+                                            <span class="avatar-name">Bloccato</span>
+                                            <span class="avatar-badge">🔒</span>
+                                        </span>
+                                    </label>
+                                </div>
+
+                                <p class="form-error" data-error-for="avatarId" hidden></p>
+                            </fieldset>
+
+                            <!-- Azioni -->
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary" id="register-submit">
+                                    Crea account
+                                </button>
+
+                                <p class="auth-small">
+                                    Hai già un account?
+                                    <a href="#" class="link" id="show-login" aria-controls="login-section">Accedi</a>
+                                </p>
+                        </form>
+                    </article>
+                </section>
+            </div>
         </main>
+        <!-- Nota backend (solo dev) -->
+        <!--
+        Campi DB:
+        - username VARCHAR(50) UNIQUE NOT NULL
+        - email VARCHAR(255) UNIQUE NOT NULL
+        - password_hash VARCHAR(255) NOT NULL (qui inviamo "password", hash in backend)
+        - avatarId (consigliato: INT FK su tabella avatar, o ENUM/INT semplice)
+      -->
 
         <div id="site-footer"></div>
     </div>
