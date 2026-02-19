@@ -40,7 +40,7 @@ public class SecurityConfig {
                 // AUTH API pubbliche (così /auth/me non fa 403 "brutto" da Security)
                 .requestMatchers("/auth/login", "/auth/register", "/auth/me", "/auth/logout").permitAll()
                 // API pubbliche
-                .requestMatchers("/api/leaderboard").permitAll()
+                .requestMatchers("/api/leaderboard").authenticated()
                 // API protette (qui si applica la vera sicurezza)
                 .requestMatchers("/api/game/score").authenticated()
                 .requestMatchers("/api/profile/**").authenticated()
