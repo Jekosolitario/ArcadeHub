@@ -1,6 +1,7 @@
 package it.project_work.app_arcade.services;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -26,15 +27,19 @@ public class LeaderboardService extends GenericService<Long, UserGameProgress, P
     }
 
     public List<LeaderboardResponse> topTot(int limit) {
+
+        if (limit <= 0){
+            return Collections.emptyList();
+        }
+
         List<User> users = userRepository.findAll();
         List<LeaderboardResponse> responses =new ArrayList<>();
         for (User user : users) {
             responses.add(new LeaderboardResponse(user.getUsername(), getTotScoreUser(user.getId()), user.getLevel()));
         }
-        // Ordinamento decrescente per totalScore
+        
         responses.sort(Comparator.comparing(LeaderboardResponse::bestScore).reversed());
         
-        // Se vuoi limitare i risultati (es. top N)
         if (limit > 0 && limit < responses.size()) {
             responses = responses.subList(0, limit);
         }
@@ -42,6 +47,11 @@ public class LeaderboardService extends GenericService<Long, UserGameProgress, P
     }
 
     public List<LeaderboardResponse> getTopScoresPerGame(String gameCode, int limit) {
+
+        if (limit <= 0){
+            return Collections.emptyList();
+        }
+
         List<UserGameProgress> progresses = getRepository().findByGameCodeOrderByBestScoreDesc(gameCode, PageRequest.of(0, limit));
         return progresses.stream()
             .map(p -> LeaderboardResponse.fromEntity(userRepository.findById(p.getUser().getId()).orElse(null), p))
