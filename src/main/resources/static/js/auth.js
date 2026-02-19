@@ -200,7 +200,7 @@
             setAlert(alertEl, { type: "success", message: "Login OK ✅" });
 
             // redirect (coerente con UI)
-            window.location.href = "/play.html";
+            window.location.href = "/index.html";
         } catch (err) {
             // ApiError dal wrapper
             if (err?.name === "ApiError") {
