@@ -222,6 +222,14 @@ const api = (() => {
         });
     }
 
+    async function deleteMyAccount(confirm) {
+        return request("/api/profile/me", {
+            method: "DELETE",
+            body: { confirm },
+            headers: { "Accept": "application/json" },
+        });
+    }
+
     return {
         // methods
         get,
@@ -233,6 +241,7 @@ const api = (() => {
         changeMyPassword,
         logout,
         changeMyUsername,
+        deleteMyAccount,
 
         // error class (utile per auth.js / UI)
         ApiError,

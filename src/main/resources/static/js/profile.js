@@ -28,6 +28,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     const $avatarHint = document.querySelector("#avatar-modal-hint");
     const $btnAvatarSave = document.querySelector("#btn-avatar-save");
 
+    const $deleteInput = document.querySelector("#delete-confirm");
+    const $btnDelete = document.querySelector("#btn-delete-account");
+    const $feedback = document.querySelector("#settings-feedback");
+
     // ----------------- RENDER BASE (già ok) -----------------
     $username && ($username.textContent = me.username ?? "—");
     $email && ($email.textContent = me.email ?? "—");
@@ -244,6 +248,25 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
 
             if (feedback) feedback.textContent = err?.message || "Errore nel cambio username.";
+        }
+    });
+
+    $deleteInput?.addEventListener("input", () => {
+        const ok = ($deleteInput.value || "").trim().toUpperCase() === "ELIMINA";
+        $btnDelete.disabled = !ok;
+    });
+
+    $btnDelete?.addEventListener("click", async () => {
+        if ($feedback) $feedback.textContent = "Eliminazione in corso…";
+
+        try {
+            await api.deleteMyAccount(($deleteInput?.value ?? "").trim().toUpperCase());
+
+            // utente “sparito” + session invalidata -> torna guest
+            window.location.replace("/index.html");
+        } catch (err) {
+            console.error(err);
+            if ($feedback) $feedback.textContent = err?.message || "Errore eliminazione account.";
         }
     });
 });
