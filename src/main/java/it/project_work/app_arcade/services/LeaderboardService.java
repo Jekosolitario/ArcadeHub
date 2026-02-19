@@ -42,7 +42,7 @@ public class LeaderboardService extends GenericService<Long, UserGameProgress, P
     }
 
     public List<LeaderboardResponse> getTopScoresPerGame(String gameCode, int limit) {
-        List<UserGameProgress> progresses = getRepository().findTopByGameCodeOrderByBestScoreDesc(gameCode, PageRequest.of(0, limit));
+        List<UserGameProgress> progresses = getRepository().findByGameCodeOrderByBestScoreDesc(gameCode, PageRequest.of(0, limit));
         return progresses.stream()
             .map(p -> LeaderboardResponse.fromEntity(userRepository.findById(p.getUser().getId()).orElse(null), p))
             .toList();
