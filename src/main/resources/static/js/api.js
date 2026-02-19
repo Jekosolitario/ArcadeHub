@@ -198,6 +198,14 @@ const api = (() => {
         });
     }
 
+    async function changeMyUsername(newUsername) {
+        return request("/api/profile/me/username", {
+            method: "PUT",
+            body: { newUsername },
+            headers: { "Accept": "application/json" },
+        });
+    }
+
     return {
         // methods
         get,
@@ -208,6 +216,7 @@ const api = (() => {
         updateMyAvatar,
         changeMyPassword,
         logout,
+        changeMyUsername,
 
         // error class (utile per auth.js / UI)
         ApiError,

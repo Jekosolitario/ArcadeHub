@@ -217,4 +217,33 @@ document.addEventListener("DOMContentLoaded", async () => {
             btn.disabled = false;
         }
     });
+
+    document.querySelector("#btn-change-username")?.addEventListener("click", async () => {
+        const input = document.querySelector("#new-username");
+        const feedback = document.querySelector("#settings-feedback");
+        const newUsername = input?.value ?? "";
+
+        if (feedback) feedback.textContent = "";
+
+        try {
+            await api.changeMyUsername(newUsername);
+
+            if (feedback) feedback.textContent = "Username aggiornato ✅ Ti reindirizzo al login…";
+
+            const next = encodeURIComponent("/index.html");
+            setTimeout(() => {
+                window.location.replace(`/auth.html?next=${next}`);
+            }, 600);
+        } catch (err) {
+            console.error(err);
+
+            // VALIDATION_ERROR (fieldErrors)
+            if (err?.fieldErrors?.newUsername && feedback) {
+                feedback.textContent = err.fieldErrors.newUsername;
+                return;
+            }
+
+            if (feedback) feedback.textContent = err?.message || "Errore nel cambio username.";
+        }
+    });
 });
