@@ -2,6 +2,7 @@ package it.project_work.app_arcade.controllers;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,6 +14,9 @@ import it.project_work.app_arcade.dto.ApiResponse;
 import it.project_work.app_arcade.dto.ChangePasswordRequest;
 import it.project_work.app_arcade.dto.MeResponse;
 import it.project_work.app_arcade.services.UserService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
 @RestController
@@ -37,13 +41,23 @@ public class UserController {
     }
 
     @PutMapping("/me/password")
-    public ResponseEntity<ApiResponse<Void>> updatePassword ( Authentication auth,
-            @RequestBody @Valid ChangePasswordRequest dto
-            ) { 
-        
+    public ResponseEntity<ApiResponse<Void>> updatePassword(Authentication auth,
+            @RequestBody @Valid ChangePasswordRequest dto, HttpServletRequest request,
+            HttpServletResponse response
+    ) {
+
         userService.updatePassword(auth.getName(), dto);
-        
-        return ResponseEntity.noContent().build();
+
+        // logout  invalida sessione + clear context
+        new SecurityContextLogoutHandler().logout(request, response, auth);
+
+        // scade il cookie della sessione
+        Cookie jsid = new Cookie("JSESSIONID", "");
+        jsid.setPath("/");
+        jsid.setMaxAge(0);
+        response.addCookie(jsid);
+
+        return ResponseEntity.noContent().build(); // -> 204
     }
 
 }
