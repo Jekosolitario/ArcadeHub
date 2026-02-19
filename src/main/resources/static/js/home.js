@@ -3,7 +3,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (!link) return;
 
     // usiamo il metodo del guard
-    const me = await api.profileMe?.(); // deve ritornare null se 401/403
+    const me = await api.me();
+    // null se guest, niente errori in console
+
     if (me) return;
 
     link.addEventListener("click", (e) => {

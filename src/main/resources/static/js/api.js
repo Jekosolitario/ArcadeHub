@@ -158,7 +158,6 @@ const api = (() => {
     }
 
     // ---- PROFILE (auth-optional) ----
-    const PROFILE_ME_PATH = "/api/profile/me";
 
     async function profileMe() {
         const res = await fetch(BASE_URL + PROFILE_ME_PATH, {

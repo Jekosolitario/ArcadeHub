@@ -118,6 +118,19 @@ function hideHeroAuthLinkIfPresent() {
     const me = window.api ? await api.me() : await getMe();
     setNavVisibility(!!me);
 
+    // link "Vedi classifica completa" nella HOME 
+    const lb = document.querySelector('a[href$="leaderboard.html"], a[href="/leaderboard.html"]');
+    if (lb) {
+        if (me) {
+            lb.href = "/leaderboard.html";
+            lb.removeAttribute("aria-disabled");
+        } else {
+            lb.href = `/auth.html?next=${encodeURIComponent("/leaderboard.html")}`;
+            lb.setAttribute("aria-disabled", "true"); 
+        }
+    }
+
+
     if (me) {
         setLogoutLink();
         hideHeroAuthLinkIfPresent();
