@@ -201,21 +201,20 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     });
 
-    document.querySelector("#btn-logout")?.addEventListener("click", async () => {
+    document.querySelector("#btn-logout")?.addEventListener("click", async (e) => {
+        const btn = e.currentTarget;
         const feedback = document.querySelector("#settings-feedback");
+
+        btn.disabled = true;
         if (feedback) feedback.textContent = "Logout…";
 
         try {
             await api.logout();
-
-            // chiudi modale
-            closeDialog(document.querySelector("#settings-modal"));
-
-            // redirect alla home
-            window.location.replace("/index.html");
+            window.location.replace("/auth.html");
         } catch (err) {
             console.error(err);
             if (feedback) feedback.textContent = err?.message || "Errore durante il logout.";
+            btn.disabled = false;
         }
     });
 
