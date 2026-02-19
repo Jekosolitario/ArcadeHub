@@ -74,39 +74,51 @@ public class UserService extends GenericService<Long, User, UserRepository> {
     }
 
     @Transactional
-        public void updatePassword(String username, ChangePasswordRequest dto) {
-    User user = getRepository().findByUsername(username)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Utente non trovato"));
+    public void updatePassword(String username, ChangePasswordRequest dto) {
+        User user = getRepository().findByUsername(username)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Utente non trovato"));
 
-    if (!dto.newPassword().equals(dto.newPasswordConfirm())) {
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Le nuove password non coincidono");
+        if (!dto.newPassword().equals(dto.newPasswordConfirm())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Le nuove password non coincidono");
+        }
+
+        // esempio: user.getPasswordHash() / user.setPasswordHash(...)
+        if (!passwordEncoder.matches(dto.oldPassword(), user.getPasswordHash())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password attuale non corretta");
+        }
+
+        user.setPasswordHash(passwordEncoder.encode(dto.newPassword()));
+        getRepository().save(user);
     }
-
-    // esempio: user.getPasswordHash() / user.setPasswordHash(...)
-    if (!passwordEncoder.matches(dto.oldPassword(), user.getPasswordHash())) {
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password attuale non corretta");
-    }
-
-    user.setPasswordHash(passwordEncoder.encode(dto.newPassword()));
-    getRepository().save(user);
-}
-
-
 
     public MeResponse meByUsername(String username) {
-        Long userId = getRepository().findByUsername(username)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"))
-                .getId();
+        User user = getRepository().findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("Utente non trovato"));
 
-        return me(userId);
+        UserGameProgress flappy = progressRepository.findByUserId(user.getId()).stream()
+                .filter(p -> "flappy".equalsIgnoreCase(p.getGameCode()))
+                .findFirst()
+                .orElse(null);
+
+        return MeResponse.fromEntity(user, flappy);
     }
 
     @Transactional
     public MeResponse updateAvatarByUsername(String username, Long avatarId) {
-        Long userId = getRepository().findByUsername(username)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"))
-                .getId();
+        User user = getRepository().findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("Utente non trovato"));
 
-        return updateAvatar(userId, avatarId);
+        var avatar = avatarRepository.findById(avatarId)
+                .orElseThrow(() -> new IllegalArgumentException("Avatar non trovato"));
+
+        user.setSelectedAvatar(avatar);
+        User saved = getRepository().save(user);
+
+        UserGameProgress flappy = progressRepository.findByUserId(saved.getId()).stream()
+                .filter(p -> "flappy".equalsIgnoreCase(p.getGameCode()))
+                .findFirst()
+                .orElse(null);
+
+        return MeResponse.fromEntity(saved, flappy);
     }
 }
