@@ -157,20 +157,37 @@ const api = (() => {
         return json;
     }
 
+    // ---- PROFILE (auth-optional) ----
+    const PROFILE_ME_PATH = "/api/profile/me";
+
     async function profileMe() {
-        try {
-            const payload = await get(PROFILE_ME_PATH, {
-                headers: { "Accept": "application/json" },
-                cache: "no-store",
-            });
-            return unwrapData(payload);
-        } catch (err) {
-            if (err?.name === "ApiError" && (err.status === 401 || err.status === 403)) {
-                return null;
-            }
-            throw err;
+        const res = await fetch(BASE_URL + PROFILE_ME_PATH, {
+            method: "GET",
+            credentials: "include",
+            headers: { "Accept": "application/json" },
+            cache: "no-store",
+        });
+
+        // guest / session scaduta
+        if (res.status === 401 || res.status === 403) return null;
+
+        if (!res.ok) {
+            // qui puoi decidere se throw o null; io farei throw per errori veri
+            const data = await res.json().catch(() => null);
+            throw new ApiError(normalizeError(res.status, data));
         }
+
+        const json = await res.json().catch(() => null);
+        if (!json) return null;
+
+        // supporta ApiResponse { message, data }
+        if (typeof json === "object" && json !== null && "data" in json) {
+            return json.data ?? null;
+        }
+
+        return json;
     }
+
 
     async function updateMyAvatar(avatarId) {
         // endpoint: PUT /api/profile/me/avatar?avatarId=...
