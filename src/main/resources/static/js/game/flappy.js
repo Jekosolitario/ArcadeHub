@@ -168,7 +168,9 @@ class Tubo {
     this.passed = false;
 
     // gap e margine: NON farli diventare microscopici su mobile
-    this.spazio = Math.round(Math.max(120, 145 * SCALE));
+    const isMobile = getCanvasW() < 720;          // soglia semplice
+    const GAP_BASE = isMobile ? 130 : 140;        // mobile più stretto
+    this.spazio = Math.round(GAP_BASE * SCALE);
     const margin = Math.round(Math.max(90, 100 * SCALE));
 
     const floorH = getFloorH();
@@ -277,9 +279,11 @@ player.draw();
 
 function startGame() {
   clearInterval(spawnInterval);
-  spawnInterval = setInterval(() => {
-    tubi.push(new Tubo());
-  }, 2000);
+
+  const isMobile = getCanvasW() < 720;
+  const SPAWN_MS = isMobile ? 1600 : 2000;
+
+  spawnInterval = setInterval(() => tubi.push(new Tubo()), SPAWN_MS);
 }
 
 function resetGame() {
@@ -477,9 +481,13 @@ function animate() {
 
   // floor
   if (floorLoaded) {
-    c.drawImage(floor, 0, H - floor.height / 2, W / 2, floor.height);
-    c.drawImage(floor, W / 2, H - floor.height / 2, W / 2, floor.height);
+    const floorH = getFloorH();
+    const drawH = floorH * 2;
+
+    c.drawImage(floor, 0, H - floorH, W / 2, drawH);
+    c.drawImage(floor, W / 2, H - floorH, W / 2, drawH);
   }
+
 
   // game over overlay
   if (gameState === "gameover") {
