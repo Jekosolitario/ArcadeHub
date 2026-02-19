@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import it.project_work.app_arcade.models.UserGameProgress;
@@ -17,6 +18,7 @@ public interface ProgressRepository extends JpaRepository<UserGameProgress, Long
     List<UserGameProgress> findByUserId(Long userId);
 
     List<UserGameProgress> findByGameCodeOrderByBestScoreDesc(String gameCode, Pageable pageable);
-
+    @Query("SELECT DISTINCT p.gameCode FROM UserGameProgress p")
+    List<String> findDistinctGameCodes();
     void deleteAllByUserId(Long userId);
 }
