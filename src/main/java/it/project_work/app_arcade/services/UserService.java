@@ -3,6 +3,7 @@ package it.project_work.app_arcade.services;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -21,10 +22,13 @@ public class UserService extends GenericService<Long, User, UserRepository> {
 
     private final ProgressRepository progressRepository;
 
+    private final PasswordEncoder passwordEncoder;
+
     public UserService(AvatarRepository avatarRepository,
-            ProgressRepository progressRepository) {
+            ProgressRepository progressRepository, PasswordEncoder passwordEncoder) {
         this.avatarRepository = avatarRepository;
         this.progressRepository = progressRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public MeResponse me(Long userId) {
@@ -49,6 +53,38 @@ public class UserService extends GenericService<Long, User, UserRepository> {
                 .findFirst()
                 .orElse(null));
     }
+
+    @Transactional
+    public MeResponse updateUsername(Long userId, String newUsername) {
+        User user = getRepository().findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Utente non trovato"));
+        if (getRepository().existsByUsername(newUsername)) {
+            throw new IllegalArgumentException("Username già utilizzato");
+        }
+        user.setUsername(newUsername);
+        List<UserGameProgress> progress = progressRepository.findByUserId(userId);
+        return MeResponse.fromEntity(getRepository().save(user), progress.stream()
+                .filter(p -> p.getGameCode().equals("flappy"))
+                .findFirst()
+                .orElse(null));
+    }
+
+    @Transactional
+    public MeResponse updatePassword(Long userId, String oldPassword, String newPassword) {
+        User user = getRepository().findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Utente non trovato"));
+        if (!passwordEncoder.matches(oldPassword, user.getPasswordHash())) {
+            throw new IllegalArgumentException("Password errata");
+        }
+        user.setPasswordHash(passwordEncoder.encode(newPassword));
+        List<UserGameProgress> progress = progressRepository.findByUserId(userId);
+        return MeResponse.fromEntity(getRepository().save(user), progress.stream()
+                .filter(p -> p.getGameCode().equals("flappy"))
+                .findFirst()
+                .orElse(null));
+    }
+
+
 
     public MeResponse meByUsername(String username) {
         Long userId = getRepository().findByUsername(username)

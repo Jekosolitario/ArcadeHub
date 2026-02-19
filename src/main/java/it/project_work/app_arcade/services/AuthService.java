@@ -31,13 +31,12 @@ public class AuthService extends GenericService<Long, User, UserRepository> {
      */
     @Transactional
     public UserResponse register(RegisterRequest dto) {
-        String uname = dto.username().trim().toLowerCase();
 
         // Business checks (unique)
         if (getRepository().existsByEmail(dto.email().trim().toLowerCase())) {
             throw new ConflictException("EMAIL_TAKEN", "Email già in uso");
         }
-        if (getRepository().existsByUsername(uname)) {
+        if (getRepository().existsByUsername(dto.username())) {
             throw new ConflictException("USERNAME_TAKEN", "Username già in uso");
         }
 
@@ -46,7 +45,7 @@ public class AuthService extends GenericService<Long, User, UserRepository> {
                 .orElseThrow(() -> new BadRequestException("AVATAR_INVALID", "Avatar non valido"));
 
         User user = new User();
-        user.setUsername(uname);                
+        user.setUsername(dto.username());                
         user.setEmail(dto.email().trim().toLowerCase());         // ok lowercase
         user.setPasswordHash(passwordEncoder.encode(dto.password()));
         user.setRole(User.Role.USER);
