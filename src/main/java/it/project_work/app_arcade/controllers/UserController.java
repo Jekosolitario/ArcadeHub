@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import it.project_work.app_arcade.dto.ApiResponse;
-// import it.project_work.app_arcade.dto.ChangePasswordRequest;
+import it.project_work.app_arcade.dto.ChangePasswordRequest;
 import it.project_work.app_arcade.dto.MeResponse;
 import it.project_work.app_arcade.services.UserService;
 import jakarta.validation.Valid;
@@ -35,15 +35,15 @@ public class UserController {
             @RequestParam Long avatarId) {
         return ResponseEntity.ok(userService.updateAvatarByUsername(auth.getName(), avatarId));
     }
-    /*
+
     @PutMapping("/me/password")
-    public ResponseEntity<ApiResponse<Void>> changePassword(
-            @RequestBody @Valid ChangePasswordRequest request,
-            Authentication auth) { 
+    public ResponseEntity<ApiResponse<Void>> updatePassword ( Authentication auth,
+            @RequestBody @Valid ChangePasswordRequest dto
+            ) { 
         
-        userService.update(auth.getName(), request);
+        userService.updatePassword(auth.getName(), dto);
         
-        return ResponseEntity.ok(new ApiResponse<>("Password aggiornata con successo", null));
+        return ResponseEntity.noContent().build();
     }
-*/
+
 }
