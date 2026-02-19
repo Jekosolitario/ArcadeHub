@@ -63,16 +63,16 @@ public class UserService extends GenericService<Long, User, UserRepository> {
         String clean = newUsername != null ? newUsername.trim() : "";
 
         if (clean.equalsIgnoreCase(user.getUsername())) {
-                throw new BadRequestException("USERNAME_SAME", "Stai già usando questo username");
+            throw new BadRequestException("USERNAME_SAME", "Stai già usando questo username");
         }
 
         if (getRepository().existsByUsername(clean)) {
-                throw new ConflictException("USERNAME_TAKEN", "Username già in uso");
+            throw new ConflictException("USERNAME_TAKEN", "Username già in uso");
         }
 
         user.setUsername(clean);
         getRepository().save(user);
-   }
+    }
 
     @Transactional
     public void updatePassword(String username, ChangePasswordRequest dto) {
@@ -126,6 +126,13 @@ public class UserService extends GenericService<Long, User, UserRepository> {
     public void deleteUser(String username) {
         User user = getRepository().findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("Utente non trovato"));
+
+        Long userId = user.getId();
+
+        // cancella dipendenze (progress)
+        progressRepository.deleteAllByUserId(userId);
+
+        // cancella l’utente
         getRepository().delete(user);
     }
 }

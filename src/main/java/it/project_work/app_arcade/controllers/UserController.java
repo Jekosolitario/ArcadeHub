@@ -2,7 +2,9 @@ package it.project_work.app_arcade.controllers;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,7 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 import it.project_work.app_arcade.dto.ApiResponse;
 import it.project_work.app_arcade.dto.ChangePasswordRequest;
 import it.project_work.app_arcade.dto.ChangeUsernameRequest;
+import it.project_work.app_arcade.dto.DeleteAccountRequest;
 import it.project_work.app_arcade.dto.MeResponse;
+import it.project_work.app_arcade.exceptions.BadRequestException;
 import it.project_work.app_arcade.services.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -81,4 +85,33 @@ public class UserController {
         return ResponseEntity.noContent().build(); // 204
     }
 
+    @DeleteMapping("/me")
+    public ResponseEntity<ApiResponse<Void>> deleteMe(
+            Authentication auth,
+            @Valid @RequestBody DeleteAccountRequest dto,
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) {
+        if (!"ELIMINA".equals(dto.confirm())) {
+            throw new BadRequestException("CONFIRM_INVALID", "Conferma non valida");
+        }
+
+        userService.deleteUser(auth.getName());
+
+        // invalidate session + cookie (come logout)
+        var session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+
+        SecurityContextHolder.clearContext();
+
+        jakarta.servlet.http.Cookie cookie = new jakarta.servlet.http.Cookie("JSESSIONID", "");
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        response.addCookie(cookie);
+
+        return ResponseEntity.ok(new ApiResponse<>("Account eliminato", null));
+    }
 }
