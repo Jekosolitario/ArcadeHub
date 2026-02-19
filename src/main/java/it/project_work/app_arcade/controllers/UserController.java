@@ -67,7 +67,7 @@ public class UserController {
             HttpServletRequest request,
             HttpServletResponse response) {
 
-        userService.changeUsernameByUsername(auth.getName(), dto.newUsername());
+        userService.updateUsername(auth.getName(), dto.newUsername());
 
         // logout “secure”
         new SecurityContextLogoutHandler().logout(request, response, auth);
