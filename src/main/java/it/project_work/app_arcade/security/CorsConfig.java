@@ -23,10 +23,10 @@ public class CorsConfig {
          */
         cfg.setAllowedOrigins(List.of(
                 "http://localhost:5173" // Vite dev server
-        // aggiungi qui eventuali altre origini in dev
-        // "http://localhost:5500" // Live Server (se lo usate)
+        // aggiungiamo qui eventuali altre origini in dev
+        // "http://localhost:5500" // Live Server
         ));
-
+ 
         /*
          * allowCredentials(true):
          * - Permette l'uso di cookie/credenziali cross-origin.
@@ -36,7 +36,7 @@ public class CorsConfig {
 
         /*
          * Metodi permessi.
-         * - In auth ti servono almeno GET/POST.
+         * - In auth servono almeno GET/POST.
          */
         cfg.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 
@@ -49,7 +49,7 @@ public class CorsConfig {
 
         /*
          * (Opzionale) Header esposti:
-         * - se un giorno vuoi leggere header custom dal client.
+         * - se un giorno vogliamo leggere header custom dal client.
          */
         // cfg.setExposedHeaders(List.of("Set-Cookie"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
