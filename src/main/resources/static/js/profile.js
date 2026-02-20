@@ -6,13 +6,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     const AVATAR_BASE = "/assets/avatars";
     const AVATAR_DEFAULT_ID = 1;
     const AVATAR_EXT = "webp";
-    const AVATARS = [
-        { id: 1, unlockLevel: 1 },
-        { id: 2, unlockLevel: 1 },
-        // in futuro: { id: 3, unlockLevel: 5 }, ...
-    ];
 
-    const getAvatarSrc = (id) => `${AVATAR_BASE}/avatar-${id}.${AVATAR_EXT}`;
+    // fallback se per qualche motivo manca imageUrl dal backend
+    const fallbackAvatarSrc = (id) => `${AVATAR_BASE}/avatar-${id}.${AVATAR_EXT}`;
+
+    // cache avatar dal backend
+    let avatarList = [];
+    let selectedAvatarId = null;
 
     // ----------------- DOM -----------------
     const $avatar = document.querySelector("#profile-avatar");
@@ -32,49 +32,80 @@ document.addEventListener("DOMContentLoaded", async () => {
     const $btnDelete = document.querySelector("#btn-delete-account");
     const $feedback = document.querySelector("#settings-feedback");
 
-    // ----------------- RENDER BASE (già ok) -----------------
+    // ----------------- RENDER BASE -----------------
     $username && ($username.textContent = me.username ?? "—");
     $email && ($email.textContent = me.email ?? "—");
     $level && ($level.textContent = String(me.level ?? 1));
     $best && ($best.textContent = String(me.bestScore ?? 0));
     $last && ($last.textContent = String(me.lastScore ?? 0));
 
-    // avatar iniziale
-    const currentAvatarId = me.avatarId ?? AVATAR_DEFAULT_ID;
+    // avatar iniziale (id preso dal backend se presente)
+    const currentAvatarId = Number(me.avatarId ?? AVATAR_DEFAULT_ID);
     setProfileAvatar(currentAvatarId);
 
     function setProfileAvatar(avatarId) {
         if (!$avatar) return;
-        $avatar.src = getAvatarSrc(avatarId);
-        $avatar.alt = `Avatar ${avatarId}`;
+
+        // prova a usare imageUrl dal backend (se abbiamo già caricato la lista)
+        const fromApi = avatarList.find(a => String(a.id) === String(avatarId));
+        const src = fromApi?.imageUrl || fallbackAvatarSrc(avatarId);
+
+        $avatar.src = src;
+        $avatar.alt = fromApi?.name ? fromApi.name : `Avatar ${avatarId}`;
         $avatar.dataset.avatarId = String(avatarId);
+
         $avatar.onerror = () => {
             $avatar.onerror = null;
-            $avatar.src = getAvatarSrc(AVATAR_DEFAULT_ID);
+            $avatar.src = fallbackAvatarSrc(AVATAR_DEFAULT_ID);
+            $avatar.alt = `Avatar ${AVATAR_DEFAULT_ID}`;
         };
     }
 
-    // ----------------- AVATAR MODAL (STRATO 1) -----------------
-    let selectedAvatarId = null;
+    // ----------------- AVATAR API -----------------
+    async function loadAvatars() {
+        // GET /api/avatars -> List<AvatarDto>
+        // AvatarDto: { id, name, imageUrl, requiredLevel, unlocked }
+        const list = await api.get("/api/avatars");
+        if (!Array.isArray(list)) return [];
+        return list;
+    }
 
-    $btnOpenAvatar?.addEventListener("click", () => {
+    async function saveMyAvatar(avatarId) {
+        // POST /api/me/avatar -> 204 No Content
+        await api.post("/api/me/avatar", { avatarId: Number(avatarId) });
+        return true;
+    }
+
+    // ----------------- AVATAR MODAL -----------------
+    $btnOpenAvatar?.addEventListener("click", async () => {
         selectedAvatarId = null;
         $btnAvatarSave.disabled = true;
-        $avatarHint.textContent = "";
+        $avatarHint.textContent = "Caricamento avatar…";
 
-        renderAvatarGrid({
-            userLevel: me.level ?? 1,
-            currentAvatarId: Number($avatar?.dataset.avatarId ?? currentAvatarId),
-        });
+        try {
+            avatarList = await loadAvatars();
+            $avatarHint.textContent = "";
 
-        openDialog($avatarModal);
+            renderAvatarGrid({
+                userLevel: Number(me.level ?? 1),
+                currentAvatarId: Number($avatar?.dataset.avatarId ?? currentAvatarId),
+            });
+
+            openDialog($avatarModal);
+        } catch (err) {
+            console.error(err);
+            $avatarHint.textContent = err?.message || "Errore caricamento avatar.";
+        }
     });
 
     function renderAvatarGrid({ userLevel, currentAvatarId }) {
+        if (!$avatarGrid) return;
+
         $avatarGrid.innerHTML = "";
 
-        for (const a of AVATARS) {
-            const locked = userLevel < a.unlockLevel;
+        for (const a of avatarList) {
+            // Il backend già calcola unlocked, ma teniamo anche check per sicurezza
+            const locked = !a.unlocked || userLevel < Number(a.requiredLevel ?? 1);
 
             const btn = document.createElement("button");
             btn.type = "button";
@@ -83,24 +114,24 @@ document.addEventListener("DOMContentLoaded", async () => {
             btn.dataset.avatarId = String(a.id);
 
             // accessibility
-            btn.setAttribute("aria-pressed", String(a.id === currentAvatarId));
+            btn.setAttribute("aria-pressed", String(Number(a.id) === Number(currentAvatarId)));
             if (locked) {
                 btn.disabled = true;
                 btn.setAttribute("aria-disabled", "true");
             }
 
             const img = document.createElement("img");
-            img.src = getAvatarSrc(a.id);
-            img.alt = `Avatar ${a.id}`;
+            img.src = a.imageUrl || fallbackAvatarSrc(a.id);
+            img.alt = a.name ? `${a.name}${locked ? " bloccato" : ""}` : `Avatar ${a.id}`;
             img.loading = "lazy";
             img.onerror = () => {
                 img.onerror = null;
-                img.src = getAvatarSrc(AVATAR_DEFAULT_ID);
+                img.src = fallbackAvatarSrc(AVATAR_DEFAULT_ID);
             };
 
             const badge = document.createElement("span");
             badge.className = "avatar-badge";
-            badge.textContent = locked ? `Lvl ${a.unlockLevel}` : "Disponibile";
+            badge.textContent = locked ? `🔒 Liv. ${a.requiredLevel}` : `Liv. ${a.requiredLevel}`;
 
             btn.append(img, badge);
 
@@ -111,9 +142,15 @@ document.addEventListener("DOMContentLoaded", async () => {
                 );
                 btn.setAttribute("aria-pressed", "true");
 
-                selectedAvatarId = a.id;
-                $btnAvatarSave.disabled = false;
-                $avatarHint.textContent = `Selezionato: Avatar ${a.id}`;
+                selectedAvatarId = Number(a.id);
+
+                // abilita salva solo se cambia rispetto all'attuale
+                const sameAsCurrent = selectedAvatarId === Number(currentAvatarId);
+                $btnAvatarSave.disabled = sameAsCurrent;
+
+                $avatarHint.textContent = a.name
+                    ? `Selezionato: ${a.name}`
+                    : `Selezionato: Avatar ${a.id}`;
             });
 
             $avatarGrid.appendChild(btn);
@@ -127,20 +164,23 @@ document.addEventListener("DOMContentLoaded", async () => {
         $avatarHint.textContent = "Salvataggio…";
 
         try {
-            const payload = await api.updateMyAvatar(selectedAvatarId);
+            await saveMyAvatar(selectedAvatarId);
 
-            // supporta sia "MeResponse" plain, sia "ApiResponse {data}"
-            const updated = payload?.data ?? payload;
-
-            // aggiorna UI
-            setProfileAvatar(updated?.avatarId ?? selectedAvatarId);
+            // aggiorna UI profilo
+            setProfileAvatar(selectedAvatarId);
             $avatarHint.textContent = "Avatar aggiornato ✅";
 
             // chiudi dopo un attimo (UX)
             setTimeout(() => closeDialog($avatarModal), 250);
         } catch (err) {
             console.error(err);
-            $avatarHint.textContent = err?.message || "Errore nel salvataggio avatar.";
+
+            // 403 -> locked (backend)
+            if (err?.status === 403) {
+                $avatarHint.textContent = "Avatar bloccato (livello insufficiente).";
+            } else {
+                $avatarHint.textContent = err?.message || "Errore nel salvataggio avatar.";
+            }
             $btnAvatarSave.disabled = false;
         }
     });
@@ -149,7 +189,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     function openDialog(dialogEl) {
         if (!dialogEl) return;
         if (typeof dialogEl.showModal === "function") dialogEl.showModal();
-        else dialogEl.setAttribute("open", ""); // fallback brutale
+        else dialogEl.setAttribute("open", ""); // fallback
     }
 
     function closeDialog(dialogEl) {
@@ -166,41 +206,35 @@ document.addEventListener("DOMContentLoaded", async () => {
         openDialog($settingsModal);
     });
 
-    // opzionale: chiusura  per reset UI quando chiude
     $settingsModal?.addEventListener("close", () => {
-        // esempio: reset feedback
         const fb = document.querySelector("#settings-feedback");
         if (fb) fb.textContent = "";
     });
 
+    // ----------------- SETTINGS ACTIONS -----------------
     document.querySelector("#btn-change-password")?.addEventListener("click", async () => {
         const oldPassword = document.querySelector("#old-password")?.value ?? "";
         const newPassword = document.querySelector("#new-password")?.value ?? "";
         const newPasswordConfirm = document.querySelector("#new-password-2")?.value ?? "";
         const feedback = document.querySelector("#settings-feedback");
-
         if (feedback) feedback.textContent = "";
 
         try {
+            if (typeof api.changeMyPassword !== "function") {
+                throw new Error("Endpoint cambio password non configurato in api.js");
+            }
             await api.changeMyPassword(oldPassword, newPassword, newPasswordConfirm);
 
-            // feedback + redirect
             if (feedback) feedback.textContent = "Password aggiornata ✅ Ti reindirizzo al login…";
-
             const next = encodeURIComponent("/profile.html");
-            setTimeout(() => {
-                window.location.replace(`/auth.html?next=${next}`);
-            }, 600);
+            setTimeout(() => window.location.replace(`/auth.html?next=${next}`), 600);
         } catch (err) {
             console.error(err);
-
-            // VALIDATION_ERROR: mostra fieldErrors
             if (err?.fieldErrors && feedback) {
                 const lines = Object.entries(err.fieldErrors).map(([k, v]) => `${k}: ${v}`);
                 feedback.textContent = lines.join(" | ");
                 return;
             }
-
             if (feedback) feedback.textContent = err?.message || "Errore nel cambio password.";
         }
     });
@@ -213,8 +247,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (feedback) feedback.textContent = "Logout…";
 
         try {
-            await api.logout();
-            window.location.replace("/auth.html");
+            // preferisci api.logout se esiste, altrimenti fetch diretto
+            if (typeof api.logout === "function") {
+                await api.logout();
+            } else {
+                await fetch("/auth/logout", { method: "POST", credentials: "include" });
+            }
+            window.location.replace("/index.html");
         } catch (err) {
             console.error(err);
             if (feedback) feedback.textContent = err?.message || "Errore durante il logout.";
@@ -226,27 +265,23 @@ document.addEventListener("DOMContentLoaded", async () => {
         const input = document.querySelector("#new-username");
         const feedback = document.querySelector("#settings-feedback");
         const newUsername = input?.value ?? "";
-
         if (feedback) feedback.textContent = "";
 
         try {
+            if (typeof api.changeMyUsername !== "function") {
+                throw new Error("Endpoint cambio username non configurato in api.js");
+            }
             await api.changeMyUsername(newUsername);
 
             if (feedback) feedback.textContent = "Username aggiornato ✅ Ti reindirizzo al login…";
-
             const next = encodeURIComponent("/index.html");
-            setTimeout(() => {
-                window.location.replace(`/auth.html?next=${next}`);
-            }, 600);
+            setTimeout(() => window.location.replace(`/auth.html?next=${next}`), 600);
         } catch (err) {
             console.error(err);
-
-            // VALIDATION_ERROR (fieldErrors)
             if (err?.fieldErrors?.newUsername && feedback) {
                 feedback.textContent = err.fieldErrors.newUsername;
                 return;
             }
-
             if (feedback) feedback.textContent = err?.message || "Errore nel cambio username.";
         }
     });
@@ -260,9 +295,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         if ($feedback) $feedback.textContent = "Eliminazione in corso…";
 
         try {
+            if (typeof api.deleteMyAccount !== "function") {
+                throw new Error("Endpoint delete account non configurato in api.js");
+            }
             await api.deleteMyAccount(($deleteInput?.value ?? "").trim().toUpperCase());
-
-            // utente “sparito” + session invalidata -> torna guest
             window.location.replace("/index.html");
         } catch (err) {
             console.error(err);

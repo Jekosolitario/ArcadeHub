@@ -61,6 +61,7 @@ public class SecurityConfig {
                 // =========================
                 .requestMatchers("/api/game/score").authenticated()
                 .requestMatchers("/api/profile/**").authenticated()
+                .requestMatchers("/api/game/progress").authenticated()
                 // tutto il resto autenticato
                 .anyRequest().authenticated()
                 )
