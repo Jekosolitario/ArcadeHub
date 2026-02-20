@@ -104,12 +104,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         try {
             const url = scope === "GLOBAL" ? ENDPOINTS.global(LIMIT) : ENDPOINTS.game(gameCode, LIMIT);
-            const rows = await api.get(url); // qui mi aspetto List<...>
+            const payload = await api.get(url);
 
-            if (!Array.isArray(rows) || rows.length === 0) {
-                setStatus({ loading: false, empty: true, error: "" });
-                stampUpdated();
-                return;
+            // GLOBAL => array
+            // GAME   => { rows: [...] }
+            const rows = Array.isArray(payload) ? payload : (payload?.rows ?? []);
+
+            if (rows.length === 0) {
             }
 
             rows.forEach((r, idx) => renderRow(idx + 1, scope, r));

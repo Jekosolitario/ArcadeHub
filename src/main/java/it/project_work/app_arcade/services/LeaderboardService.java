@@ -25,7 +25,7 @@ public class LeaderboardService extends GenericService<Long, UserGameProgress, P
         this.userRepository = userRepository;
     }
 
-    // Legacy/utility: top flappy (se vi serve ancora)
+    // Legacy/utility: top flappy 
     public List<GameTopDTO> topFlappy(int limit) {
         return getTopScoresPerGame("flappy", limit);
     }
