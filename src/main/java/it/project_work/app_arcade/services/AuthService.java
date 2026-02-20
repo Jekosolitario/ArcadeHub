@@ -32,25 +32,41 @@ public class AuthService extends GenericService<Long, User, UserRepository> {
     @Transactional
     public UserResponse register(RegisterRequest dto) {
 
-        // Business checks (unique)
-        if (getRepository().existsByEmail(dto.email().trim().toLowerCase())) {
+        // Normalizzazione (coerenza + evita duplicati strani)
+        String uname = dto.username().trim().toLowerCase();
+        String email = dto.email().trim().toLowerCase();
+
+        if (getRepository().existsByEmail(email)) {
             throw new ConflictException("EMAIL_TAKEN", "Email già in uso");
         }
-        if (getRepository().existsByUsername(dto.username())) {
+        if (getRepository().existsByUsername(uname)) {
             throw new ConflictException("USERNAME_TAKEN", "Username già in uso");
         }
 
-        // Avatar FK check
         Avatar avatar = avatarRepository.findById(dto.avatarId())
                 .orElseThrow(() -> new BadRequestException("AVATAR_INVALID", "Avatar non valido"));
 
+        // Hardening: avatar disattivo
+        if (Boolean.FALSE.equals(avatar.getActive())) {
+            throw new BadRequestException("AVATAR_INACTIVE", "Avatar non disponibile");
+        }
+
+        // Hardening: in registrazione livello iniziale = 1
+        int startingLevel = 1;
+        if (avatar.getRequiredLevel() != null && avatar.getRequiredLevel() > startingLevel) {
+            throw new ConflictException(
+                    "AVATAR_LOCKED",
+                    "Avatar bloccato. Richiede livello " + avatar.getRequiredLevel()
+            );
+        }
+
         User user = new User();
-        user.setUsername(dto.username());                
-        user.setEmail(dto.email().trim().toLowerCase());         // ok lowercase
+        user.setUsername(uname);
+        user.setEmail(email);
         user.setPasswordHash(passwordEncoder.encode(dto.password()));
         user.setRole(User.Role.USER);
         user.setEnabled(true);
-        user.setLevel(1);
+        user.setLevel(startingLevel);
         user.setSelectedAvatar(avatar);
 
         return UserResponse.fromEntity(getRepository().save(user));

@@ -33,8 +33,16 @@ public class AvatarController {
 
     @GetMapping("/avatars")
     public List<AvatarDto> list(Authentication auth) {
-        User user = userRepo.findByUsername(auth.getName()).orElseThrow();
-        int lvl = user.getLevel() == null ? 1 : user.getLevel();
+
+        int lvl = 1; // guest/nuovo utente
+
+        if (auth != null && auth.isAuthenticated()
+                && !"anonymousUser".equals(String.valueOf(auth.getPrincipal()))) {
+            User user = userRepo.findByUsername(auth.getName()).orElseThrow();
+            lvl = (user.getLevel() == null) ? 1 : user.getLevel();
+        }
+
+        final int userLvl = lvl; // variabile “final” per usarla nella lambda
 
         return avatarRepo.findByActiveTrueOrderByRequiredLevelAsc()
                 .stream()
@@ -43,7 +51,7 @@ public class AvatarController {
                 a.getName(),
                 a.getImageUrl(),
                 a.getRequiredLevel(),
-                a.getRequiredLevel() <= lvl
+                a.getRequiredLevel() <= userLvl
         ))
                 .toList();
     }

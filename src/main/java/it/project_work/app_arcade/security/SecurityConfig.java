@@ -50,7 +50,8 @@ public class SecurityConfig {
                         "/api/leaderboard/global",
                         "/api/leaderboard/game/**",
                         "/api/leaderboard/games/codes",
-                        "/api/leaderboard/flappy"
+                        "/api/leaderboard/flappy",
+                        "/api/avatars"
                 ).permitAll()
                 // Se vuoi essere più “strettissimo”:
                 // tutto il resto sotto /api/leaderboard richiede login

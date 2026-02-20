@@ -11,6 +11,31 @@
     const $ = (sel, root = document) => root.querySelector(sel);
 
     // ---------------- Helpers UI ----------------
+    let avatarsLoaded = false;
+    async function loadAvatarsIntoRegister() {
+        if (avatarsLoaded) return;
+        avatarsLoaded = true;
+        const grid = document.querySelector("#register-form .avatar-grid");
+        if (!grid) return;
+
+        try {
+            // usa il wrapper api.js (già credentials include)
+            const avatars = await api.get("/api/avatars");
+
+            if (!Array.isArray(avatars) || avatars.length === 0) {
+                grid.innerHTML = `<p class="form-hint">Nessun avatar disponibile.</p>`;
+                return;
+            }
+
+            renderAvatarGrid(grid, avatars);
+        } catch (err) {
+            console.warn("Impossibile caricare avatar:", err);
+            grid.innerHTML = `<p class="form-hint">Avatar non disponibili al momento.</p>`;
+        }
+    }
+
+
+
     function setHidden(el, hidden) {
         if (el) el.hidden = !!hidden;
     }
@@ -250,7 +275,7 @@
         const password = $("#reg-password")?.value ?? "";
         const avatarId = form.querySelector('input[name="avatarId"]:checked')?.value ?? null;
 
-        // ✅ validazione client-side: errori SOLO sotto campo (niente alert in alto)
+        // validazione client-side: errori SOLO sotto campo (niente alert in alto)
         const fe = validateRegister({ username, email, password, avatarId });
         if (Object.keys(fe).length) {
             applyFieldErrors(fe);
@@ -279,7 +304,7 @@
             $("#login-password")?.focus?.();
 
         } catch (err) {
-            // ✅ errori backend "di campo" → sotto campo, NON in alto
+            // errori backend "di campo" → sotto campo
             if (err?.name === "ApiError") {
                 // 1) VALIDATION_ERROR (fieldErrors)
                 const be = err.fieldErrors || null;
@@ -309,6 +334,18 @@
                     return;
                 }
 
+                // 3) AVATAR bloccato/disattivo (mostra sotto sezione avatar)
+                if (err.code === "AVATAR_LOCKED") {
+                    applyFieldErrors({ avatarId: err.message || "Avatar bloccato." });
+                    hideAlert();
+                    return;
+                }
+                if (err.code === "AVATAR_INACTIVE") {
+                    applyFieldErrors({ avatarId: err.message || "Avatar non disponibile." });
+                    hideAlert();
+                    return;
+                }
+
                 // fallback: errore globale
                 setAlert(alertEl, { type: "error", message: err.message || "Registrazione fallita." });
                 return;
@@ -320,6 +357,34 @@
         }
     }
 
+    function renderAvatarGrid(gridEl, avatars) {
+        // mantiene eventuale selezione precedente
+        const prev = gridEl.querySelector('input[name="avatarId"]:checked')?.value ?? null;
+
+        gridEl.innerHTML = avatars.map(a => {
+            const locked = !a.unlocked;
+            const req = Number(a.requiredLevel) || 1;
+
+            return `
+      <label class="avatar-option ${locked ? "is-locked" : ""}" ${locked ? 'aria-disabled="true"' : ""}>
+        <input
+          type="radio"
+          name="avatarId"
+          value="${a.id}"
+          ${locked ? "disabled" : ""}
+          ${(!locked && req === 1) ? "required" : ""}
+          ${prev && String(prev) === String(a.id) ? "checked" : ""}
+        />
+        <span class="avatar-card">
+          <img src="${a.imageUrl}" alt="${a.name}${locked ? " bloccato" : ""}" class="avatar-img" loading="lazy" />
+          <span class="avatar-name">${a.name}</span>
+          <span class="avatar-badge">${locked ? `🔒 Liv. ${req}` : `Disponibile • Liv. ${req}`}</span>
+        </span>
+      </label>
+    `;
+        }).join("");
+    }
+
 
     // ---------------- Init ----------------
     document.addEventListener("DOMContentLoaded", () => {
@@ -327,6 +392,7 @@
         setupPasswordToggle("#toggle-password", "#login-password");
         setupPasswordToggle("#toggle-reg-password", "#reg-password");
 
+        loadAvatarsIntoRegister();
         // switch
         setupAuthSwitch();
 
