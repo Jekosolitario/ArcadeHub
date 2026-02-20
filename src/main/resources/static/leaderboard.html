@@ -35,6 +35,9 @@
     <script src="/js/api.js" defer></script>
     <script src="/js/guard.js" defer></script>
 
+    <script src="/js/leaderboard.js" defer></script>
+
+
     <link rel="stylesheet" href="/css/style.css" />
 </head>
 
@@ -45,6 +48,83 @@
 
         <main class="main-classifica">
 
+        </main>
+
+        <div id="site-footer"></div>
+    </div>
+    <main id="main" class="main-classifica" aria-labelledby="leaderboard-title">
+            <header class="page-header">
+                <div class="page-header__left">
+                    <h1 id="leaderboard-title" class="page-title">Classifica</h1>
+                    <p class="page-subtitle">Scegli un gioco per vedere la classifica oppure guarda la classifica generale (top-player per gioco).</p>
+                </div>
+
+                <div class="page-header__right">
+                    <label for="game-select" class="sr-only">Seleziona gioco</label>
+                    <select id="game-select" class="select" aria-label="Seleziona gioco">
+                        <option value="flappy">Flappy</option>
+                    </select>
+                </div>
+            </header>
+
+            <!-- PER-GAME LEADERBOARD -->
+            <section class="leaderboard-panel" aria-labelledby="leaderboard-title">
+                <h2 class="sr-only">Classifica per gioco</h2>
+
+                <div class="status" aria-live="polite">
+                    <div id="lb-loading" class="status__loading" hidden>
+                        <p>Caricamento classifica…</p>
+                    </div>
+                    <div id="lb-error" class="status__error" hidden role="alert">
+                        <p id="lb-error-text">Errore nel caricamento della classifica.</p>
+                    </div>
+                </div>
+
+                <div class="table-wrap" role="region" aria-label="Tabella classifica">
+                    <table>
+                        <caption class="sr-only">Classifica per gioco</caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Utente</th>
+                                <th scope="col">Punteggio</th>
+                                <th scope="col">Livello</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lb-rows">
+                            <!-- JS: righe della classifica -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <p class="muted small" id="lb-empty" hidden>La classifica è vuota — gioca e sarai il primo!</p>
+            </section>
+
+            <!-- GAME-BY-GAME SUMMARY -->
+            <section class="leaderboard-panel" aria-label="Classifica per gioco - top player per ogni gioco">
+                <header>
+                    <h3>Classifica per gioco (Top player per ciascun gioco)</h3>
+                </header>
+
+                <div class="table-wrap" role="region" aria-label="Tabella top per gioco">
+                    <table>
+                        <caption class="sr-only">Top player per gioco</caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">Gioco</th>
+                                <th scope="col">Utente</th>
+                                <th scope="col">Punteggio</th>
+                                <th scope="col">Livello</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lb-games-rows">
+                            <!-- JS: righe game-by-game -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <p class="muted small" id="lb-games-empty" hidden>Ancora nessun punteggio registrato per i giochi.</p>
+            </section>
         </main>
 
         <div id="site-footer"></div>

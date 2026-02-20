@@ -5,6 +5,7 @@ import it.project_work.app_arcade.dto.LeaderboardResponseDto;
 import it.project_work.app_arcade.services.LeaderboardService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import it.project_work.app_arcade.dto.GameTopDTO;
 
 import java.util.List;
 
@@ -19,19 +20,41 @@ public class LeaderboardController {
     }
 
     /**
-     * Endpoint per ottenere la classifica di Flappy Bird.
-     * Come da Step 8, il limite di default è 20.
+     * Legacy endpoint for Flappy (kept for compatibility).
      */
     @GetMapping("/flappy")
     public ResponseEntity<LeaderboardResponseDto> getFlappyLeaderboard(
             @RequestParam(defaultValue = "20") int limit) {
-        
-        // Utilizziamo il metodo topTot del service come richiesto
-        List<LeaderboardResponse> topPlayers = leaderboardService.topTot(limit);
-        
-        // Incapsuliamo la lista nel DTO di risposta
-        LeaderboardResponseDto response = new LeaderboardResponseDto();
-        
-        return ResponseEntity.ok(response);
+
+        List<LeaderboardResponse> topPlayers = leaderboardService.getTopScoresPerGame("flappy", limit);
+        return ResponseEntity.ok(new LeaderboardResponseDto(topPlayers, "flappy"));
+    }
+
+    /**
+     * Generic per-game leaderboard: /api/leaderboard/game/{gameCode}
+     */
+    @GetMapping("/game/{gameCode}")
+    public ResponseEntity<LeaderboardResponseDto> getGameLeaderboard(
+            @PathVariable String gameCode,
+            @RequestParam(defaultValue = "20") int limit) {
+
+        List<LeaderboardResponse> rows = leaderboardService.getTopScoresPerGame(gameCode, limit);
+        return ResponseEntity.ok(new LeaderboardResponseDto(rows, gameCode));
+    }
+
+    /**
+     * Top-per-game summary: one row per game with the top player.
+     */
+    @GetMapping("/games")
+    public ResponseEntity<List<GameTopDTO>> getTopPerGame(@RequestParam(defaultValue = "20") int limit) {
+        return ResponseEntity.ok(leaderboardService.topPerGame(limit));
+    }
+
+    /**
+     * Return available game codes (used by frontend to populate selector)
+     */
+    @GetMapping("/games/codes")
+    public ResponseEntity<List<String>> listGameCodes() {
+        return ResponseEntity.ok(leaderboardService.listGameCodes());
     }
 }

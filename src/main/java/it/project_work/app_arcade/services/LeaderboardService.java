@@ -8,11 +8,13 @@ import java.util.List;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import it.project_work.app_arcade.dto.GameTopDTO;
 import it.project_work.app_arcade.dto.LeaderboardResponse;
 import it.project_work.app_arcade.models.User;
 import it.project_work.app_arcade.models.UserGameProgress;
 import it.project_work.app_arcade.repositories.ProgressRepository;
 import it.project_work.app_arcade.repositories.UserRepository;
+
 
 @Service
 public class LeaderboardService extends GenericService<Long, UserGameProgress, ProgressRepository> {
@@ -56,6 +58,34 @@ public class LeaderboardService extends GenericService<Long, UserGameProgress, P
         return progresses.stream()
             .map(p -> LeaderboardResponse.fromEntity(userRepository.findById(p.getUser().getId()).orElse(null), p))
             .toList();
+    }
+    /**
+     * Top entry for every distinct game (one row per game)
+     */
+    public List<GameTopDTO> topPerGame(int limit) {
+        if (limit <= 0) return Collections.emptyList();
+
+        List<String> codes = getRepository().findDistinctGameCodes();
+        List<GameTopDTO> out = new ArrayList<>();
+
+        for (String code : codes) {
+            List<UserGameProgress> topForCode = getRepository().findByGameCodeOrderByBestScoreDesc(code, PageRequest.of(0, 1));
+            if (topForCode.isEmpty()) continue;
+            UserGameProgress p = topForCode.get(0);
+            User u = userRepository.findById(p.getUser().getId()).orElse(null);
+            if (u == null) continue; // defensive
+            out.add(new GameTopDTO(code, u.getUsername(), p.getBestScore(), u.getLevel()));
+        }
+
+        out.sort(Comparator.comparing(GameTopDTO::bestScore).reversed());
+        if (limit > 0 && limit < out.size()) {
+            out = out.subList(0, limit);
+        }
+        return out;
+    }
+
+    public List<String> listGameCodes() {
+        return getRepository().findDistinctGameCodes();
     }
 
     public Integer getTotScoreUser(long userId) {
