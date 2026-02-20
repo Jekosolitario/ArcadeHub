@@ -42,11 +42,19 @@ public class LeaderboardController {
         return ResponseEntity.ok(new LeaderboardResponseDto(rows, gameCode));
     }
 
+    
+    @GetMapping("/global")
+    public ResponseEntity<List<LeaderboardResponse>> getTopPerGame(@RequestParam(defaultValue = "20") int limit) {
+
+        return ResponseEntity.ok(leaderboardService.topTot(limit));
+    }
+
     /**
      * Top-per-game summary: one row per game with the top player.
      */
-    @GetMapping("/games")
-    public ResponseEntity<List<GameTopDTO>> getTopPerGame(@RequestParam(defaultValue = "20") int limit) {
+    @GetMapping("/toppergame")
+    public ResponseEntity<List<GameTopDTO>> getTopPerGameLegacy(@RequestParam(defaultValue = "20") int limit) {
+
         return ResponseEntity.ok(leaderboardService.topPerGame(limit));
     }
 
@@ -55,6 +63,7 @@ public class LeaderboardController {
      */
     @GetMapping("/games/codes")
     public ResponseEntity<List<String>> listGameCodes() {
+        
         return ResponseEntity.ok(leaderboardService.listGameCodes());
     }
 }
