@@ -2,6 +2,7 @@ package it.project_work.app_arcade.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -18,10 +19,11 @@ public class SecurityConfig {
         http
                 // fetch + session cookie, senza CSRF token
                 .csrf(csrf -> csrf.disable())
-                // se FE e BE sono su origin diverse serve poi CorsConfigurationSource
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
-                // Pagine HTML pubbliche: così il guard.js può gestire redirect UX
+                // =========================
+                // Pagine / asset pubblici
+                // =========================
                 .requestMatchers(
                         "/",
                         "/index.html",
@@ -29,7 +31,6 @@ public class SecurityConfig {
                         "/auth.html",
                         "/leaderboard.html",
                         "/profile.html",
-                        // assets statici
                         "/css/**",
                         "/js/**",
                         "/assets/**",
@@ -37,11 +38,26 @@ public class SecurityConfig {
                         "/partials/**",
                         "/audio/**"
                 ).permitAll()
-                // AUTH API pubbliche (così /auth/me non fa 403 "brutto" da Security)
+                // =========================
+                // AUTH API pubbliche
+                // =========================
                 .requestMatchers("/auth/login", "/auth/register", "/auth/me", "/auth/logout").permitAll()
-                // API pubbliche
-                .requestMatchers("/api/leaderboard").authenticated()
-                // API protette (qui si applica la vera sicurezza)
+                // =========================
+                // LEADERBOARD API pubbliche (solo GET)
+                // così la Top5 in home funziona da guest
+                // =========================
+                .requestMatchers(HttpMethod.GET,
+                        "/api/leaderboard/global",
+                        "/api/leaderboard/game/**",
+                        "/api/leaderboard/games/codes",
+                        "/api/leaderboard/flappy"
+                ).permitAll()
+                // Se vuoi essere più “strettissimo”:
+                // tutto il resto sotto /api/leaderboard richiede login
+                .requestMatchers("/api/leaderboard/**").authenticated()
+                // =========================
+                // API protette (vera sicurezza)
+                // =========================
                 .requestMatchers("/api/game/score").authenticated()
                 .requestMatchers("/api/profile/**").authenticated()
                 // tutto il resto autenticato
