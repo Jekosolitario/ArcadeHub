@@ -46,15 +46,6 @@ public class LeaderboardController {
     }
 
     /**
-     * Top-per-game summary: one row per game with the top player.
-     */
-    @GetMapping("/toppergame")
-    public ResponseEntity<List<GameTopDTO>> getTopPerGameLegacy(@RequestParam(defaultValue = "20") int limit) {
-
-        return ResponseEntity.ok(leaderboardService.topPerGame(limit));
-    }
-
-    /**
      * Return available game codes (used by frontend to populate selector)
      */
     @GetMapping("/game/{gameCode}")

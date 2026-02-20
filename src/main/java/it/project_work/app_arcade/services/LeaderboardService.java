@@ -25,10 +25,12 @@ public class LeaderboardService extends GenericService<Long, UserGameProgress, P
         this.userRepository = userRepository;
     }
 
+    // Legacy/utility: top flappy (se vi serve ancora)
     public List<GameTopDTO> topFlappy(int limit) {
         return getTopScoresPerGame("flappy", limit);
     }
 
+    // Globale: somma bestScore + somma playedCount su tutti i giochi
     public List<LeaderboardResponse> topTot(int limit) {
         if (limit <= 0) {
             return Collections.emptyList();
@@ -50,7 +52,7 @@ public class LeaderboardService extends GenericService<Long, UserGameProgress, P
             ));
         }
 
-        responses.sort(Comparator.comparing(LeaderboardResponse::totalScore).reversed());
+        responses.sort(Comparator.comparingLong(LeaderboardResponse::totalScore).reversed());
 
         if (limit < responses.size()) {
             responses = responses.subList(0, limit);
@@ -58,14 +60,7 @@ public class LeaderboardService extends GenericService<Long, UserGameProgress, P
         return responses;
     }
 
-    private String extractAvatarUrl(User u) {
-        if (u == null) {
-            return null;
-        }
-        Avatar a = u.getSelectedAvatar();
-        return (a != null) ? a.getImageUrl() : null;
-    }
-
+    // Per gioco: migliori utenti ordinati per bestScore (con playedCount del gioco)
     public List<GameTopDTO> getTopScoresPerGame(String gameCode, int limit) {
         if (limit <= 0) {
             return Collections.emptyList();
@@ -81,54 +76,19 @@ public class LeaderboardService extends GenericService<Long, UserGameProgress, P
                         return null;
                     }
 
+                    Integer bestScore = p.getBestScore() != null ? p.getBestScore() : 0;
+                    Integer playedCount = p.getPlayedCount() != null ? p.getPlayedCount() : 0;
+
                     return new GameTopDTO(
                             u.getUsername(),
-                            extractAvatarUrl(u), // <-- vedi helper sotto
+                            extractAvatarUrl(u),
                             p.getBestScore(),
                             u.getLevel(),
-                            p.getPlayedCount() // <-- deve esistere nel model
+                            p.getPlayedCount()
                     );
                 })
                 .filter(x -> x != null)
                 .toList();
-    }
-
-    /**
-     * Top entry for every distinct game (one row per game)
-     */
-    public List<GameTopDTO> topPerGame(int limit) {
-        if (limit <= 0) {
-            return Collections.emptyList();
-        }
-
-        List<String> codes = getRepository().findDistinctGameCodes();
-        List<GameTopDTO> out = new ArrayList<>();
-
-        for (String code : codes) {
-            List<UserGameProgress> topForCode = getRepository().findByGameCodeOrderByBestScoreDesc(code, PageRequest.of(0, 1));
-            if (topForCode.isEmpty()) {
-                continue;
-            }
-            UserGameProgress p = topForCode.get(0);
-            User u = userRepository.findById(p.getUser().getId()).orElse(null);
-            if (u == null) {
-                continue; // defensive
-
-            }
-            out.add(new GameTopDTO(
-                    u.getUsername(),
-                    extractAvatarUrl(u),
-                    p.getBestScore(),
-                    u.getLevel(),
-                    p.getPlayedCount()
-            ));
-        }
-
-        out.sort(Comparator.comparing(GameTopDTO::bestScore).reversed());
-        if (limit > 0 && limit < out.size()) {
-            out = out.subList(0, limit);
-        }
-        return out;
     }
 
     public List<String> listGameCodes() {
@@ -145,5 +105,14 @@ public class LeaderboardService extends GenericService<Long, UserGameProgress, P
         return getRepository().findByUserId(userId).stream()
                 .mapToLong(p -> p.getPlayedCount() == null ? 0 : p.getPlayedCount())
                 .sum();
+    }
+
+    // Avatar url: users.selected_avatar_id -> avatars.image_url
+    private String extractAvatarUrl(User u) {
+        if (u == null) {
+            return null;
+        }
+        Avatar a = u.getSelectedAvatar();
+        return (a != null) ? a.getImageUrl() : null;
     }
 }
