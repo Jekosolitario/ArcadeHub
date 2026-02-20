@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import it.project_work.app_arcade.dto.GameTopDTO;
 import it.project_work.app_arcade.dto.LeaderboardResponse;
+import it.project_work.app_arcade.models.Avatar;
 import it.project_work.app_arcade.models.User;
 import it.project_work.app_arcade.models.UserGameProgress;
 import it.project_work.app_arcade.repositories.ProgressRepository;
@@ -24,39 +25,71 @@ public class LeaderboardService extends GenericService<Long, UserGameProgress, P
         this.userRepository = userRepository;
     }
 
-    public List<LeaderboardResponse> topFlappy(int limit) {
+    public List<GameTopDTO> topFlappy(int limit) {
         return getTopScoresPerGame("flappy", limit);
     }
 
     public List<LeaderboardResponse> topTot(int limit) {
-
         if (limit <= 0) {
             return Collections.emptyList();
         }
 
         List<User> users = userRepository.findAll();
         List<LeaderboardResponse> responses = new ArrayList<>();
+
         for (User user : users) {
-            responses.add(new LeaderboardResponse(user.getUsername(), getTotScoreUser(user.getId()), user.getLevel()));
+            long totalScore = getTotScoreUser(user.getId());
+            long totalPlayed = getTotPlayedUser(user.getId());
+
+            responses.add(new LeaderboardResponse(
+                    user.getUsername(),
+                    extractAvatarUrl(user),
+                    totalScore,
+                    totalPlayed,
+                    user.getLevel()
+            ));
         }
 
-        responses.sort(Comparator.comparing(LeaderboardResponse::bestScore).reversed());
+        responses.sort(Comparator.comparing(LeaderboardResponse::totalScore).reversed());
 
-        if (limit > 0 && limit < responses.size()) {
+        if (limit < responses.size()) {
             responses = responses.subList(0, limit);
         }
         return responses;
     }
 
-    public List<LeaderboardResponse> getTopScoresPerGame(String gameCode, int limit) {
+    private String extractAvatarUrl(User u) {
+        if (u == null) {
+            return null;
+        }
+        Avatar a = u.getSelectedAvatar();
+        return (a != null) ? a.getImageUrl() : null;
+    }
 
+    public List<GameTopDTO> getTopScoresPerGame(String gameCode, int limit) {
         if (limit <= 0) {
             return Collections.emptyList();
         }
 
-        List<UserGameProgress> progresses = getRepository().findByGameCodeOrderByBestScoreDesc(gameCode, PageRequest.of(0, limit));
+        List<UserGameProgress> progresses
+                = getRepository().findByGameCodeOrderByBestScoreDesc(gameCode, PageRequest.of(0, limit));
+
         return progresses.stream()
-                .map(p -> LeaderboardResponse.fromEntity(userRepository.findById(p.getUser().getId()).orElse(null), p))
+                .map(p -> {
+                    User u = userRepository.findById(p.getUser().getId()).orElse(null);
+                    if (u == null) {
+                        return null;
+                    }
+
+                    return new GameTopDTO(
+                            u.getUsername(),
+                            extractAvatarUrl(u), // <-- vedi helper sotto
+                            p.getBestScore(),
+                            u.getLevel(),
+                            p.getPlayedCount() // <-- deve esistere nel model
+                    );
+                })
+                .filter(x -> x != null)
                 .toList();
     }
 
@@ -81,7 +114,14 @@ public class LeaderboardService extends GenericService<Long, UserGameProgress, P
             if (u == null) {
                 continue; // defensive
 
-                        }out.add(new GameTopDTO(code, u.getUsername(), p.getBestScore(), u.getLevel()));
+            }
+            out.add(new GameTopDTO(
+                    u.getUsername(),
+                    extractAvatarUrl(u),
+                    p.getBestScore(),
+                    u.getLevel(),
+                    p.getPlayedCount()
+            ));
         }
 
         out.sort(Comparator.comparing(GameTopDTO::bestScore).reversed());
@@ -95,9 +135,15 @@ public class LeaderboardService extends GenericService<Long, UserGameProgress, P
         return getRepository().findDistinctGameCodes();
     }
 
-    public Integer getTotScoreUser(long userId) {
+    public long getTotScoreUser(long userId) {
         return getRepository().findByUserId(userId).stream()
-                .map(UserGameProgress::getBestScore)
-                .reduce(0, Integer::sum);
+                .mapToLong(p -> p.getBestScore() == null ? 0 : p.getBestScore())
+                .sum();
+    }
+
+    public long getTotPlayedUser(long userId) {
+        return getRepository().findByUserId(userId).stream()
+                .mapToLong(p -> p.getPlayedCount() == null ? 0 : p.getPlayedCount())
+                .sum();
     }
 }

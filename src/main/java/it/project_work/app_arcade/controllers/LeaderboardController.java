@@ -1,13 +1,18 @@
 package it.project_work.app_arcade.controllers;
 
+import java.util.List;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import it.project_work.app_arcade.dto.GameTopDTO;
 import it.project_work.app_arcade.dto.LeaderboardResponse;
 import it.project_work.app_arcade.dto.LeaderboardResponseDto;
 import it.project_work.app_arcade.services.LeaderboardService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import it.project_work.app_arcade.dto.GameTopDTO;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/leaderboard")
@@ -26,25 +31,16 @@ public class LeaderboardController {
     public ResponseEntity<LeaderboardResponseDto> getFlappyLeaderboard(
             @RequestParam(defaultValue = "20") int limit) {
 
-        List<LeaderboardResponse> topPlayers = leaderboardService.getTopScoresPerGame("flappy", limit);
+        List<GameTopDTO> topPlayers = leaderboardService.getTopScoresPerGame("flappy", limit);
         return ResponseEntity.ok(new LeaderboardResponseDto(topPlayers, "flappy"));
     }
 
     /**
      * Generic per-game leaderboard: /api/leaderboard/game/{gameCode}
      */
-    @GetMapping("/game/{gameCode}")
-    public ResponseEntity<LeaderboardResponseDto> getGameLeaderboard(
-            @PathVariable String gameCode,
-            @RequestParam(defaultValue = "20") int limit) {
-
-        List<LeaderboardResponse> rows = leaderboardService.getTopScoresPerGame(gameCode, limit);
-        return ResponseEntity.ok(new LeaderboardResponseDto(rows, gameCode));
-    }
-
-    
     @GetMapping("/global")
-    public ResponseEntity<List<LeaderboardResponse>> getTopPerGame(@RequestParam(defaultValue = "20") int limit) {
+    public ResponseEntity<List<LeaderboardResponse>> getGlobal(
+            @RequestParam(defaultValue = "20") int limit) {
 
         return ResponseEntity.ok(leaderboardService.topTot(limit));
     }
@@ -61,9 +57,13 @@ public class LeaderboardController {
     /**
      * Return available game codes (used by frontend to populate selector)
      */
-    @GetMapping("/games/codes")
-    public ResponseEntity<List<String>> listGameCodes() {
-        
-        return ResponseEntity.ok(leaderboardService.listGameCodes());
+    @GetMapping("/game/{gameCode}")
+    public ResponseEntity<LeaderboardResponseDto<GameTopDTO>> getGameLeaderboard(
+            @PathVariable String gameCode,
+            @RequestParam(defaultValue = "20") int limit) {
+
+        String code = gameCode.toLowerCase();
+        List<GameTopDTO> rows = leaderboardService.getTopScoresPerGame(code, limit);
+        return ResponseEntity.ok(new LeaderboardResponseDto<>(rows, code));
     }
 }
