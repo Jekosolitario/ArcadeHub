@@ -1,132 +1,179 @@
 document.addEventListener("DOMContentLoaded", async () => {
     const me = await requireAuth();
-    if (!me) return; // requireAuth already redirects guest -> auth
+    if (!me) return;
 
-    const loading = document.getElementById("lb-loading");
-    const errorBox = document.getElementById("lb-error");
-    const errorText = document.getElementById("lb-error-text");
-    const tbody = document.getElementById("lb-rows");
-    const emptyHint = document.getElementById("lb-empty");
+    // --- DOM ---
+    const scopeSelect = document.getElementById("lb-scope");
+    const gameWrap = document.getElementById("lb-game-wrap");
+    const gameSelect = document.getElementById("lb-game");
+    const refreshBtn = document.getElementById("lb-refresh");
+    const updatedEl = document.getElementById("lb-updated");
 
-    function show(el) { el.hidden = false; }
-    function hide(el) { el.hidden = true; }
+    const loadingEl = document.getElementById("lb-loading");
+    const emptyEl = document.getElementById("lb-empty");
+    const errorEl = document.getElementById("lb-error");
 
-    async function loadLeaderboard(gameCode = 'flappy', limit = 20) {
-        try {
-            show(loading);
-            hide(errorBox);
-            hide(emptyHint);
-            tbody.innerHTML = "";
+    const tbody = document.getElementById("lb-tbody");
+    const rowTpl = document.getElementById("lb-row-template");
 
-            const payload = await api.get(`/api/leaderboard/game/${encodeURIComponent(gameCode)}?limit=${limit}`);
-            const rows = (payload && payload.rows) ? payload.rows : [];
+    // --- CONFIG ENDPOINTS (ADATTA SE SERVE) ---
+    const ENDPOINTS = {
+        global: (limit) => `/api/leaderboard/global?limit=${limit}`,
+        game: (gameCode, limit) => `/api/leaderboard/game/${encodeURIComponent(gameCode)}?limit=${limit}`,
+        // opzionale (se esiste): lista giochi dal backend
+        // games: () => `/api/games`,
+    };
 
-            if (!rows.length) {
-                show(emptyHint);
-                return;
-            }
+    const LIMIT = 20;
 
-            rows.forEach((r, idx) => {
-                const tr = document.createElement('tr');
+    // --- helpers UI ---
+    const show = (el) => (el.hidden = false);
+    const hide = (el) => (el.hidden = true);
 
-                const rank = document.createElement('th');
-                rank.setAttribute('scope', 'row');
-                rank.textContent = String(idx + 1);
+    function setStatus({ loading = false, empty = false, error = "" }) {
+        loading ? show(loadingEl) : hide(loadingEl);
+        empty ? show(emptyEl) : hide(emptyEl);
 
-                const userTd = document.createElement('td');
-                userTd.textContent = r.username || '—';
-
-                const scoreTd = document.createElement('td');
-                scoreTd.textContent = r.bestScore != null ? String(r.bestScore) : '0';
-
-                const levelTd = document.createElement('td');
-                levelTd.textContent = r.level != null ? String(r.level) : '—';
-
-                tr.appendChild(rank);
-                tr.appendChild(userTd);
-                tr.appendChild(scoreTd);
-                tr.appendChild(levelTd);
-
-                tbody.appendChild(tr);
-            });
-
-        } catch (err) {
-            console.error('Leaderboard load failed', err);
-            show(errorBox);
-            errorText.textContent = err?.message || 'Impossibile caricare la classifica.';
-        } finally {
-            hide(loading);
+        if (error) {
+            errorEl.textContent = error;
+            show(errorEl);
+        } else {
+            hide(errorEl);
         }
     }
 
-    async function loadTopPerGame(limit = 20) {
-        const gamesTbody = document.getElementById('lb-games-rows');
-        const gamesEmpty = document.getElementById('lb-games-empty');
-        gamesTbody.innerHTML = '';
-        try {
-            const rows = await api.get(`/api/leaderboard/games?limit=${limit}`);
-            if (!rows || !rows.length) {
-                gamesEmpty.hidden = false;
-                return;
-            }
-            gamesEmpty.hidden = true;
-            rows.forEach((r) => {
-                const tr = document.createElement('tr');
-
-                const gameTd = document.createElement('td');
-                gameTd.textContent = r.gameCode || '—';
-
-                const userTd = document.createElement('td');
-                userTd.textContent = r.username || '—';
-
-                const scoreTd = document.createElement('td');
-                scoreTd.textContent = r.bestScore != null ? String(r.bestScore) : '0';
-
-                const levelTd = document.createElement('td');
-                levelTd.textContent = r.level != null ? String(r.level) : '—';
-
-                tr.appendChild(gameTd);
-                tr.appendChild(userTd);
-                tr.appendChild(scoreTd);
-                tr.appendChild(levelTd);
-                gamesTbody.appendChild(tr);
-            });
-        } catch (err) {
-            console.error('Top-per-game load failed', err);
-            const gamesError = document.getElementById('lb-error');
-            gamesError.hidden = false;
-            document.getElementById('lb-error-text').textContent = 'Impossibile caricare la classifica per gioco.';
-        }
+    function clearTable() {
+        tbody.innerHTML = "";
     }
 
-    async function populateGameSelector() {
-        const sel = document.getElementById('game-select');
-        try {
-            const codes = await api.get('/api/leaderboard/games/codes');
-            if (Array.isArray(codes) && codes.length) {
-                sel.innerHTML = '';
-                codes.forEach(c => {
-                    const opt = document.createElement('option');
-                    opt.value = c;
-                    opt.textContent = c.charAt(0).toUpperCase() + c.slice(1);
-                    sel.appendChild(opt);
-                });
-            }
-        } catch (err) {
-            // leave default
-            console.warn('Could not populate game selector', err);
-        }
+    function normalizeRows(payload) {
+        if (Array.isArray(payload)) return payload;
+        if (payload && Array.isArray(payload.rows)) return payload.rows;
+        if (payload && Array.isArray(payload.content)) return payload.content; // Spring Page<>
+        return [];
+    }
 
-        sel.addEventListener('change', () => {
-            loadLeaderboard(sel.value, 20);
+    function toggleColumns(scope) {
+        const showGlobal = scope === "GLOBAL";
+        document.querySelectorAll('[data-col="GLOBAL"]').forEach((el) => (el.hidden = !showGlobal));
+        document.querySelectorAll('[data-col="GAME"]').forEach((el) => (el.hidden = showGlobal));
+    }
+
+    function stampUpdated() {
+        const d = new Date();
+        updatedEl.textContent = `Aggiornata alle ${d.toLocaleTimeString("it-IT", {
+            hour: "2-digit",
+            minute: "2-digit",
+        })}`;
+    }
+
+    // placeholder 1x1 trasparente (evita icona rotta se manca url)
+    const IMG_1PX =
+        "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==";
+
+    function fillRow(node, data, rank, scope) {
+        // rank
+        node.querySelector('[data-field="rank"]').textContent = String(rank);
+
+        // avatar
+        const img = node.querySelector('[data-field="avatarUrl"]');
+        const avatarUrl = data.avatarUrl || data.imageUrl || data.avatar || "";
+        img.src = avatarUrl || IMG_1PX;
+        img.alt = data.username ? `Avatar di ${data.username}` : "Avatar";
+
+        // username
+        node.querySelector('[data-field="username"]').textContent = data.username ?? "—";
+
+        // campi GLOBAL
+        const totalScore = data.totalScore ?? data.sumBestScore ?? data.scoreTotal ?? 0;
+        const totalPlayed = data.totalPlayed ?? data.totalGamesPlayed ?? data.playedTotal ?? 0;
+        const level = data.level ?? data.userLevel ?? "—";
+
+        const bestScore = data.bestScore ?? 0;
+        const playedCount = data.playedCount ?? data.gamePlayedCount ?? 0;
+
+        // compila tutte le celle esistenti nel template
+        const setText = (selector, value) => {
+            const el = node.querySelector(selector);
+            if (el) el.textContent = value;
+        };
+
+        setText('[data-field="totalScore"]', String(totalScore));
+        setText('[data-field="totalPlayed"]', String(totalPlayed));
+        setText('[data-field="level"]', String(level));
+
+        setText('[data-field="bestScore"]', String(bestScore));
+        setText('[data-field="playedCount"]', String(playedCount));
+
+        // toggle hidden sulle celle della riga in base allo scope
+        const showGlobal = scope === "GLOBAL";
+        node.querySelectorAll('[data-col="GLOBAL"]').forEach((el) => (el.hidden = !showGlobal));
+        node.querySelectorAll('[data-col="GAME"]').forEach((el) => (el.hidden = showGlobal));
+    }
+
+    function render(rows, scope) {
+        clearTable();
+        rows.forEach((r, idx) => {
+            const fragment = rowTpl.content.cloneNode(true);
+            const tr = fragment.querySelector("tr");
+            fillRow(tr, r, idx + 1, scope);
+            tbody.appendChild(fragment);
         });
     }
 
-    // initial load
-    await populateGameSelector();
-    const sel = document.getElementById('game-select');
-    loadLeaderboard(sel ? sel.value : 'flappy', 20);
-    loadTopPerGame(20);
+    // --- fetch ---
+    async function fetchLeaderboard() {
+        const scope = scopeSelect.value; // GLOBAL | GAME
+        const gameCode = gameSelect.value;
 
-    // optional: you can add UI to change limit later
+        toggleColumns(scope);
+        setStatus({ loading: true, empty: false, error: "" });
+
+        try {
+            const url = scope === "GLOBAL" ? ENDPOINTS.global(LIMIT) : ENDPOINTS.game(gameCode, LIMIT);
+            const payload = await api.get(url);
+            const rows = normalizeRows(payload);
+
+            if (!rows.length) {
+                clearTable();
+                setStatus({ loading: false, empty: true, error: "" });
+                stampUpdated();
+                return;
+            }
+
+            render(rows, scope);
+            setStatus({ loading: false, empty: false, error: "" });
+            stampUpdated();
+        } catch (err) {
+            console.error("Leaderboard load failed", err);
+            clearTable();
+            setStatus({
+                loading: false,
+                empty: false,
+                error: err?.message || "Impossibile caricare la classifica.",
+            });
+        }
+    }
+
+    // --- UI events ---
+    function syncScopeUI() {
+        const isGame = scopeSelect.value === "GAME";
+        gameWrap.hidden = !isGame;
+        toggleColumns(scopeSelect.value);
+    }
+
+    scopeSelect.addEventListener("change", async () => {
+        syncScopeUI();
+        await fetchLeaderboard();
+    });
+
+    gameSelect.addEventListener("change", async () => {
+        if (scopeSelect.value === "GAME") await fetchLeaderboard();
+    });
+
+    refreshBtn.addEventListener("click", fetchLeaderboard);
+
+    // init
+    syncScopeUI();
+    await fetchLeaderboard();
 });

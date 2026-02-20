@@ -1,0 +1,254 @@
+/* =========================================================
+   LEADERBOARD (leaderboard.html) | Mobile First
+   - Card + controlli + tabella scrollabile con header sticky
+========================================================= */
+
+/* Wrapper pagina (opzionale) */
+.main-leaderboard {
+    padding-bottom: var(--sp-4);
+}
+
+/* Sezione principale */
+.leaderboard {
+    background: var(--superficie-1);
+    border: 1px solid var(--bordo-1);
+    border-radius: var(--radius);
+    padding: var(--sp-3);
+    box-shadow: var(--ombra-1);
+}
+
+/* Header */
+.leaderboard__head h1 {
+    margin-bottom: var(--sp-1);
+}
+
+.leaderboard__subtitle {
+    margin: 0;
+    color: rgba(255, 255, 254, 0.85);
+    font-size: clamp(1.3rem, 0.4vw + 1.2rem, 1.6rem);
+}
+
+/* Controls */
+.leaderboard__controls {
+    margin-top: var(--sp-3);
+    display: grid;
+    gap: var(--sp-2);
+    align-items: end;
+    padding: var(--sp-2);
+    border-radius: calc(var(--radius) - 2px);
+    background: var(--superficie-1);
+    border: 1px solid var(--bordo-1);
+}
+
+.leaderboard__control label {
+    display: block;
+    margin-bottom: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.01em;
+}
+
+.leaderboard__hint {
+    display: block;
+    margin-top: 0.6rem;
+    font-size: var(--fs-small);
+    color: rgba(255, 255, 254, 0.75);
+}
+
+/* Select coerenti col tema */
+.leaderboard select {
+    width: 100%;
+    padding: 1.1rem 1.2rem;
+    border-radius: 14px;
+    border: 1px solid var(--bordo-1);
+    background: rgba(255, 255, 254, 0.06);
+    color: var(--colore-testo);
+    color-scheme: dark;
+    outline: none;
+
+    /* look moderno cross-browser */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+.leaderboard select option,
+.leaderboard select optgroup {
+    background-color: var(--colore-sfondo);
+    color: var(--colore-testo);
+}
+
+.leaderboard select:focus-visible {
+    outline: 2px solid rgba(249, 220, 53, 0.85);
+    outline-offset: 3px;
+}
+
+/* Azioni */
+.leaderboard__actions {
+    display: flex;
+    gap: var(--sp-1);
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.leaderboard__updated {
+    font-size: var(--fs-small);
+    color: rgba(255, 255, 254, 0.75);
+}
+
+/* Status (loading / empty / error) */
+.leaderboard__status {
+    margin-top: var(--sp-2);
+    padding: 1.0rem 1.2rem;
+    border-radius: 12px;
+    border: 1px dashed rgba(255, 255, 254, 0.18);
+    background: rgba(0, 0, 1, 0.35);
+    color: rgba(255, 255, 254, 0.88);
+    font-size: var(--fs-small);
+}
+
+/* Tabella: contenitore scroll (mobile) */
+.leaderboard__table-wrap {
+    margin-top: var(--sp-3);
+    border-radius: var(--radius);
+    border: 1px solid var(--bordo-1);
+    background: rgba(0, 0, 1, 0.35);
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+
+    /* evita che la tabella “scappi” */
+    max-width: 100%;
+}
+
+/* Tabella */
+.leaderboard__table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    min-width: 680px;
+    /* abilita scroll orizzontale su mobile */
+}
+
+/* Head sticky dentro lo scroll container */
+.leaderboard__table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+
+    background: rgba(0, 0, 1, 0.82);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 254, 0.14);
+
+    text-align: left;
+    font-weight: 900;
+    letter-spacing: 0.01em;
+    font-size: clamp(1.2rem, 0.3vw + 1.1rem, 1.4rem);
+}
+
+.leaderboard__table th,
+.leaderboard__table td {
+    padding: 1.2rem 1.2rem;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+/* Righe */
+.leaderboard__table tbody tr {
+    border-bottom: 1px solid rgba(255, 255, 254, 0.08);
+}
+
+.leaderboard__table tbody tr:nth-child(odd) {
+    background: rgba(255, 255, 254, 0.03);
+}
+
+.leaderboard__table tbody tr:hover {
+    background: rgba(249, 220, 53, 0.08);
+}
+
+/* Colonne: allineamenti */
+.col-rank,
+.cell-rank,
+.col-totalPlayed,
+.cell-totalPlayed,
+.col-level,
+.cell-level,
+.col-bestScore,
+.cell-bestScore,
+.col-gamePlayed,
+.cell-gamePlayed,
+.col-levelGame,
+.cell-levelGame,
+.col-totalScore,
+.cell-totalScore {
+    text-align: right;
+}
+
+.col-avatar,
+.cell-avatar {
+    width: 56px;
+    text-align: center;
+}
+
+/* Avatar */
+.avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 254, 0.22);
+    background: rgba(255, 255, 254, 0.06);
+    object-fit: cover;
+    display: inline-block;
+}
+
+/* Username più “solido” */
+.cell-username {
+    font-weight: 800;
+}
+
+/* Hidden columns (JS toggla hidden) */
+[hidden] {
+    display: none !important;
+}
+
+/* Accessibilità: focus dentro regione scroll */
+.leaderboard__table-wrap:focus-visible {
+    outline: 3px solid rgba(249, 220, 53, 0.75);
+    outline-offset: 4px;
+}
+
+/* ============ Media query ============ */
+@media (min-width: 768px) {
+    .leaderboard {
+        padding: var(--sp-4);
+    }
+
+    .leaderboard__controls {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .leaderboard__actions {
+        grid-column: 1 / -1;
+        justify-content: space-between;
+    }
+
+    .leaderboard__table {
+        min-width: 0;
+        /* su tablet spesso non serve scroll orizzontale */
+    }
+}
+
+@media (min-width: 1024px) {
+    .leaderboard__controls {
+        grid-template-columns: 1fr 1fr auto;
+    }
+
+    .leaderboard__actions {
+        grid-column: auto;
+        justify-content: flex-end;
+    }
+
+    .leaderboard__table thead th,
+    .leaderboard__table th,
+    .leaderboard__table td {
+        padding: 1.3rem 1.4rem;
+    }
+}

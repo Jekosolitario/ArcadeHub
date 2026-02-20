@@ -37,93 +37,112 @@
 
     <script src="/js/leaderboard.js" defer></script>
 
-
     <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/leaderboard.css">
 </head>
 
 <body>
+
     <div class="layout">
         <div id="site-header"></div>
 
-
-        <main class="main-classifica">
-
-        </main>
-
-        <div id="site-footer"></div>
-    </div>
-    <main id="main" class="main-classifica" aria-labelledby="leaderboard-title">
-            <header class="page-header">
-                <div class="page-header__left">
-                    <h1 id="leaderboard-title" class="page-title">Classifica</h1>
-                    <p class="page-subtitle">Scegli un gioco per vedere la classifica oppure guarda la classifica generale (top-player per gioco).</p>
-                </div>
-
-                <div class="page-header__right">
-                    <label for="game-select" class="sr-only">Seleziona gioco</label>
-                    <select id="game-select" class="select" aria-label="Seleziona gioco">
-                        <option value="flappy">Flappy</option>
-                    </select>
-                </div>
-            </header>
-
-            <!-- PER-GAME LEADERBOARD -->
-            <section class="leaderboard-panel" aria-labelledby="leaderboard-title">
-                <h2 class="sr-only">Classifica per gioco</h2>
-
-                <div class="status" aria-live="polite">
-                    <div id="lb-loading" class="status__loading" hidden>
-                        <p>Caricamento classifica…</p>
-                    </div>
-                    <div id="lb-error" class="status__error" hidden role="alert">
-                        <p id="lb-error-text">Errore nel caricamento della classifica.</p>
-                    </div>
-                </div>
-
-                <div class="table-wrap" role="region" aria-label="Tabella classifica">
-                    <table>
-                        <caption class="sr-only">Classifica per gioco</caption>
-                        <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Utente</th>
-                                <th scope="col">Punteggio</th>
-                                <th scope="col">Livello</th>
-                            </tr>
-                        </thead>
-                        <tbody id="lb-rows">
-                            <!-- JS: righe della classifica -->
-                        </tbody>
-                    </table>
-                </div>
-
-                <p class="muted small" id="lb-empty" hidden>La classifica è vuota — gioca e sarai il primo!</p>
-            </section>
-
-            <!-- GAME-BY-GAME SUMMARY -->
-            <section class="leaderboard-panel" aria-label="Classifica per gioco - top player per ogni gioco">
-                <header>
-                    <h3>Classifica per gioco (Top player per ciascun gioco)</h3>
+        <main class="main-leaderboard" id="main-content">
+            <section class="leaderboard" aria-labelledby="lb-title">
+                <header class="leaderboard__head">
+                    <h1 id="lb-title">Classifica</h1>
+                    <p class="leaderboard__subtitle">
+                        Visualizza la classifica globale oppure seleziona un gioco per vedere la classifica dedicata.
+                    </p>
                 </header>
 
-                <div class="table-wrap" role="region" aria-label="Tabella top per gioco">
-                    <table>
-                        <caption class="sr-only">Top player per gioco</caption>
+                <!-- Controlli -->
+                <form class="leaderboard__controls" id="lb-controls" autocomplete="off">
+                    <div class="leaderboard__control">
+                        <label for="lb-scope">Tipo classifica</label>
+                        <select id="lb-scope" name="scope" aria-describedby="lb-scope-hint">
+                            <option value="GLOBAL" selected>Globale</option>
+                            <option value="GAME">Per gioco</option>
+                        </select>
+                    </div>
+
+                    <div class="leaderboard__control" id="lb-game-wrap" hidden>
+                        <label for="lb-game">Gioco</label>
+                        <select id="lb-game" name="game">
+                            <option value="FLAPPY" selected>Flappy Bird</option>
+                            <!-- Futuro: aggiungere altri giochi -->
+                        </select>
+                    </div>
+
+                    <div class="leaderboard__actions">
+                        <button type="button" class="btn btn-ghost" id="lb-refresh">
+                            Aggiorna
+                        </button>
+                        <span class="leaderboard__updated" id="lb-updated" aria-live="polite"></span>
+                    </div>
+                </form>
+
+                <!-- Stato UI (JS lo gestisce) -->
+                <div class="leaderboard__status" id="lb-status" aria-live="polite" role="status">
+                    <span id="lb-loading" hidden>Caricamento classifica…</span>
+                    <span id="lb-empty" hidden>Nessun dato disponibile.</span>
+                    <span id="lb-error" hidden>Errore nel caricamento. Riprova.</span>
+                </div>
+
+                <!-- Tabella -->
+                <div class="leaderboard__table-wrap" role="region" aria-label="Tabella classifica" tabindex="0">
+                    <table class="table leaderboard__table" id="lb-table">
+                        <caption class="sr-only">Classifica utenti</caption>
+
                         <thead>
                             <tr>
-                                <th scope="col">Gioco</th>
-                                <th scope="col">Utente</th>
-                                <th scope="col">Punteggio</th>
-                                <th scope="col">Livello</th>
+                                <th scope="col" class="col-rank">#</th>
+                                <th scope="col" class="col-avatar">Avatar</th>
+                                <th scope="col" class="col-username">Username</th>
+
+                                <!-- Colonne GLOBAL -->
+                                <th scope="col" class="col-totalScore" data-col="GLOBAL">Punteggio totale</th>
+                                <th scope="col" class="col-totalPlayed" data-col="GLOBAL">Partite totali</th>
+                                <th scope="col" class="col-level" data-col="GLOBAL">Livello</th>
+
+                                <!-- Colonne PER GIOCO -->
+                                <th scope="col" class="col-bestScore" data-col="GAME" hidden>Best score</th>
+                                <th scope="col" class="col-gamePlayed" data-col="GAME" hidden>Partite (gioco)</th>
+                                <th scope="col" class="col-levelGame" data-col="GAME" hidden>Livello</th>
                             </tr>
                         </thead>
-                        <tbody id="lb-games-rows">
-                            <!-- JS: righe game-by-game -->
+
+                        <tbody id="lb-tbody">
+                            <!-- JS: righe inserite qui -->
                         </tbody>
                     </table>
                 </div>
 
-                <p class="muted small" id="lb-games-empty" hidden>Ancora nessun punteggio registrato per i giochi.</p>
+                <!-- Template riga: JS clona e compila -->
+                <template id="lb-row-template">
+                    <tr class="lb-row">
+                        <td class="cell-rank" data-field="rank"></td>
+
+                        <td class="cell-avatar">
+                            <img class="avatar" data-field="avatarUrl" alt="" loading="lazy" width="32" height="32" />
+                        </td>
+
+                        <td class="cell-username" data-field="username"></td>
+
+                        <!-- GLOBAL -->
+                        <td class="cell-totalScore" data-field="totalScore" data-col="GLOBAL"></td>
+                        <td class="cell-totalPlayed" data-field="totalPlayed" data-col="GLOBAL"></td>
+                        <td class="cell-level" data-field="level" data-col="GLOBAL"></td>
+
+                        <!-- GAME -->
+                        <td class="cell-bestScore" data-field="bestScore" data-col="GAME" hidden></td>
+                        <td class="cell-gamePlayed" data-field="playedCount" data-col="GAME" hidden></td>
+                        <td class="cell-levelGame" data-field="level" data-col="GAME" hidden></td>
+                    </tr>
+                </template>
+
+                <noscript>
+                    <p>Questa pagina richiede JavaScript per caricare la classifica.</p>
+                </noscript>
             </section>
         </main>
 
