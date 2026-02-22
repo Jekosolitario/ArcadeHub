@@ -192,7 +192,6 @@
   let waveIndex = 0;         // 0..2
   let killedThisWave = 0;    // count kills (towards 1000)
   let endlessKills = 0;      // kills in endless
-  let nextEndlessBonusAt = 500;
 
   let invulnerableMs = 0;
 
@@ -582,11 +581,14 @@
   }
 
   function rewardWaveAndNext() {
-    score += 50;
+    // boss kill reward
+    score += 10;
+
+    // recupera 1 vita se sei sotto 3
+    if (lives < 3) lives += 1;
 
     waveIndex++;
     if (waveIndex >= 3) {
-      // win -> endless
       state = "win";
 
       for (let i = 0; i < 10; i++) {
@@ -602,13 +604,13 @@
       enemyBullets = [];
       return;
     }
+
     goBanner();
   }
 
   function goEndless() {
     state = "endless";
     endlessKills = 0;
-    nextEndlessBonusAt = 500;
     enemies = [];
     bullets = [];
     enemyBullets = [];
@@ -690,18 +692,17 @@
 
     // enemies movement + shooting
     const shootChance = enemyShootChancePerSec();
-    enemies.forEach((e) => {
-      e.y += e.vy * step;
+    enemies.forEach((en) => {
+      en.y += en.vy * step;
 
-      // shoot cooldown
-      e.shootCd -= (step / 60);
-      if (e.shootCd <= 0) {
-        e.shootCd = 0.6 + Math.random() * 0.9;
+      en.shootCd -= step / 60;
+      if (en.shootCd <= 0) {
+        en.shootCd = 0.6 + Math.random() * 0.9;
         if (Math.random() < shootChance) {
           const U = unit();
           enemyBullets.push({
-            x: e.x + e.w / 2 - Math.round(U * 0.14),
-            y: e.y + e.h,
+            x: en.x + en.w / 2 - Math.round(U * 0.14),
+            y: en.y + en.h,
             w: Math.round(U * 0.28),
             h: Math.round(U * 0.70),
             vx: 0,
@@ -712,10 +713,10 @@
       }
     });
 
-    // remove enemies offscreen -> se arrivano al fondo = danno vita (pressione)
+    // remove enemies offscreen -> se arrivano al fondo = danno vita
     for (let i = enemies.length - 1; i >= 0; i--) {
-      const e = enemies[i];
-      if (e.y > H + 60) {
+      const en = enemies[i];
+      if (en.y > H + 60) {
         enemies.splice(i, 1);
         hitPlayer();
       }
@@ -732,7 +733,7 @@
     });
     enemyBullets = enemyBullets.filter((b) => b.y < H + 40);
 
-    // collisions: enemy bullets vs player
+    // collisions: enemy bullets vs player (con padding hitbox)
     for (let i = enemyBullets.length - 1; i >= 0; i--) {
       const b = enemyBullets[i];
       const pad = Math.round(unit() * 0.15);
@@ -740,6 +741,7 @@
       const by = b.y - pad;
       const bw = b.w + pad * 2;
       const bh = b.h + pad * 2;
+
       if (aabb(bx, by, bw, bh, player.x, player.y, player.w, player.h)) {
         enemyBullets.splice(i, 1);
         hitPlayer();
@@ -756,15 +758,16 @@
       bossShoot(step);
     }
 
-    // collisions: player bullets vs enemies
+    // collisions: player bullets vs enemies/boss
     for (let bi = bullets.length - 1; bi >= 0; bi--) {
       const b = bullets[bi];
 
       // vs boss
       if (boss) {
-        const bx = boss.x - boss.w / 2;
-        const by = boss.y - boss.h / 2;
-        if (aabb(b.x, b.y, b.w, b.h, bx, by, boss.w, boss.h)) {
+        const bbx = boss.x - boss.w / 2;
+        const bby = boss.y - boss.h / 2;
+
+        if (aabb(b.x, b.y, b.w, b.h, bbx, bby, boss.w, boss.h)) {
           bullets.splice(bi, 1);
           boss.hp -= 1;
           spawnExplosion(b.x + b.w / 2, b.y, false);
@@ -772,12 +775,10 @@
           if (boss.hp <= 0) {
             spawnExplosion(boss.x, boss.y, true);
 
-            // wave boss defeated
             if (state === "boss") {
               boss = null;
-              rewardWaveAndNext();
+              rewardWaveAndNext(); // +10 + heal
             } else {
-              // endless boss? (non usato ora)
               boss = null;
             }
           }
@@ -787,45 +788,40 @@
 
       // vs enemies
       for (let ei = enemies.length - 1; ei >= 0; ei--) {
-        const e = enemies[ei];
-        if (aabb(b.x, b.y, b.w, b.h, e.x, e.y, e.w, e.h)) {
-          bullets.splice(bi, 1);
+        const en = enemies[ei];
+        if (!aabb(b.x, b.y, b.w, b.h, en.x, en.y, en.w, en.h)) continue;
 
-          e.hp -= 1;
-          spawnExplosion(b.x + b.w / 2, b.y, false);
+        bullets.splice(bi, 1);
+        en.hp -= 1;
+        spawnExplosion(b.x + b.w / 2, b.y, false);
 
-          if (e.hp <= 0) {
-            spawnExplosion(e.x + e.w / 2, e.y + e.h / 2, false);
-            enemies.splice(ei, 1);
+        if (en.hp <= 0) {
+          spawnExplosion(en.x + en.w / 2, en.y + en.h / 2, false);
+          enemies.splice(ei, 1);
 
-            // counters
-            if (state === "endless") {
-              endlessKills++;
-              if (endlessKills >= nextEndlessBonusAt) {
-                score += 10;
-                nextEndlessBonusAt += 500;
-              }
-            } else {
-              killedThisWave++;
-              if (killedThisWave >= WAVES[waveIndex].enemiesToKill) {
-                // stop spawn and go boss
-                state = "boss";
-                enemies = [];
-                bullets = [];
-                enemyBullets = [];
-                spawnBoss();
-                break;
-              }
+          // ✅ 1 punto per alieno ucciso (sempre)
+          score += 1;
+
+          if (state === "endless") {
+            endlessKills++;
+          } else {
+            killedThisWave++;
+            if (killedThisWave >= WAVES[waveIndex].enemiesToKill) {
+              state = "boss";
+              enemies = [];
+              bullets = [];
+              enemyBullets = [];
+              spawnBoss();
             }
           }
-          break;
         }
+        break;
       }
     }
 
-    // explosions
-    explosions.forEach((e) => e.update(step));
-    explosions = explosions.filter((e) => !e.done);
+    // explosions (solo qui, una volta)
+    explosions.forEach((ex) => ex.update(step));
+    explosions = explosions.filter((ex) => !ex.done);
   }
 
   // ----------------------- DRAW -----------------------
@@ -842,10 +838,10 @@
   }
 
   function drawEnemies() {
-    for (const e of enemies) {
-      const img = alienImg(e.type);
-      if (ready(img)) c.drawImage(img, e.x, e.y, e.w, e.h);
-      else c.fillRect(e.x, e.y, e.w, e.h);
+    for (const en of enemies) {
+      const img = alienImg(en.type);
+      if (ready(img)) c.drawImage(img, en.x, en.y, en.w, en.h);
+      else c.fillRect(en.x, en.y, en.w, en.h);
     }
   }
 
@@ -853,7 +849,6 @@
     if (!boss) return;
     const dx = boss.x - boss.w / 2;
     const dy = boss.y - boss.h / 2;
-
     if (ready(boss.img)) c.drawImage(boss.img, dx, dy, boss.w, boss.h);
     else c.fillRect(dx, dy, boss.w, boss.h);
   }
@@ -870,93 +865,45 @@
       drawControlsHint();
       return;
     }
-    // render game world in all non-start states
-    player.draw();
+
+    player?.draw?.();
     drawEnemies();
     drawBoss();
     drawBullets();
-    explosions.forEach((e) => e.draw());
+    explosions.forEach((ex) => ex.draw());
     drawHud();
 
-    if (state === "banner") {
-      drawWaveBanner();
-      return;
-    }
-
+    if (state === "banner") drawWaveBanner();
     if (state === "paused") {
       drawCenterText("PAUSED", "Press P to Resume");
       drawControlsHint();
-      return;
     }
-
-    if (state === "win") {
-      drawCenterText("YOU WIN", "Endless mode incoming...");
-      return;
-    }
-
-    if (state === "gameover") {
-      drawCenterText("GAME OVER", isMobile() ? "Tap / SPACE to Restart" : "Press SPACE to Restart");
-      return;
-    }
+    if (state === "win") drawCenterText("YOU WIN", "Endless mode incoming...");
+    if (state === "gameover") drawCenterText("GAME OVER", isMobile() ? "Tap / SPACE to Restart" : "Press SPACE to Restart");
   }
 
   // ----------------------- LOOP -----------------------
   function loop(ts) {
     rafId = requestAnimationFrame(loop);
-    if (!running) {
-      lastTs = ts;
-      return;
-    }
+    if (!running) { lastTs = ts; return; }
 
     if (lastTs == null) lastTs = ts;
     const dtMs = Math.min(50, ts - lastTs);
     lastTs = ts;
-
     const step = dtMs / (1000 / 60);
 
-    if (state !== "paused" && state !== "start" && state !== "gameover") {
-      update(step);
-    } else {
-      // banner/win hanno timer dentro update, ma li gestiamo comunque:
-      if (state === "banner" || state === "win") update(step);
-    }
+    if (state !== "paused" && state !== "start" && state !== "gameover") update(step);
+    else if (state === "banner" || state === "win") update(step);
 
     draw();
   }
 
   // ----------------------- INPUT -----------------------
+  const touch = { moveId: null, offsetX: 0 };
+
   function togglePause() {
     if (state === "playing" || state === "boss" || state === "endless") state = "paused";
-    else if (state === "paused") state = (boss ? "boss" : (waveIndex >= 3 ? "endless" : "playing"));
-  }
-
-  function startOrRestart() {
-    if (state === "start") {
-      waveIndex = 0;
-      score = 0;
-      lives = 3;
-      killedThisWave = 0;
-      endlessKills = 0;
-      nextEndlessBonusAt = 500;
-      window.__invadersScoreSent = false;
-
-      resetRoundForWave();
-      goBanner();
-      return;
-    }
-
-    if (state === "gameover") {
-      waveIndex = 0;
-      score = 0;
-      lives = 3;
-      killedThisWave = 0;
-      endlessKills = 0;
-      nextEndlessBonusAt = 500;
-      window.__invadersScoreSent = false;
-
-      resetRoundForWave();
-      goBanner();
-    }
+    else if (state === "paused") state = boss ? "boss" : (waveIndex >= 3 ? "endless" : "playing");
   }
 
   function resetRoundForWave() {
@@ -970,6 +917,18 @@
     player.syncScale();
   }
 
+  function startOrRestart() {
+    waveIndex = 0;
+    score = 0;
+    lives = 3;
+    killedThisWave = 0;
+    endlessKills = 0;
+    window.__invadersScoreSent = false;
+
+    resetRoundForWave();
+    goBanner();
+  }
+
   function onKeyDown(e) {
     if (!running) return;
 
@@ -979,71 +938,54 @@
     }
 
     if (e.code === "Space") {
-      if (state === "start" || state === "gameover") {
-        startOrRestart();
-        return;
-      }
+      if (state === "start" || state === "gameover") { startOrRestart(); return; }
       if (state === "paused" || state === "banner" || state === "win") return;
       keys.shoot = true;
       return;
     }
 
     if (state !== "playing" && state !== "boss" && state !== "endless") return;
-
     if (e.code === "ArrowLeft" || e.code === "KeyA") keys.left = true;
     if (e.code === "ArrowRight" || e.code === "KeyD") keys.right = true;
   }
+
   function onKeyUp(e) {
     if (e.code === "ArrowLeft" || e.code === "KeyA") keys.left = false;
     if (e.code === "ArrowRight" || e.code === "KeyD") keys.right = false;
     if (e.code === "Space") keys.shoot = false;
   }
 
-  const touch = {
-    moveId: null,      // pointerId che controlla il movimento
-    offsetX: 0,        // distanza dito-centro nave per drag naturale
-  };
-
   function onPointerDown(e) {
-    if (state === "start" || state === "gameover") {
-      startOrRestart();
-      return;
-    }
+    if (state === "start" || state === "gameover") { startOrRestart(); return; }
     if (state === "paused" || state === "banner" || state === "win") return;
 
     canvas.setPointerCapture?.(e.pointerId);
-
     const rect = canvas.getBoundingClientRect();
     const x = e.clientX - rect.left;
 
-    // questo dito controlla tutto
     touch.moveId = e.pointerId;
     touch.offsetX = x - (player.x + player.w / 2);
-
     player.targetX = clamp(x - touch.offsetX - player.w / 2, 10, getCanvasW() - player.w - 10);
 
-    // ✅ auto-fire con 1 dito
-    if (isMobile()) keys.shoot = true;
+    if (isMobile()) keys.shoot = true; // autofire mobile
   }
 
   function onPointerUp(e) {
     canvas.releasePointerCapture?.(e.pointerId);
-
     if (touch.moveId === e.pointerId) {
       touch.moveId = null;
       touch.offsetX = 0;
-      keys.shoot = false; // ✅ stop autofire
+      keys.shoot = false;
     }
   }
 
   function onPointerMove(e) {
-    if (touch.moveId === null) return;
+    if (touch.moveId == null) return;
     if (e.pointerId !== touch.moveId) return;
     if (state !== "playing" && state !== "boss" && state !== "endless") return;
 
     const rect = canvas.getBoundingClientRect();
     const x = e.clientX - rect.left;
-
     player.targetX = clamp(x - touch.offsetX - player.w / 2, 10, getCanvasW() - player.w - 10);
   }
 
@@ -1054,7 +996,6 @@
     canvas.addEventListener("pointermove", onPointerMove);
     window.addEventListener("pointerup", onPointerUp);
   }
-
   function unbindInputs() {
     window.removeEventListener("keydown", onKeyDown);
     window.removeEventListener("keyup", onKeyUp);
@@ -1067,40 +1008,31 @@
   function handleResize() {
     if (!running) return;
     if (!resizeCanvas()) return;
-
     recomputeScale();
     if (!player) player = new Player();
     player.syncScale();
   }
-
   window.addEventListener("resize", handleResize);
-  if (window.visualViewport) {
-    window.visualViewport.addEventListener("resize", handleResize);
-  }
+  window.visualViewport?.addEventListener("resize", handleResize);
 
   // ----------------------- API -----------------------
   window.Invaders = {
     start() {
       if (running) return;
       running = true;
-
       bindInputs();
 
       requestAnimationFrame(() => {
         if (resizeCanvas()) recomputeScale();
-
-
         player = new Player();
         player.syncScale();
 
-        // start screen
         state = "start";
         waveIndex = 0;
         score = 0;
         lives = 3;
         killedThisWave = 0;
         endlessKills = 0;
-        nextEndlessBonusAt = 500;
         window.__invadersScoreSent = false;
 
         lastTs = null;
@@ -1110,13 +1042,11 @@
 
     stop() {
       running = false;
-
       unbindInputs();
       if (rafId) cancelAnimationFrame(rafId);
       rafId = null;
       lastTs = null;
 
-      // reset soft
       state = "start";
       enemies = [];
       bullets = [];
@@ -1124,11 +1054,11 @@
       explosions = [];
       boss = null;
 
-      // clear
       const W = getCanvasW();
       const H = getCanvasH();
       c.clearRect(0, 0, W, H);
     },
+
     pause() { if (running && state !== "paused") state = "paused"; },
     resume() { if (running && state === "paused") state = boss ? "boss" : (waveIndex >= 3 ? "endless" : "playing"); },
   };
