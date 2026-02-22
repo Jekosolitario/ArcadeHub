@@ -125,6 +125,12 @@ const api = (() => {
         return payload;
     }
 
+    async function getGameProgress(gameCode) {
+        return request(`/api/game/progress?gameCode=${encodeURIComponent(gameCode)}`, {
+            method: "GET",
+            headers: { "Accept": "application/json" },
+        });
+    }
 
     // -------------------- API methods --------------------
     /**
@@ -252,6 +258,7 @@ const api = (() => {
         changeMyUsername,
         deleteMyAccount,
         submitScore,
+        getGameProgress,
 
         // error class (utile per auth.js / UI)
         ApiError,

@@ -10,6 +10,14 @@ const btnExitConfirm = document.getElementById("btnExitConfirm");
 const rotateOverlay = document.getElementById("rotateOverlay");
 const btnRotateCheck = document.getElementById("btnRotateCheck");
 const btnRotateBack = document.getElementById("btnRotateBack");
+const LANDSCAPE_ONLY_GAMES = new Set(["flappy"]);
+
+const ORIENTATION_RULES = {
+    flappy: "landscape",
+    invaders: "portrait",
+};
+// solo su mobile (<=900px). Su desktop: nessun blocco.
+// invaders NON incluso -> funziona anche in portrait
 
 let pendingGameId = null;
 let currentGame = null;
@@ -18,25 +26,52 @@ let lastFocusedEl = null;
 function rememberFocus() {
     lastFocusedEl = document.activeElement instanceof HTMLElement ? document.activeElement : null;
 }
-
 function restoreFocus() {
     (lastFocusedEl && document.contains(lastFocusedEl) ? lastFocusedEl : btnClose)?.focus?.();
 }
 
+function isMobile() {
+    return window.matchMedia("(max-width: 900px)").matches;
+}
+
+function getOrientation() {
+    return window.matchMedia("(orientation: portrait)").matches ? "portrait" : "landscape";
+}
+
+function isOrientationAllowed(gameId) {
+    if (!isMobile()) return true;
+    const rule = ORIENTATION_RULES[gameId];
+    if (!rule) return true; // default: libero
+    return getOrientation() === rule;
+}
+/* ===================== GAME REGISTRY ===================== */
+// ogni gioco deve esporre window.<Name> = { start(), stop() }
+const GAMES = {
+    flappy: () => window.Flappy,
+    invaders: () => window.Invaders,
+    // pong: () => window.Pong,
+};
+
+function getGameApi(gameId) {
+    return GAMES[gameId]?.() || null;
+}
+
 /* ---------------- OVERLAY ---------------- */
 function openOverlay(gameId) {
-    rememberFocus();                 //  salva dove eri (card cliccata)
+    rememberFocus();
     currentGame = gameId;
+
+    document.body.classList.remove("game--flappy", "game--invaders");
+    document.body.classList.add(`game--${gameId}`);
 
     overlay.classList.add("is-open");
     overlay.setAttribute("aria-hidden", "false");
 
-    btnClose?.focus?.();             //  focus dentro dialog
+    btnClose?.focus?.();
 
-    // Avvia gioco scelto
-    if (gameId === "flappy") {
-        window.Flappy?.start?.();
-    }
+    // Avvia gioco scelto (generic)
+    const api = getGameApi(gameId);
+    api?.start?.();
 }
 
 function closeOverlay() {
@@ -44,12 +79,15 @@ function closeOverlay() {
         document.activeElement.blur();
     }
 
-    window.Flappy?.stop?.();
+    // Stop gioco corrente (generic)
+    const api = getGameApi(currentGame);
+    api?.stop?.();
 
     overlay.classList.remove("is-open");
     overlay.setAttribute("aria-hidden", "true");
 
-    restoreFocus();                  // torna alla card giusta
+    restoreFocus();
+    document.body.classList.remove("game--flappy", "game--invaders");
     currentGame = null;
 }
 
@@ -79,18 +117,16 @@ cards.forEach((btn) => {
         const gameId = btn.dataset.game;
         if (!gameId || btn.disabled) return;
 
-        if (isMobilePortrait()) {
+        if (!isOrientationAllowed(gameId)) {
             openRotateOverlay(gameId);
             return;
         }
-
         openOverlay(gameId);
     });
 });
 
 btnClose.addEventListener("click", openExitModal);
 
-// ✅ ESC fix: non chiudere subito dopo aver aperto
 window.addEventListener("keydown", (e) => {
     if (e.key !== "Escape") return;
 
@@ -104,24 +140,39 @@ window.addEventListener("keydown", (e) => {
     }
 });
 
-// Bottoni modal
 btnExitCancel.addEventListener("click", closeExitModal);
 btnExitConfirm.addEventListener("click", confirmExit);
 
-// Click fuori (backdrop) per annullare
 exitModal.addEventListener("click", (e) => {
     if (e.target?.dataset?.close === "true") closeExitModal();
 });
 
-function isMobilePortrait() {
+function isMobilePortraitForGame(gameId) {
     const isSmall = window.matchMedia("(max-width: 900px)").matches;
     const isPortrait = window.matchMedia("(orientation: portrait)").matches;
-    return isSmall && isPortrait;
+    return isSmall && isPortrait && LANDSCAPE_ONLY_GAMES.has(gameId);
 }
 
 function openRotateOverlay(gameId) {
     rememberFocus();
     pendingGameId = gameId;
+
+    // testo dinamico
+    const rule = ORIENTATION_RULES[gameId];
+    const title = document.getElementById("rotateTitle");
+    const text = rotateOverlay.querySelector(".rotate-text");
+
+    if (rule === "landscape") {
+        title.textContent = "Ruota il telefono";
+        text.innerHTML = "Per giocare, usa la modalità <strong>orizzontale</strong> (landscape).";
+    } else if (rule === "portrait") {
+        title.textContent = "Torna in verticale";
+        text.innerHTML = "Per giocare, usa la modalità <strong>verticale</strong> (portrait).";
+    } else {
+        title.textContent = "Orientamento non supportato";
+        text.textContent = "Ruota il dispositivo e riprova.";
+    }
+
     rotateOverlay.classList.add("is-open");
     rotateOverlay.setAttribute("aria-hidden", "false");
     btnRotateCheck.focus();
@@ -139,7 +190,7 @@ function closeRotateOverlay() {
 
 function tryStartPendingGame() {
     if (!pendingGameId) return;
-    if (isMobilePortrait()) return;
+    if (!isOrientationAllowed(pendingGameId)) return;
 
     const gameId = pendingGameId;
     closeRotateOverlay();
@@ -149,17 +200,48 @@ function tryStartPendingGame() {
 btnRotateCheck.addEventListener("click", tryStartPendingGame);
 btnRotateBack.addEventListener("click", closeRotateOverlay);
 
-window.addEventListener("orientationchange", tryStartPendingGame);
-window.addEventListener("resize", tryStartPendingGame);
+function enforceOrientationWhilePlaying() {
+    if (!overlay.classList.contains("is-open")) return;
+    if (!currentGame) return;
+
+    if (!isOrientationAllowed(currentGame)) {
+        // Pausa il gioco se possibile
+        const api = getGameApi(currentGame);
+        api?.pause?.(); // opzionale: se lo implementi in invaders.js
+        openRotateOverlay(currentGame);
+    } else {
+        // se torna ok, chiudi rotate overlay e riprendi
+        if (rotateOverlay.classList.contains("is-open")) closeRotateOverlay();
+        const api = getGameApi(currentGame);
+        api?.resume?.(); // opzionale
+    }
+}
+
+window.addEventListener("orientationchange", enforceOrientationWhilePlaying);
+window.addEventListener("resize", enforceOrientationWhilePlaying);
+
+
 
 /* =========================================================
-   SCORE SUBMIT (guest vs logged)
-   - Non blocca il gioco se non sei loggato
-   - Se loggato: POST /api/game/score
-   - Da chiamare da flappy.js quando la run finisce
+   SCORE SUBMIT (robusto)
+   - supporta submitScore(score)
+   - supporta submitScore(gameCode, score) 
 ========================================================= */
-window.submitScore = async (gameCode, score) => {
+window.submitScore = async (...args) => {
+    let gameCode, score;
+
+    if (args.length === 1) {
+        score = args[0];
+        gameCode = (currentGame || "").toUpperCase(); // "invaders" -> "INVADERS"
+    } else {
+        [gameCode, score] = args;
+        gameCode = String(gameCode || "").toUpperCase();
+    }
+
+    if (!gameCode || score === undefined || score === null) return;
+
     try {
+        console.log("[submitScore]", { gameCode, score }); // tienilo finché testi
         await api.post("/api/game/score", { gameCode, score });
     } catch (e) {
         console.error("Errore submitScore:", e);

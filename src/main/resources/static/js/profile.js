@@ -22,6 +22,27 @@ document.addEventListener("DOMContentLoaded", async () => {
     const $best = document.querySelector("#best-score");
     const $last = document.querySelector("#last-score");
 
+    const $gameSelect = document.querySelector("#game-select");
+
+    const GAMES = [
+        { code: "flappy", label: "Flappy" },
+        { code: "invaders", label: "Invaders" },
+    ];
+
+    function initGameSelect() {
+        if (!$gameSelect) return;
+        $gameSelect.innerHTML = "";
+        for (const g of GAMES) {
+            const opt = document.createElement("option");
+            opt.value = g.code;
+            opt.textContent = g.label;
+            $gameSelect.appendChild(opt);
+        }
+        if (!$gameSelect.value) $gameSelect.value = "flappy";
+    }
+
+    initGameSelect();
+
     const $btnOpenAvatar = document.querySelector("#btn-open-avatar");
     const $avatarModal = document.querySelector("#avatar-modal");
     const $avatarGrid = document.querySelector("#avatar-grid");
@@ -36,8 +57,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     $username && ($username.textContent = me.username ?? "—");
     $email && ($email.textContent = me.email ?? "—");
     $level && ($level.textContent = String(me.level ?? 1));
-    $best && ($best.textContent = String(me.bestScore ?? 0));
-    $last && ($last.textContent = String(me.lastScore ?? 0));
+    $best && ($best.textContent = "—");
+    $last && ($last.textContent = "—");
 
     // avatar iniziale (id preso dal backend se presente)
     const currentAvatarId = Number(me.avatarId ?? AVATAR_DEFAULT_ID);
@@ -71,9 +92,45 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     async function saveMyAvatar(avatarId) {
-        // POST /api/me/avatar -> 204 No Content
-        await api.post("/api/me/avatar", { avatarId: Number(avatarId) });
-        return true;
+        const updated = await api.updateMyAvatar(Number(avatarId));
+        return updated; // MeResponse
+    }
+
+    // ----------------- PROGRESS API (generico, multi-gioco) -----------------
+    async function loadProgress(gameCode) {
+        const code = String(gameCode || "").trim();
+        if (!code) return null;
+
+        // GET /api/game/progress?gameCode=...
+        return await api.get(`/api/game/progress?gameCode=${encodeURIComponent(code)}`);
+    }
+
+    async function refreshScoresForSelectedGame() {
+        if (!$gameSelect) return;
+
+        const gameCode = $gameSelect.value;
+
+        // loading UI
+        if ($best) $best.textContent = "…";
+        if ($last) $last.textContent = "…";
+
+        try {
+            const p = await loadProgress(gameCode);
+
+            const best = p?.bestScore ?? 0;
+            const last = p?.lastScore ?? 0;
+
+            if ($best) $best.textContent = String(best);
+            if ($last) $last.textContent = String(last);
+
+            // se vogliamo aggiornare anche livello/xp da ProgressResponse
+            // if (p?.level != null && $level) $level.textContent = String(p.level);
+
+        } catch (err) {
+            console.error(err);
+            if ($best) $best.textContent = "—";
+            if ($last) $last.textContent = "—";
+        }
     }
 
     // ----------------- AVATAR MODAL -----------------
@@ -157,6 +214,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
+    // refresh iniziale + su cambio gioco
+    await refreshScoresForSelectedGame();
+    $gameSelect?.addEventListener("change", refreshScoresForSelectedGame);
+
     $btnAvatarSave?.addEventListener("click", async () => {
         if (!selectedAvatarId) return;
 
@@ -164,13 +225,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         $avatarHint.textContent = "Salvataggio…";
 
         try {
-            await saveMyAvatar(selectedAvatarId);
-
-            // aggiorna UI profilo
-            setProfileAvatar(selectedAvatarId);
+            const updated = await saveMyAvatar(selectedAvatarId);
+            const meUpdated = updated?.data ?? updated;
+            setProfileAvatar(meUpdated?.avatarId ?? selectedAvatarId);
             $avatarHint.textContent = "Avatar aggiornato ✅";
 
-            // chiudi dopo un attimo (UX)
             setTimeout(() => closeDialog($avatarModal), 250);
         } catch (err) {
             console.error(err);

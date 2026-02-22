@@ -103,12 +103,12 @@ function resetGlow() {
 // ----------------------- ASSETS -----------------------
 let backgroundLoaded = false;
 const background = new Image();
-background.src = `${ASSET_BASE}images/background.png`;
+background.src = `${ASSET_BASE}images/background.webp`;
 background.onload = () => (backgroundLoaded = true);
 
 let floorLoaded = false;
 const floor = new Image();
-floor.src = `${ASSET_BASE}images/base.png`;
+floor.src = `${ASSET_BASE}images/base.webp`;
 floor.onload = () => (floorLoaded = true);
 
 function getFloorH() {
@@ -154,7 +154,7 @@ class Player {
     this.gravity = 0.5 * SCALE;
 
     this.image = new Image();
-    this.image.src = `${ASSET_BASE}images/bird.png`;
+    this.image.src = `${ASSET_BASE}images/bird.webp`;
     this.scale = 2 * SCALE;
   }
 
@@ -224,7 +224,7 @@ class Tubo {
     this.y = Math.random() * (max - min) + min;
 
     this.image = new Image();
-    this.image.src = `${ASSET_BASE}images/pipe-green.png`;
+    this.image.src = `${ASSET_BASE}images/pipe-green.webp`;
   }
 
   draw() {
