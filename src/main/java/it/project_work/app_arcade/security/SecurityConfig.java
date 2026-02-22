@@ -1,11 +1,13 @@
 package it.project_work.app_arcade.security;
 
+import org.springframework.boot.security.autoconfigure.web.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -15,15 +17,20 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        // 🔥 Static fuori dalla security chain => niente 403 su /assets/**
+        return (web) -> web.ignoring().requestMatchers(
+                PathRequest.toStaticResources().atCommonLocations()
+        );
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                // fetch + session cookie, senza CSRF token
                 .csrf(csrf -> csrf.disable())
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
-                // =========================
-                // Pagine / asset pubblici
-                // =========================
+                // pagine + asset pubblici
                 .requestMatchers(
                         "/",
                         "/index.html",
@@ -38,14 +45,9 @@ public class SecurityConfig {
                         "/partials/**",
                         "/audio/**"
                 ).permitAll()
-                // =========================
-                // AUTH API pubbliche
-                // =========================
+                // auth pubbliche
                 .requestMatchers("/auth/login", "/auth/register", "/auth/me", "/auth/logout").permitAll()
-                // =========================
-                // LEADERBOARD API pubbliche (solo GET)
-                // così la Top5 in home funziona da guest
-                // =========================
+                // leaderboard pubbliche GET
                 .requestMatchers(HttpMethod.GET,
                         "/api/leaderboard/global",
                         "/api/leaderboard/game/**",
@@ -53,21 +55,14 @@ public class SecurityConfig {
                         "/api/leaderboard/flappy",
                         "/api/avatars"
                 ).permitAll()
-                // Se vuoi essere più “strettissimo”:
-                // tutto il resto sotto /api/leaderboard richiede login
                 .requestMatchers("/api/leaderboard/**").authenticated()
-                // =========================
-                // API protette (vera sicurezza)
-                // =========================
+                // API protette
                 .requestMatchers("/api/game/score").authenticated()
                 .requestMatchers("/api/profile/**").authenticated()
                 .requestMatchers("/api/game/progress").authenticated()
-                // tutto il resto autenticato
                 .anyRequest().authenticated()
                 )
-                // login JSON custom, quindi niente formLogin
                 .formLogin(form -> form.disable())
-                // logout gestito dal controller
                 .logout(logout -> logout.disable());
 
         return http.build();
