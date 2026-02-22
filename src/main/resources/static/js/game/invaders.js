@@ -263,7 +263,7 @@
   class Player {
     constructor() {
       const U = unit();
-      this.w = Math.round(U * 2.05);
+      this.w = Math.round(U * 1.50);
       this.h = Math.round(U * 1.75);
       this.x = Math.round(getCanvasW() / 2 - this.w / 2);
       this.targetX = this.x;
@@ -273,7 +273,7 @@
     }
     syncScale() {
       const U = unit();
-      this.w = Math.round(U * 2.05);
+      this.w = Math.round(U * 1.50);
       this.h = Math.round(U * 1.75);
       this.y = Math.round(getCanvasH() - this.h - 18 * SCALE);
       this.x = clamp(this.x, 10, getCanvasW() - this.w - 10);

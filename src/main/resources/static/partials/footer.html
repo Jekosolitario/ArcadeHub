@@ -1,11 +1,96 @@
 <footer class="footer">
-    <section aria-label="Info e contatti">
-        <h2>Info</h2>
-        <p>ArcadeHub — App di intrattenimento 2D.</p>
-        <ul>
-            <li>Email: <a href="mailto:info@arcadehub.example">info@arcadehub.example</a></li>
-            <li>Repository: <a href="#" rel="noopener">GitHub (placeholder)</a></li>
-        </ul>
-    </section>
-    <p>© <time datetime="2026">2026</time> ArcadeHub</p>
+    <div class="footer-inner">
+        <section class="footer-block" aria-label="ArcadeHub">
+            <h2 class="footer-title">ArcadeHub</h2>
+            <p class="footer-text">Gioca, fai record, scala la classifica. Modalità guest disponibile.</p>
+
+            <div class="footer-status" aria-label="Stato applicazione">
+                <span class="status-pill status-pill--online">
+                    <span class="status-dot" aria-hidden="true"></span>
+                    Online
+                </span>
+
+                <span class="status-pill">
+                    v<span id="app-version">1.0</span>
+                </span>
+            </div>
+
+            <div class="footer-cta">
+                <button class="btn btn-ghost" type="button" data-open-feedback>
+                    Segnala bug / Suggerisci
+                </button>
+                <a class="btn btn-primary" href="/play.html">Gioca ora</a>
+            </div>
+        </section>
+
+        <section class="footer-block" aria-label="Link utili">
+            <h3 class="footer-subtitle">Link</h3>
+            <ul class="footer-links">
+                <li><a href="/play.html">Gioca</a></li>
+                <li><a href="/leaderboard.html">Classifica</a></li>
+                <li><a href="/auth.html">Accedi / Registrati</a></li>
+                <li><a href="/profile.html">Profilo</a></li>
+            </ul>
+        </section>
+
+        <section class="footer-block" aria-label="Contatti">
+            <h3 class="footer-subtitle">Contatti</h3>
+            <ul class="footer-links">
+                <li>Email: <a href="mailto:info@arcadehub.example">info@arcadehub.example</a></li>
+                <li>Repo: <a href="#" rel="noopener">GitHub</a></li>
+            </ul>
+
+            <p class="footer-mini muted small">
+                Suggerimenti e bug ci aiutano a migliorare l’esperienza 👾
+            </p>
+        </section>
+    </div>
+
+    <div class="footer-bottom">
+        <p>© <time datetime="2026">2026</time> ArcadeHub</p>
+    </div>
 </footer>
+
+<div class="modal" id="feedbackModal" aria-hidden="true">
+    <div class="modal-backdrop" data-close="true"></div>
+
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="feedbackTitle">
+        <h2 id="feedbackTitle" class="modal-title">Scrivici un messaggio</h2>
+        <p class="modal-text">Segnala un bug o proponi una miglioria. Rispondiamo via email quando possibile.</p>
+
+        <form id="feedbackForm" class="form" novalidate autocomplete="off">
+            <div class="form-group">
+                <label class="form-label" for="fb-type">Tipo</label>
+                <select id="fb-type" name="type" class="select" required>
+                    <option value="BUG" selected>Bug</option>
+                    <option value="SUGGESTION">Suggerimento</option>
+                    <option value="OTHER">Altro</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="fb-email">Email</label>
+                <input id="fb-email" name="email" class="form-input" type="email" placeholder="nome@email.com"
+                    autocomplete="email" required />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="fb-message">Messaggio</label>
+                <textarea id="fb-message" name="message" class="form-input" rows="4" required
+                    placeholder="Descrivi il bug (passi per riprodurlo) oppure la tua idea..."></textarea>
+                <p class="form-hint">Se è un bug, scrivi anche il gioco e cosa stavi facendo.</p>
+            </div>
+
+            <!-- info utili per debug -->
+            <input type="hidden" name="page" id="fb-page" />
+            <input type="hidden" name="userAgent" id="fb-ua" />
+        </form>
+
+        <div class="modal-actions">
+            <button type="button" class="btn btn-ghost" data-close-feedback>Annulla</button>
+            <button type="submit" class="btn btn-primary" form="feedbackForm">Invia</button>
+        </div>
+
+        <p id="fb-status" class="muted small" aria-live="polite" style="margin-top: 1rem;"></p>
+    </div>
+</div>

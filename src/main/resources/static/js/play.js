@@ -63,11 +63,13 @@ function openOverlay(gameId) {
 
     document.body.classList.remove("game--flappy", "game--invaders");
     document.body.classList.add(`game--${gameId}`);
+    document.body.classList.add("is-game-open");
 
     overlay.classList.add("is-open");
     overlay.setAttribute("aria-hidden", "false");
 
-    btnClose?.focus?.();
+    const canvas = document.getElementById("canvas");
+    canvas?.focus?.();
 
     // Avvia gioco scelto (generic)
     const api = getGameApi(gameId);
@@ -88,6 +90,7 @@ function closeOverlay() {
 
     restoreFocus();
     document.body.classList.remove("game--flappy", "game--invaders");
+    document.body.classList.remove("is-game-open");
     currentGame = null;
 }
 
@@ -128,6 +131,9 @@ cards.forEach((btn) => {
 btnClose.addEventListener("click", openExitModal);
 
 window.addEventListener("keydown", (e) => {
+    if (e.code === "Space" && overlay.classList.contains("is-open")) {
+        e.preventDefault(); // niente scroll / niente click su focusable
+    }
     if (e.key !== "Escape") return;
 
     if (exitModal.classList.contains("is-open")) {
