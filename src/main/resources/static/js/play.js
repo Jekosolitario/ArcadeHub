@@ -223,6 +223,79 @@ function enforceOrientationWhilePlaying() {
     }
 }
 
+(() => {
+    function norm(s) {
+        return (s || "").toLowerCase().trim();
+    }
+
+    function setupGameSearchAndFilters() {
+        const input = document.getElementById("game-search");
+        const cards = Array.from(document.querySelectorAll(".game-card"));
+        const diffBtns = Array.from(document.querySelectorAll(".diff-filter"));
+        let diff = "all"; // all | 1 | 2 | 3
+
+        diffBtns.forEach((btn) => {
+            btn.addEventListener("click", () => {
+                diffBtns.forEach((b) => b.setAttribute("aria-pressed", "false"));
+                btn.setAttribute("aria-pressed", "true");
+                diff = btn.dataset.diff || "all";
+                apply();
+            });
+        });
+
+        const datalist = document.getElementById("games-list");
+        if (datalist) {
+            const titles = cards
+                .map(c => c.querySelector("h2")?.textContent?.trim())
+                .filter(Boolean);
+
+            datalist.innerHTML = titles.map(t => `<option value="${t}"></option>`).join("");
+        }
+
+        const filterBtns = Array.from(document.querySelectorAll(".games-filter"));
+
+        let mode = "all"; // all | available | soon
+
+        function apply() {
+            const q = norm(input?.value);
+
+            cards.forEach((card) => {
+                const title = norm(card.querySelector("h2")?.textContent);
+                const isSoon = card.disabled || card.dataset.game === "soon";
+
+                const matchText = !q || title.includes(q);
+                const matchMode =
+                    mode === "all" ||
+                    (mode === "available" && !isSoon) ||
+                    (mode === "soon" && isSoon);
+
+                const cardDiff = card.dataset.difficulty || "0"; // se manca, NON deve passare
+                const matchDiff = (diff === "all") || (cardDiff === diff);
+
+                card.style.display = matchText && matchMode && matchDiff ? "" : "none";
+
+                const empty = document.getElementById("games-empty");
+                if (empty) empty.hidden = cards.some(c => c.style.display !== "none");
+            });
+        }
+
+        input?.addEventListener("input", apply);
+
+        filterBtns.forEach((btn) => {
+            btn.addEventListener("click", () => {
+                filterBtns.forEach((b) => b.setAttribute("aria-pressed", "false"));
+                btn.setAttribute("aria-pressed", "true");
+                mode = btn.dataset.filter || "all";
+                apply();
+            });
+        });
+
+        apply();
+    }
+
+    document.addEventListener("DOMContentLoaded", setupGameSearchAndFilters);
+})();
+
 window.addEventListener("orientationchange", enforceOrientationWhilePlaying);
 window.addEventListener("resize", enforceOrientationWhilePlaying);
 

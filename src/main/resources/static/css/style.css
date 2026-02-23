@@ -1052,6 +1052,55 @@ dialog::backdrop {
     transform: translateX(-50%) translateY(-2px);
 }
 
+.to-top {
+    position: fixed;
+    right: calc(var(--sp-2) + env(safe-area-inset-right));
+    bottom: calc(var(--sp-3) + env(safe-area-inset-bottom));
+    z-index: 99999;
+
+    width: 46px;
+    height: 46px;
+    border-radius: 999px;
+
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: rgba(7, 10, 18, 0.55);
+    color: var(--text);
+
+    display: grid;
+    place-items: center;
+
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(6px);
+    transition: opacity 160ms ease, transform 160ms ease, background 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+}
+
+/* IMPORTANT: quando visibile */
+.to-top.is-visible {
+    opacity: 0.75;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+.to-top:hover {
+    opacity: 1;
+    background: rgba(45, 226, 230, 0.10);
+    border-color: rgba(45, 226, 230, 0.28);
+    box-shadow: var(--glow-cyan);
+}
+
+.to-top:focus-visible {
+    outline: 2px solid rgba(45, 226, 230, 0.75);
+    outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .to-top {
+        transition: none;
+    }
+}
+
+
 /* ============ Media query ============ */
 @media (min-width: 768px) {
     :root {

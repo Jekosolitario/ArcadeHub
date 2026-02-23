@@ -9,6 +9,21 @@
 
 (() => {
     const $ = (sel, root = document) => root.querySelector(sel);
+    const NEXT_PARAM = "next";
+
+    function getNextFromUrl() {
+        const p = new URLSearchParams(window.location.search);
+        const next = p.get(NEXT_PARAM);
+        // sicurezza: accetta solo path interni (no http/https)
+        if (!next) return null;
+        if (!next.startsWith("/")) return null;
+        return next;
+    }
+
+    function redirectAfterLogin() {
+        const next = getNextFromUrl();
+        window.location.href = next || "/index.html";
+    }
 
     // ---------------- Helpers UI ----------------
     let avatarsLoaded = false;
@@ -225,7 +240,7 @@
             setAlert(alertEl, { type: "success", message: "Login OK ✅" });
 
             // redirect (coerente con UI)
-            window.location.href = "/index.html";
+            redirectAfterLogin();
         } catch (err) {
             // ApiError dal wrapper
             if (err?.name === "ApiError") {

@@ -51,12 +51,21 @@
     </div>
 </footer>
 
+<button class="to-top" type="button" aria-label="Torna su" hidden>↑</button>
+
 <div class="modal" id="feedbackModal" aria-hidden="true">
     <div class="modal-backdrop" data-close="true"></div>
 
     <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="feedbackTitle">
         <h2 id="feedbackTitle" class="modal-title">Scrivici un messaggio</h2>
         <p class="modal-text">Segnala un bug o proponi una miglioria. Rispondiamo via email quando possibile.</p>
+
+        <div id="fb-auth-required" class="hint" hidden>
+            <p class="muted" style="margin:0 0 0.8rem;">
+                Per inviare segnalazioni devi essere autenticato.
+            </p>
+            <a class="btn btn-primary" id="fb-go-login" href="/auth.html">Vai al login</a>
+        </div>
 
         <form id="feedbackForm" class="form" novalidate autocomplete="off">
             <div class="form-group">

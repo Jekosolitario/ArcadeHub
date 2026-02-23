@@ -56,38 +56,115 @@
             <!-- GRID GIOCHI -->
             <section class="games" aria-label="Seleziona un gioco">
                 <header class="games-header">
-                    <h1>Gioca</h1>
-                    <p>Scegli un gioco e inizia subito.</p>
+                    <div class="games-header__top">
+
+                        <div class="games-difficulty" aria-label="Filtro difficoltà">
+                            <span class="games-difficulty__label">Difficoltà:</span>
+
+                            <button class="btn btn-ghost diff-filter" type="button" data-diff="all" aria-pressed="true">
+                                Tutte
+                            </button>
+                            <button class="btn btn-ghost diff-filter" type="button" data-diff="1" aria-pressed="false"
+                                aria-label="Facile">
+                                ★
+                            </button>
+                            <button class="btn btn-ghost diff-filter" type="button" data-diff="2" aria-pressed="false"
+                                aria-label="Media">
+                                ★★
+                            </button>
+                            <button class="btn btn-ghost diff-filter" type="button" data-diff="3" aria-pressed="false"
+                                aria-label="Difficile">
+                                ★★★
+                            </button>
+                        </div>
+
+                        <div>
+                            <h1>Gioca</h1>
+                            <p>Scegli un gioco e inizia subito.</p>
+                        </div>
+
+                        <div class="games-search" role="search" aria-label="Cerca un gioco">
+                            <label class="sr-only" for="game-search">Cerca gioco</label>
+                            <input id="game-search" class="games-search__input" type="search"
+                                placeholder="Cerca… (es. Flappy, Invaders)" list="games-list" autocomplete="off" />
+                            <datalist id="games-list"></datalist>
+                        </div>
+                    </div>
+
+                    <div class="games-header__filters">
+                        <button class="btn btn-ghost games-filter" type="button" data-filter="all"
+                            aria-pressed="true">Tutti</button>
+                        <button class="btn btn-ghost games-filter" type="button" data-filter="available"
+                            aria-pressed="false">Disponibili</button>
+                        <button class="btn btn-ghost games-filter" type="button" data-filter="soon"
+                            aria-pressed="false">In arrivo</button>
+                    </div>
                 </header>
 
                 <div class="games-grid">
                     <!-- Card 1: Flappy -->
-                    <button class="game-card" type="button" data-game="flappy" aria-label="Avvia Flappy Bird">
+                    <button class="game-card" type="button" data-game="flappy" data-difficulty="2"
+                        aria-label="Avvia Flappy Bird">
                         <img src="/images/flappy-card.webp" alt="" />
                         <div class="game-card-body">
-                            <h2>Flappy Bird</h2>
+                            <div class="game-card-top">
+                                <h2>Flappy Bird</h2>
+                                <span class="badge badge--new">Hot</span>
+                            </div>
                             <p>Schiva i tubi e fai il miglior punteggio.</p>
+
+                            <div class="game-meta">
+                                <span class="badge badge--cyan">2 min</span>
+                                <span class="badge badge--pink">★★☆</span>
+                                <span class="badge">Arcade</span>
+                            </div>
                         </div>
                     </button>
 
-                    <button class="game-card" type="button" data-game="invaders" aria-label="Avvia Invaders">
+                    <!-- Card 2: Invaders -->
+                    <button class="game-card" type="button" data-game="invaders" data-difficulty="3"
+                        aria-label="Avvia Invaders">
                         <img src="/images/Invaders/invaders-card.webp" alt="" />
                         <div class="game-card-body">
-                            <h2>Invaders</h2>
+                            <div class="game-card-top">
+                                <h2>Invaders</h2>
+                                <span class="badge badge--new">Boss</span>
+                            </div>
+
                             <p>Abbatti gli alieni prima che ti raggiungano.</p>
+
+                            <div class="game-meta">
+                                <span class="badge badge--cyan">Endless</span>
+                                <span class="badge badge--pink">★★★</span>
+                                <span class="badge">Shooter</span>
+                            </div>
                         </div>
                     </button>
 
                     <!-- Placeholder card per futuri giochi -->
-                    <button class="game-card" type="button" data-game="soon" disabled aria-label="Gioco in arrivo">
+                    <button class="game-card" type="button" data-game="soon" data-difficulty="0" disabled
+                        aria-label="Gioco in arrivo">
                         <img src="/images/coming-soon.webp" alt="" />
                         <div class="game-card-body">
-                            <h2>Coming soon</h2>
+                            <div class="game-card-top">
+                                <h2>Coming soon</h2>
+                                <span class="badge badge--soon">Soon</span>
+                            </div>
+
                             <p>Nuovi giochi in arrivo.</p>
+
+                            <div class="game-meta">
+                                <span class="badge">In sviluppo</span>
+                            </div>
                         </div>
                     </button>
                 </div>
             </section>
+
+            <!-- messaggio quando filtri e non trovi nulla -->
+            <p class="games-empty muted" id="games-empty" hidden>
+                Nessun gioco trovato con questi filtri.
+            </p>
 
             <!-- OVERLAY GIOCO -->
             <section class="game-overlay" id="gameOverlay" aria-hidden="true">
@@ -130,8 +207,9 @@
 
         </main>
 
-        <div id="site-footer"></div>
-        <div class="modal" id="feedbackModal" aria-hidden="true"> </div>
+        <div id="site-footer">
+        </div>
+
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.8.0/gsap.min.js"
@@ -143,6 +221,7 @@
     <script src="/js/game/invaders.js"></script>
     <script src="/js/partials.js"></script>
     <script src="/js/play.js"></script>
+    <script src="/js/to-top.js"></script>
     <script src="/js/feedback.js"></script>
 </body>
 

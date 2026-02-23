@@ -67,6 +67,7 @@
 
                 <!-- Controlli -->
                 <form class="leaderboard__controls" id="lb-controls" autocomplete="off">
+
                     <div class="leaderboard__control">
                         <label for="lb-scope">Tipo classifica</label>
                         <select id="lb-scope" name="scope" aria-describedby="lb-scope-hint">
@@ -79,7 +80,7 @@
                         <label for="lb-game">Gioco</label>
                         <select id="lb-game" name="game">
                             <option value="flappy" selected>Flappy Bird</option>
-                            <option value="invaders" selected>Invaders</option>
+                            <option value="invaders">Invaders</option>
                             <!-- Futuro: aggiungere altri giochi -->
                         </select>
                     </div>
@@ -91,6 +92,30 @@
                         <span class="leaderboard__updated" id="lb-updated" aria-live="polite"></span>
                     </div>
                 </form>
+
+                <section class="lb-podium" aria-label="Podio Top 3" hidden>
+
+                    <article class="lb-podium__card lb-podium__card--1">
+                        <div class="lb-podium__rank">1</div>
+                        <img class="lb-podium__avatar" alt="" />
+                        <div class="lb-podium__name">—</div>
+                        <div class="lb-podium__score">—</div>
+                    </article>
+
+                    <article class="lb-podium__card lb-podium__card--2">
+                        <div class="lb-podium__rank">2</div>
+                        <img class="lb-podium__avatar" alt="" />
+                        <div class="lb-podium__name">—</div>
+                        <div class="lb-podium__score">—</div>
+                    </article>
+
+                    <article class="lb-podium__card lb-podium__card--3">
+                        <div class="lb-podium__rank">3</div>
+                        <img class="lb-podium__avatar" alt="" />
+                        <div class="lb-podium__name">—</div>
+                        <div class="lb-podium__score">—</div>
+                    </article>
+                </section>
 
                 <!-- Stato UI (JS lo gestisce) -->
                 <div class="leaderboard__status" id="lb-status" aria-live="polite" role="status">
@@ -159,7 +184,6 @@
         </main>
 
         <div id="site-footer"></div>
-        <div class="modal" id="feedbackModal" aria-hidden="true"> </div>
     </div>
 
     <!-- Accessibilità: helper class da definire poi in CSS -->
@@ -167,6 +191,7 @@
     .sr-only { ... }
   -->
     <script src="/js/partials.js"></script>
+    <script src="/js/to-top.js"></script>
     <script src="/js/feedback.js"></script>
 
 </body>

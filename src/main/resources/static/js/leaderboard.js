@@ -16,6 +16,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const tbody = document.getElementById("lb-tbody");
     const rowTpl = document.getElementById("lb-row-template");
 
+    const podium = document.querySelector(".lb-podium");
+
     const LIMIT = 20;
 
     // Endpoint (adatta se serve)
@@ -65,6 +67,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     function renderRow(rank, scope, data) {
         const fragment = rowTpl.content.cloneNode(true);
         const tr = fragment.querySelector("tr");
+        const uname = (data.username ?? "").toLowerCase().trim();
+        const meName = (me?.username ?? "").toLowerCase().trim();
+
+        if (meName && uname === meName) {
+            tr.classList.add("is-me");
+            tr.setAttribute("data-me", "true");
+        }
 
         tr.querySelector('[data-field="rank"]').textContent = String(rank);
 
@@ -94,6 +103,52 @@ document.addEventListener("DOMContentLoaded", async () => {
         tbody.appendChild(fragment);
     }
 
+    function renderPodium(scope, rows) {
+        if (!podium) return;
+
+        const list = Array.isArray(rows) ? rows : [];
+        const n = list.length;
+
+        // se 0, nascondi
+        if (n === 0) {
+            podium.hidden = true;
+            return;
+        }
+
+        podium.hidden = false;
+
+        const scoreField = (scope === "GLOBAL") ? "totalScore" : "bestScore";
+        const cards = podium.querySelectorAll(".lb-podium__card");
+
+        // mapping: card order in DOM = 2°,1°,3°
+        const mapRowIndex = [1, 0, 2];
+
+        mapRowIndex.forEach((rowIdx, i) => {
+            const card = cards[i];
+            const img = card.querySelector(".lb-podium__avatar");
+            const name = card.querySelector(".lb-podium__name");
+            const score = card.querySelector(".lb-podium__score");
+
+            const r = list[rowIdx];
+
+            if (!r) {
+                // posto vuoto
+                img.src = IMG_1PX;
+                img.alt = "";
+                name.textContent = "—";
+                score.textContent = "";
+                card.style.opacity = "0.45";
+                return;
+            }
+
+            card.style.opacity = "1";
+            img.src = r.avatarUrl || IMG_1PX;
+            img.alt = r.username ? `Avatar di ${r.username}` : "Avatar";
+            name.textContent = r.username ?? "—";
+            score.textContent = `Score: ${String(r?.[scoreField] ?? 0)}`;
+        });
+    }
+
     async function fetchLeaderboard() {
         const scope = scopeSelect.value; // GLOBAL | GAME
         const gameCode = gameSelect.value;
@@ -109,8 +164,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             // GLOBAL => array
             // GAME   => { rows: [...] }
             const rows = Array.isArray(payload) ? payload : (payload?.rows ?? []);
+            renderPodium(scope, rows);
 
             if (rows.length === 0) {
+                setStatus({ loading: false, empty: true, error: "" });
+                podium && (podium.hidden = true);
+                return;
             }
 
             rows.forEach((r, idx) => renderRow(idx + 1, scope, r));

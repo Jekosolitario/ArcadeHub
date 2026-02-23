@@ -82,6 +82,135 @@
     margin-top: var(--sp-2);
 }
 
+/* =========================
+   PODIO TOP 3
+========================= */
+.lb-podium {
+    margin-top: var(--sp-3);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-2);
+}
+
+.lb-podium__card {
+    position: relative;
+    border-radius: calc(var(--radius) + 6px);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: rgba(255, 255, 255, 0.04);
+    box-shadow: var(--shadow-1);
+    backdrop-filter: blur(10px);
+    padding: var(--sp-2);
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-areas:
+        "rank avatar"
+        "rank name"
+        "rank score";
+    column-gap: var(--sp-2);
+    row-gap: 0.4rem;
+    overflow: hidden;
+}
+
+.lb-podium__card::after {
+    content: "";
+    position: absolute;
+    inset: -40% -20%;
+    background: radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.08), transparent 45%);
+    transform: rotate(10deg);
+    pointer-events: none;
+}
+
+.lb-podium__rank {
+    grid-area: rank;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    font-family: var(--ff-ui);
+    font-weight: 900;
+    color: #070a12;
+}
+
+.lb-podium__avatar {
+    grid-area: avatar;
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    object-fit: cover;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(0, 0, 0, 0.35);
+}
+
+.lb-podium__name {
+    grid-area: name;
+    font-weight: 900;
+    color: rgba(255, 255, 255, 0.92);
+}
+
+.lb-podium__score {
+    grid-area: score;
+    font-family: var(--ff-ui);
+    font-weight: 900;
+    color: var(--text-muted);
+}
+
+/* colori medaglie */
+.lb-podium__card--1 .lb-podium__rank {
+    background: linear-gradient(135deg, rgba(249, 220, 53, 0.95), rgba(254, 152, 0, 0.9));
+    box-shadow: var(--glow-yellow);
+}
+
+.lb-podium__card--2 .lb-podium__rank {
+    background: linear-gradient(135deg, rgba(234, 240, 255, 0.85), rgba(120, 140, 170, 0.75));
+}
+
+.lb-podium__card--3 .lb-podium__rank {
+    background: linear-gradient(135deg, rgba(254, 152, 0, 0.55), rgba(140, 90, 40, 0.55));
+}
+
+/* =========================
+   Evidenzia riga "TU"
+========================= */
+.lb-row.is-me {
+    background: rgba(45, 226, 230, 0.10) !important;
+    outline: 2px solid rgba(45, 226, 230, 0.28);
+    outline-offset: -2px;
+}
+
+.lb-row.is-me .cell-username {
+    position: relative;
+}
+
+.lb-row.is-me .cell-username::after {
+    content: "TU";
+    margin-left: 0.8rem;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.6rem;
+    border-radius: 999px;
+    font-size: var(--fs-small);
+    font-weight: 900;
+    color: var(--neon-cyan);
+    border: 1px solid rgba(45, 226, 230, 0.28);
+    box-shadow: var(--glow-cyan);
+    background: rgba(0, 0, 0, 0.35);
+}
+
+/* desktop: podio 3 colonne e 1° al centro più grande */
+@media (min-width: 768px) {
+    .lb-podium {
+        grid-template-columns: 1fr 1.2fr 1fr;
+        align-items: stretch;
+    }
+
+    .lb-podium__card--1 {
+        transform: translateY(-6px);
+        border-color: rgba(249, 220, 53, 0.35);
+        box-shadow: var(--shadow-1), var(--glow-yellow);
+    }
+}
+
 /* ============ Media query ============ */
 @media (min-width: 768px) {
     .leaderboard {
