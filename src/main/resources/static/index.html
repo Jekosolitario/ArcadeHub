@@ -1,52 +1,65 @@
 <!DOCTYPE html>
 <html lang="it">
 
+<!-- Cosa devi cambiare esattamente
+
+In ogni pagina:
+link rel="canonical" href="https://..."
+meta property="og:url" content="https://..."
+meta property="og:image" content="https://..."
+meta name="twitter:image" content="https://..." -->
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!-- SEO base -->
     <title>ArcadeHub - Home</title>
-    <meta name="description" content="ArcadeHub: un’app di intrattenimento che offre giochi 2D divertenti." />
-    <meta name="author" content="Zuhir, Gilda, Yuchen, Marco" />
-    <meta name="robots" content="index, follow" />
+    <meta name="description"
+        content="Giochi 2D in stile arcade, profilo, XP e classifiche. Entra in ArcadeHub e gioca subito." />
 
-    <!-- Social preview (OK anche se poi li aggiornate) -->
+    <!-- Canonical + Social URL (DEVONO puntare alla stessa pagina) -->
+    <link rel="canonical" href="https://NOME.onrender.com/" />
+    <meta property="og:url" content="https://NOME.onrender.com/" />
+
+    <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="ArcadeHub" />
     <meta property="og:title" content="ArcadeHub - Home" />
-    <meta property="og:description" content="Giochi 2D e quiz: entra in ArcadeHub e gioca subito." />
-    <!-- TODO: inserire URL assoluto quando avete dominio -->
-    <!-- <meta property="og:url" content="https://example.com/index.html" /> -->
-    <!-- TODO: inserire immagine social quando pronta -->
-    <!-- <meta property="og:image" content="https://example.com/assets/og/arcadehub.png" /> -->
+    <meta property="og:description"
+        content="Giochi 2D in stile arcade, profilo, XP e classifiche. Entra in ArcadeHub e gioca subito." />
+    <meta property="og:image" content="https://NOME.onrender.com/images/og/logo-ArcadeHub.png" />
+    <!-- opzionale ma consigliato se l'immagine è 1200x630 -->
+    <meta property="og:image:width" content="835" />
+    <meta property="og:image:height" content="835" />
+    <meta property="og:image:type" content="image/png" />
 
+    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="ArcadeHub - Home" />
-    <meta name="twitter:description" content="Giochi 2D e quiz: entra in ArcadeHub e gioca subito." />
-    <!-- <meta name="twitter:image" content="https://example.com/assets/og/arcadehub.png" /> -->
+    <meta name="twitter:description"
+        content="Giochi 2D in stile arcade, profilo, XP e classifiche. Entra in ArcadeHub e gioca subito." />
+    <meta name="twitter:image" content="https://NOME.onrender.com/images/og/logo-ArcadeHub.png" />
 
-    <!-- PWA/Icons (placeholder, aggiungete quando pronti) -->
-    <!-- <link rel="icon" href="./assets/favicon.ico" /> -->
-    <!-- <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png" /> -->
-    <!-- <link rel="manifest" href="./site.webmanifest" /> -->
+    <!-- Icons / PWA -->
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/assets/icons/icon-192.png" />
+    <link rel="manifest" href="/site.webmanifest" />
     <meta name="theme-color" content="#000000" />
 
-    <link rel="stylesheet" href="/css/style.css"/>
-    <link rel="stylesheet" href="/css/home.css">
-
-    <link rel="stylesheet" href="/assets/intro/intro.css">
+    <!-- Styles -->
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/home.css" />
+    <link rel="stylesheet" href="/assets/intro/intro.css" />
 
     <!-- Google font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!--  font-family: "Inter", sans-serif; Body: Inter (leggibilità alta, zero fatica) -->
-    <!--  font-family: "Orbitron", sans-serif;  UI / numeri / HUD: Orbitron (per arcade/sci-fi) -->
-    <!-- font-family: "Press Start 2P", system-ui; Headings / logo: Press Start 2P (pixel vibe, ma solo per H1/H2/brand) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Orbitron:wght@400..900&family=Press+Start+2P&display=swap"
-        rel="stylesheet">
+        rel="stylesheet" />
 
+    <!-- Scripts -->
     <script src="/js/api.js" defer></script>
     <script src="/js/home.js" defer></script>
     <script src="/js/home-leaderboard.js" defer></script>

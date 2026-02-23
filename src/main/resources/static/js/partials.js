@@ -68,6 +68,7 @@ function setLogoutLink() {
     aAccedi.setAttribute("href", "#");
     aAccedi.setAttribute("role", "button");
     aAccedi.setAttribute("aria-label", "Logout");
+    aAccedi.classList.add("is-logout");
 
     aAccedi.addEventListener("click", async (e) => {
         e.preventDefault();
@@ -104,39 +105,44 @@ function hideHeroAuthLinkIfPresent() {
 
 
 (async function initLayout() {
-    await loadPartial("#site-header", "./partials/header.html");
-    await loadPartial("#site-footer", "./partials/footer.html");
+    try {
+        await loadPartial("#site-header", "/partials/header.html");
+        await loadPartial("#site-footer", "/partials/footer.html");
 
-    // evidenzia link attivo
-    const path = location.pathname.split("/").pop() || "index.html";
-    document.querySelectorAll(".top-ul-menu a").forEach((a) => {
-        if (a.getAttribute("href") === path) a.setAttribute("aria-current", "page");
-    });
+        // evidenzia link attivo
+        const path = "/" + (location.pathname.split("/").pop() || "index.html");
 
-    // check login state e aggiorna UI
-    setNavVisibility(false);
-    const me = window.api ? await api.me() : await getMe();
-    setNavVisibility(!!me);
+        document.querySelectorAll(".top-ul-menu a").forEach((a) => {
+            const href = a.getAttribute("href");
+            if (href === path) a.setAttribute("aria-current", "page");
+        });
 
-    // link "Vedi classifica completa" nella HOME 
-    const lb = document.querySelector('a[href$="leaderboard.html"], a[href="/leaderboard.html"]');
-    if (lb) {
-        if (me) {
-            lb.href = "/leaderboard.html";
-            lb.removeAttribute("aria-disabled");
-        } else {
-            lb.href = `/auth.html?next=${encodeURIComponent("/leaderboard.html")}`;
-            lb.setAttribute("aria-disabled", "true"); 
+        // check login state e aggiorna UI
+        setNavVisibility(false);
+        const me = window.api ? await api.me() : await getMe();
+        setNavVisibility(!!me);
+
+        // link "Vedi classifica completa" nella HOME 
+        const lb = document.querySelector('a[href$="leaderboard.html"], a[href="/leaderboard.html"]');
+        if (lb) {
+            if (me) {
+                lb.href = "/leaderboard.html";
+                lb.removeAttribute("aria-disabled");
+            } else {
+                lb.href = `/auth.html?next=${encodeURIComponent("/leaderboard.html")}`;
+                lb.setAttribute("aria-disabled", "true");
+            }
         }
+
+
+        if (me) {
+            setLogoutLink();
+            hideHeroAuthLinkIfPresent();
+        }
+
+    } catch (e) {
+        console.error("[partials] initLayout error", e);
     }
-
-
-    if (me) {
-        setLogoutLink();
-        hideHeroAuthLinkIfPresent();
-    }
-
-
 })();
 
 function setNavVisibility(isLogged) {

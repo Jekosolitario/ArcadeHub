@@ -7,48 +7,55 @@
 
     <!-- SEO base -->
     <title>ArcadeHub - Classifica</title>
-    <meta name="description" content="ArcadeHub: un’app di intrattenimento che offre giochi 2D divertenti." />
-    <meta name="author" content="Zuhir, Gilda, Yuchen, Marco" />
-    <meta name="robots" content="index, follow" />
+    <meta name="description"
+        content="Classifica ArcadeHub: ranking globale e per gioco. Confronta i punteggi migliori e scala la leaderboard." />
 
-    <!-- Social preview (OK anche se poi li aggiornate) -->
+    <!-- NON indicizzare -->
+    <meta name="robots" content="noindex, nofollow" />
+
+    <!-- Canonical + Social URL -->
+    <link rel="canonical" href="https://NOME.onrender.com/leaderboard.html" />
+    <meta property="og:url" content="https://NOME.onrender.com/leaderboard.html" />
+
+    <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="ArcadeHub" />
-    <meta property="og:title" content="ArcadeHub - Home" />
-    <meta property="og:description" content="Giochi 2D e quiz: entra in ArcadeHub e gioca subito." />
-    <!-- TODO: inserire URL assoluto quando avete dominio -->
-    <!-- <meta property="og:url" content="https://example.com/index.html" /> -->
-    <!-- TODO: inserire immagine social quando pronta -->
-    <!-- <meta property="og:image" content="https://example.com/assets/og/arcadehub.png" /> -->
+    <meta property="og:title" content="ArcadeHub - Classifica" />
+    <meta property="og:description"
+        content="Classifica ArcadeHub: ranking globale e per gioco. Confronta i punteggi migliori e scala la leaderboard." />
+    <meta property="og:image" content="https://NOME.onrender.com/images/og/logo-ArcadeHub.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="835" />
+    <meta property="og:image:height" content="835" />
 
+    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="ArcadeHub - Home" />
-    <meta name="twitter:description" content="Giochi 2D e quiz: entra in ArcadeHub e gioca subito." />
-    <!-- <meta name="twitter:image" content="https://example.com/assets/og/arcadehub.png" /> -->
+    <meta name="twitter:title" content="ArcadeHub - Classifica" />
+    <meta name="twitter:description"
+        content="Classifica ArcadeHub: ranking globale e per gioco. Confronta i punteggi migliori e scala la leaderboard." />
+    <meta name="twitter:image" content="https://NOME.onrender.com/images/og/logo-ArcadeHub.png" />
 
-    <!-- PWA/Icons (placeholder, aggiungete quando pronti) -->
-    <!-- <link rel="icon" href="./assets/favicon.ico" /> -->
-    <!-- <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png" /> -->
-    <!-- <link rel="manifest" href="./site.webmanifest" /> -->
+    <!-- Icons / PWA -->
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/assets/icons/icon-192.png" />
+    <link rel="manifest" href="/site.webmanifest" />
     <meta name="theme-color" content="#000000" />
 
+    <!-- Scripts -->
     <script src="/js/api.js" defer></script>
     <script src="/js/guard.js" defer></script>
-
     <script src="/js/leaderboard.js" defer></script>
 
+    <!-- Styles -->
     <link rel="stylesheet" href="/css/style.css" />
-    <link rel="stylesheet" href="/css/leaderboard.css">
+    <link rel="stylesheet" href="/css/leaderboard.css" />
 
     <!-- Google font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!--  font-family: "Inter", sans-serif; Body: Inter (leggibilità alta, zero fatica) -->
-    <!--  font-family: "Orbitron", sans-serif;  UI / numeri / HUD: Orbitron (per arcade/sci-fi) -->
-    <!-- font-family: "Press Start 2P", system-ui; Headings / logo: Press Start 2P (pixel vibe, ma solo per H1/H2/brand) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Orbitron:wght@400..900&family=Press+Start+2P&display=swap"
-        rel="stylesheet">
+        rel="stylesheet" />
 </head>
 
 <body>

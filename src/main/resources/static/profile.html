@@ -7,35 +7,49 @@
 
     <!-- SEO base -->
     <title>ArcadeHub - Profilo</title>
-    <meta name="description" content="ArcadeHub: profilo utente, avatar, progressi e impostazioni account." />
-    <meta name="author" content="Zuhir, Gilda, Yuchen, Marco" />
-    <meta name="robots" content="index, follow" />
+    <meta name="description" content="Il tuo profilo ArcadeHub: avatar, XP, livello e progressi dei giochi." />
 
-    <!-- Social preview -->
+    <!-- Area utente: meglio NON indicizzare -->
+    <meta name="robots" content="noindex, nofollow" />
+
+    <!-- Canonical + Social URL -->
+    <link rel="canonical" href="https://NOME.onrender.com/profile.html" />
+    <meta property="og:url" content="https://NOME.onrender.com/profile.html" />
+
+    <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="ArcadeHub" />
     <meta property="og:title" content="ArcadeHub - Profilo" />
-    <meta property="og:description" content="Gestisci il tuo profilo, avatar e progressi su ArcadeHub." />
+    <meta property="og:description" content="Il tuo profilo ArcadeHub: avatar, XP, livello e progressi dei giochi." />
+    <meta property="og:image" content="https://NOME.onrender.com/images/og/logo-ArcadeHub.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="835" />
+    <meta property="og:image:height" content="835" />
 
+    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="ArcadeHub - Profilo" />
-    <meta name="twitter:description" content="Gestisci il tuo profilo, avatar e progressi su ArcadeHub." />
+    <meta name="twitter:description" content="Il tuo profilo ArcadeHub: avatar, XP, livello e progressi dei giochi." />
+    <meta name="twitter:image" content="https://NOME.onrender.com/images/og/logo-ArcadeHub.png" />
 
+    <!-- Icons / PWA -->
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/assets/icons/icon-192.png" />
+    <link rel="manifest" href="/site.webmanifest" />
     <meta name="theme-color" content="#000000" />
 
+    <!-- Styles -->
     <link rel="stylesheet" href="/css/style.css" />
     <link rel="stylesheet" href="/css/profile.css" />
 
     <!-- Google font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!--  font-family: "Inter", sans-serif; Body: Inter (leggibilità alta, zero fatica) -->
-    <!--  font-family: "Orbitron", sans-serif;  UI / numeri / HUD: Orbitron (per arcade/sci-fi) -->
-    <!-- font-family: "Press Start 2P", system-ui; Headings / logo: Press Start 2P (pixel vibe, ma solo per H1/H2/brand) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Orbitron:wght@400..900&family=Press+Start+2P&display=swap"
-        rel="stylesheet">
+        rel="stylesheet" />
 
+    <!-- Scripts -->
     <script src="/js/api.js" defer></script>
     <script src="/js/guard.js" defer></script>
     <script src="/js/profile.js" defer></script>
