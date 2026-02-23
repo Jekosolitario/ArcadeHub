@@ -117,18 +117,22 @@ document.addEventListener("DOMContentLoaded", async () => {
         podium.hidden = false;
 
         const scoreField = (scope === "GLOBAL") ? "totalScore" : "bestScore";
-        const cards = podium.querySelectorAll(".lb-podium__card");
-        const mapRowIndex = [1, 0, 2]; // 2°,1°,3°
+        const cards = [
+            podium.querySelector(".lb-podium__card--1"),
+            podium.querySelector(".lb-podium__card--2"),
+            podium.querySelector(".lb-podium__card--3"),
+        ];
 
         const meName = (me?.username ?? "").toLowerCase().trim();
 
-        mapRowIndex.forEach((rowIdx, i) => {
-            const card = cards[i];
+        cards.forEach((card, idx) => {
+            if (!card) return;
+
             const img = card.querySelector(".lb-podium__avatar");
             const name = card.querySelector(".lb-podium__name");
             const score = card.querySelector(".lb-podium__score");
 
-            const r = list[rowIdx];
+            const r = list[idx]; // 0->1°, 1->2°, 2->3°
 
             if (!r) {
                 img.src = IMG_1PX;
