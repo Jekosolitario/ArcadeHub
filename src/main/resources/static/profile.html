@@ -93,7 +93,7 @@
                         <div class="profile-id">
                             <figure class="profile-id__avatar">
                                 <!-- JS: src + alt + data-avatar-id -->
-                                <img id="profile-avatar" src="#" alt="Avatar utente" width="112" height="112" />
+                                <img id="profile-avatar" src="" alt="Avatar utente" width="112" height="112" />
                             </figure>
 
                             <div class="profile-id__meta">
@@ -141,8 +141,29 @@
                             <select id="game-select" class="select" name="game">
                                 <!-- JS: popola da API se serve -->
                                 <option value="FLAPPY" selected>Flappy</option>
-                                <option value="invaders">Invaders</option>
+                                <option value="INVADERS">Invaders</option>
                             </select>
+                        </div>
+
+                        <!-- XP (reale) -->
+                        <div class="xp" aria-label="Progressione XP">
+                            <div class="xp__head">
+                                <span class="label">XP livello</span>
+                                <span class="xp__nums">
+                                    <strong id="xp-into" class="value">—</strong>
+                                    <span class="muted">/</span>
+                                    <strong id="xp-to-next" class="value">—</strong>
+                                </span>
+                            </div>
+
+                            <div class="xp__bar" role="progressbar" aria-label="Barra XP" aria-valuemin="0"
+                                aria-valuemax="100" aria-valuenow="0">
+                                <div class="xp__fill" id="xp-fill" style="width:0%"></div>
+                            </div>
+
+                            <div class="xp__foot muted small">
+                                Totale: <strong id="xp-total" class="value">—</strong>
+                            </div>
                         </div>
 
                         <div class="scores">

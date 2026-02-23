@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", async () => {
     const me = await requireAuth();
+    console.log("ME:", me);
     if (!me) return;
 
     // ----------------- CONFIG -----------------
@@ -28,6 +29,20 @@ document.addEventListener("DOMContentLoaded", async () => {
         { code: "flappy", label: "Flappy" },
         { code: "invaders", label: "Invaders" },
     ];
+
+    const $xpFill = document.querySelector("#xp-fill");
+    const $xpText = document.querySelector("#xp-text"); // opzionale
+
+    function renderXp(me) {
+        const into = Number(me?.xpIntoLevel ?? 0);
+        const toNext = Math.max(1, Number(me?.xpToNext ?? 1));
+        const pct = Math.min(100, Math.max(0, (into / toNext) * 100));
+
+        if ($xpFill) $xpFill.style.width = `${pct}%`;
+        if ($xpText) $xpText.textContent = `${into} / ${toNext} XP`;
+    }
+
+    renderXp(me);
 
     function initGameSelect() {
         if (!$gameSelect) return;
@@ -59,6 +74,25 @@ document.addEventListener("DOMContentLoaded", async () => {
     $level && ($level.textContent = String(me.level ?? 1));
     $best && ($best.textContent = "—");
     $last && ($last.textContent = "—");
+
+    // ===== XP UI =====
+    const $xpInto = document.getElementById("xp-into");
+    const $xpToNext = document.getElementById("xp-to-next");
+    const $xpTotal = document.getElementById("xp-total");
+    const $xpBar = document.querySelector(".xp__bar");
+
+    const into = Number(me?.xpIntoLevel ?? 0);
+    const toNext = Number(me?.xpToNext ?? 0);
+    const total = Number(me?.xpTotal ?? 0);
+
+    if ($xpInto) $xpInto.textContent = String(into);
+    if ($xpToNext) $xpToNext.textContent = String(toNext);
+    if ($xpTotal) $xpTotal.textContent = String(total);
+
+    const pct = toNext > 0 ? Math.max(0, Math.min(100, (into / toNext) * 100)) : 0;
+    if ($xpFill) $xpFill.style.width = `${pct}%`;
+    if ($xpBar) $xpBar.setAttribute("aria-valuemax", String(toNext || 100));
+    if ($xpBar) $xpBar.setAttribute("aria-valuenow", String(into));
 
     // avatar iniziale (id preso dal backend se presente)
     const currentAvatarId = Number(me.avatarId ?? AVATAR_DEFAULT_ID);

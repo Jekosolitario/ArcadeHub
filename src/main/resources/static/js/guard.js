@@ -7,7 +7,7 @@ console.log("[guard] loaded");
 
 async function requireAuth() {
     try {
-        const me = await api.profileMe(); // nuovo metodo: /api/profile/me
+        const me = await api.me(); // nuovo metodo: /api/profile/me
         if (!me) {
             const next = encodeURIComponent(window.location.pathname);
             window.location.replace(`/auth.html?next=${next}`);

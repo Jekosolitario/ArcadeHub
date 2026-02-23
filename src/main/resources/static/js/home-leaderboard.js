@@ -10,12 +10,59 @@ document.addEventListener("DOMContentLoaded", async () => {
     const IMG_1PX =
         "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==";
 
+
+    function renderHomePodium(rows) {
+        const podium = document.querySelector(".home-podium");
+        if (!podium) return;
+
+        if (!Array.isArray(rows) || rows.length === 0) {
+            podium.hidden = true;
+            return;
+        }
+
+        podium.hidden = false;
+
+        const IMG_1PX =
+            "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==";
+
+        const cards = [
+            podium.querySelector(".home-podium__card--1"),
+            podium.querySelector(".home-podium__card--2"),
+            podium.querySelector(".home-podium__card--3"),
+        ];
+
+        cards.forEach((card, idx) => {
+            if (!card) return;
+
+            const r = rows[idx]; // 0->1°, 1->2°, 2->3°
+            const img = card.querySelector(".home-podium__avatar");
+            const name = card.querySelector(".home-podium__name");
+            const score = card.querySelector(".home-podium__score");
+
+            if (!r) {
+                img.src = IMG_1PX;
+                img.alt = "";
+                name.textContent = "—";
+                score.textContent = "";
+                card.style.opacity = "0.45";
+                return;
+            }
+
+            card.style.opacity = "1";
+            img.src = r.avatarUrl || IMG_1PX;
+            img.alt = r.username ? `Avatar di ${r.username}` : "Avatar";
+            name.textContent = r.username ?? "—";
+            score.textContent = `Score: ${String(r.totalScore ?? 0)}`;
+        });
+    }
+
     try {
         setStatus("Caricamento classifica…");
         tbody.innerHTML = "";
 
         const payload = await api.get("/api/leaderboard/global?limit=5");
         const rows = Array.isArray(payload) ? payload : [];
+        renderHomePodium(rows);
 
         if (rows.length === 0) {
             setStatus("Nessun dato disponibile.");

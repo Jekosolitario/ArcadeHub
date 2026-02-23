@@ -139,9 +139,8 @@
 
 /* accessibilità: riduci motion -> sostituisci con immagine statica */
 @media (prefers-reduced-motion: reduce) {
-  .main-home .hero-media-frame img {
+  .main-home .hero-media img {
     content: url("/images/hero/GoodGameHeroHome.webp");
-    /* crea una cover statica */
   }
 }
 
@@ -258,6 +257,15 @@
   margin-top: var(--sp-2);
 }
 
+.panel {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-1);
+  border-radius: calc(var(--radius) + 6px);
+  padding: var(--sp-3);
+  box-shadow: var(--shadow-1);
+  backdrop-filter: blur(10px);
+}
+
 /* =========================================================
    LEADERBOARD PREVIEW
 ========================================================= */
@@ -270,11 +278,103 @@
 }
 
 /* =========================================================
+   HOME - PODIO (Top 3 preview)
+========================================================= */
+.main-home .home-podium {
+  margin-top: var(--sp-3);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--sp-2);
+}
+
+.main-home .home-podium__card {
+  position: relative;
+  border-radius: calc(var(--radius) + 6px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(7, 10, 18, 0.35);
+  box-shadow: var(--shadow-1);
+  backdrop-filter: blur(10px);
+  padding: var(--sp-2);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-areas:
+    "rank avatar"
+    "rank name"
+    "rank score";
+  column-gap: var(--sp-2);
+  row-gap: 0.4rem;
+  overflow: hidden;
+}
+
+.main-home .home-podium__rank {
+  grid-area: rank;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  font-family: var(--ff-ui);
+  font-weight: 900;
+  color: #070a12;
+}
+
+.main-home .home-podium__avatar {
+  grid-area: avatar;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.main-home .home-podium__name {
+  grid-area: name;
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.main-home .home-podium__score {
+  grid-area: score;
+  font-family: var(--ff-ui);
+  font-weight: 900;
+  color: var(--text-muted);
+}
+
+/* Medaglie */
+.main-home .home-podium__card--1 .home-podium__rank {
+  background: linear-gradient(135deg, rgba(249, 220, 53, 0.95), rgba(254, 152, 0, 0.9));
+  box-shadow: var(--glow-yellow);
+}
+
+.main-home .home-podium__card--2 .home-podium__rank {
+  background: linear-gradient(135deg, rgba(234, 240, 255, 0.85), rgba(120, 140, 170, 0.75));
+}
+
+.main-home .home-podium__card--3 .home-podium__rank {
+  background: linear-gradient(135deg, rgba(254, 152, 0, 0.55), rgba(140, 90, 40, 0.55));
+}
+
+@media (min-width: 768px) {
+  .main-home .home-podium {
+    grid-template-columns: 1fr 1.2fr 1fr;
+    align-items: stretch;
+  }
+
+  .main-home .home-podium__card--1 {
+    transform: translateY(-6px);
+    border-color: rgba(249, 220, 53, 0.35);
+    box-shadow: var(--shadow-1), var(--glow-yellow);
+  }
+}
+
+/* =========================================================
    Responsive
 ========================================================= */
 @media (max-width: 480px) {
   .main-home .hero-media {
     aspect-ratio: 4 / 3;
+    object-position: center top;
     /* meno crop su mobile */
   }
 }

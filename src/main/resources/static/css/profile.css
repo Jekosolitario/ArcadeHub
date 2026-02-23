@@ -108,6 +108,15 @@
     border-radius: 12px;
     background: rgba(255, 255, 255, 0.04);
     border: 1px solid rgba(255, 255, 255, 0.08);
+    min-width: 0;
+}
+
+.profile-id__row .value,
+.profile-id__row .muted {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .profile-actions {
@@ -115,6 +124,17 @@
     display: flex;
     gap: var(--sp-2);
     flex-wrap: wrap;
+}
+
+#profile-level.value {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.35rem 0.8rem;
+    border-radius: 999px;
+    background: rgba(45, 226, 230, 0.10);
+    border: 1px solid rgba(45, 226, 230, 0.25);
+    box-shadow: var(--glow-cyan);
 }
 
 /* Select row */
@@ -172,6 +192,7 @@
     object-fit: cover;
     border-radius: 12px;
     display: block;
+    background: rgba(7, 10, 18, 0.35);
 }
 
 .avatar-item:hover {
@@ -281,6 +302,100 @@ details[open] .settings-item__summary {
 .settings-item--danger {
     border-color: rgba(255, 46, 147, 0.35);
     background: rgba(255, 46, 147, 0.08);
+}
+
+.settings-item__summary {
+    user-select: none;
+}
+
+.settings-item__summary:focus-visible {
+    outline: 2px solid rgba(45, 226, 230, 0.75);
+    outline-offset: 3px;
+}
+
+/* =========================
+   XP bar (reale)
+========================= */
+.xp {
+    margin-bottom: var(--sp-3);
+    padding: var(--sp-2);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.xp__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--sp-2);
+    margin-bottom: 0.9rem;
+}
+
+.xp__nums {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    font-family: var(--ff-ui);
+    font-weight: 900;
+}
+
+.xp__bar {
+    width: 100%;
+    height: 12px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    overflow: hidden;
+}
+
+.xp__fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 999px;
+    background: linear-gradient(90deg,
+            rgba(45, 226, 230, 0.92),
+            rgba(138, 43, 226, 0.82),
+            rgba(255, 46, 147, 0.82));
+    box-shadow: var(--glow-cyan);
+    transition: width 220ms ease;
+}
+
+.xp__foot {
+    margin-top: 0.9rem;
+}
+
+/* =========================
+   Layout più compatto mobile
+   (avatar + meta più vicini)
+========================= */
+@media (min-width: 520px) {
+    .profile-id {
+        grid-template-columns: auto 1fr;
+        align-items: center;
+    }
+}
+
+/* =========================
+   Level “badge” più evidente
+========================= */
+.profile-id__row #profile-level {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 3.2rem;
+    padding: 0.35rem 0.9rem;
+    border-radius: 999px;
+    background: rgba(45, 226, 230, 0.10);
+    border: 1px solid rgba(45, 226, 230, 0.28);
+    box-shadow: var(--glow-cyan);
+}
+
+@media (max-width: 520px) {
+    .profile-actions .btn {
+        width: 100%;
+        justify-content: center;
+    }
 }
 
 /* Responsive */

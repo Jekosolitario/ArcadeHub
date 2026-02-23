@@ -7,24 +7,23 @@ public final class Leveling {
 
     public static LevelInfo fromTotalXp(long xpTotal) {
         long xp = Math.max(0, xpTotal);
+
         int lvl = 1;
+        long toNext = 1000; // 1->2
 
-        long toNext = 50; // 1->2
-
-        while (lvl < 10 && xp >= toNext) {
+        while (xp >= toNext) {
             xp -= toNext;
             lvl++;
-            toNext *= 2; // raddoppia fino a raggiungere 10
+            
+            if (toNext > Long.MAX_VALUE / 2) {
+                toNext = Long.MAX_VALUE;
+                break;
+            }
+            toNext *= 2; // raddoppia
         }
 
-        if (lvl >= 10) {
-            // dal 10 in poi: 1000 per livello
-            long extra = xp / 1000;
-            lvl += (int) extra;
-            xp = xp % 1000;
-            toNext = 1000;
-        }
-
+        // xp = XP dentro il livello corrente
+        // toNext = XP necessari per passare al prossimo livello
         return new LevelInfo(lvl, xp, toNext);
     }
 }
