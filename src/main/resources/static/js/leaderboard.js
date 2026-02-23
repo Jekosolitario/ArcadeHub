@@ -109,7 +109,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         const list = Array.isArray(rows) ? rows : [];
         const n = list.length;
 
-        // se 0, nascondi
         if (n === 0) {
             podium.hidden = true;
             return;
@@ -119,9 +118,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const scoreField = (scope === "GLOBAL") ? "totalScore" : "bestScore";
         const cards = podium.querySelectorAll(".lb-podium__card");
+        const mapRowIndex = [1, 0, 2]; // 2°,1°,3°
 
-        // mapping: card order in DOM = 2°,1°,3°
-        const mapRowIndex = [1, 0, 2];
+        const meName = (me?.username ?? "").toLowerCase().trim();
 
         mapRowIndex.forEach((rowIdx, i) => {
             const card = cards[i];
@@ -132,12 +131,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             const r = list[rowIdx];
 
             if (!r) {
-                // posto vuoto
                 img.src = IMG_1PX;
                 img.alt = "";
                 name.textContent = "—";
                 score.textContent = "";
                 card.style.opacity = "0.45";
+                card.classList.remove("is-me");
                 return;
             }
 
@@ -146,6 +145,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             img.alt = r.username ? `Avatar di ${r.username}` : "Avatar";
             name.textContent = r.username ?? "—";
             score.textContent = `Score: ${String(r?.[scoreField] ?? 0)}`;
+
+            const uname = (r.username ?? "").toLowerCase().trim();
+            card.classList.toggle("is-me", !!meName && uname === meName);
         });
     }
 

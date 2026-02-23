@@ -197,6 +197,26 @@
     background: rgba(0, 0, 0, 0.35);
 }
 
+.lb-podium__card.is-me {
+    border-color: rgba(45, 226, 230, 0.28);
+    box-shadow: var(--shadow-1), var(--glow-cyan);
+}
+
+.lb-podium__card.is-me .lb-podium__name::after {
+    content: "TU";
+    margin-left: 0.8rem;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.6rem;
+    border-radius: 999px;
+    font-size: var(--fs-small);
+    font-weight: 900;
+    color: var(--neon-cyan);
+    border: 1px solid rgba(45, 226, 230, 0.28);
+    box-shadow: var(--glow-cyan);
+    background: rgba(0, 0, 0, 0.35);
+}
+
 /* desktop: podio 3 colonne e 1° al centro più grande */
 @media (min-width: 768px) {
     .lb-podium {
