@@ -1,0 +1,36 @@
+#intro-start {
+    position: fixed;
+    inset: 0;
+    z-index: 2147483647;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(10px);
+}
+
+#intro-start.is-hidden {
+    display: none !important;
+}
+
+#intro-btn {
+    font-family: "Press Start 2P", system-ui;
+    font-size: 14px;
+    padding: 16px 22px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(20, 24, 30, 0.92);
+    color: #fff;
+    cursor: pointer;
+}
+
+#intro-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 2147483646;
+    display: none;
+    pointer-events: none;
+    background: #000;
+}
