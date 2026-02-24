@@ -611,7 +611,7 @@ a.btn {
 
 .btn-ghost {
     background: var(--surface-1);
-    color: var(--text);
+    color: var(--bg);
     border-color: var(--border-1);
 }
 
