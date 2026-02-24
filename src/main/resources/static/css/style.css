@@ -1130,6 +1130,16 @@ dialog::backdrop {
     outline-offset: 3px;
 }
 
+/* ===== FIX: testo sempre NERO sui bottoni gialli ===== */
+.btn-primary,
+a.btn.btn-primary,
+button.btn.btn-primary,
+.btn-primary:visited,
+.btn-primary:hover,
+.btn-primary:active {
+    color: #070a12 !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
     .to-top {
         transition: none;
