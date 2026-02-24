@@ -294,9 +294,14 @@ function enforceOrientationWhilePlaying() {
     }
 
     function setVvh() {
-        const h = window.visualViewport?.height ?? window.innerHeight;
+        const vv = window.visualViewport;
+        const h = vv?.height ?? window.innerHeight;
+        const top = vv?.offsetTop ?? 0;
+
         document.documentElement.style.setProperty("--vvh", `${h * 0.01}px`);
+        document.documentElement.style.setProperty("--vv-top", `${top}px`);
     }
+
     setVvh();
     window.addEventListener("resize", setVvh);
     window.addEventListener("orientationchange", setVvh);

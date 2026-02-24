@@ -258,7 +258,10 @@
 }
 
 /* ============ Overlay gioco (canvas) ============ */
-body.is-game-open .to-top { display: none !important; }
+body.is-game-open .to-top {
+    display: none !important;
+}
+
 /* Stack: overlay < rotate < modal */
 .game-overlay {
     z-index: 99999;
@@ -281,6 +284,8 @@ dialog.modal {
 .game-overlay {
     position: fixed;
     inset: 0;
+    top: var(--vv-top, 0px);
+    height: calc(var(--vvh) * 100);
     display: none;
     place-items: center;
 
