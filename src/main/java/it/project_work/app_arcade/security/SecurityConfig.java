@@ -44,7 +44,8 @@ public class SecurityConfig {
                         "/partials/**",
                         "/favicon.ico",
                         "/site.webmanifest",
-                        "/audio/**"
+                        "/audio/**",
+                        "/health"
                 ).permitAll()
                 // auth pubbliche
                 .requestMatchers("/auth/login", "/auth/register", "/auth/me", "/auth/logout").permitAll()
