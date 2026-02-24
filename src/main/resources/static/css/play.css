@@ -269,6 +269,9 @@
     background: rgba(0, 0, 0, 0.72);
     backdrop-filter: blur(6px);
     padding: var(--sp-2);
+
+    height: calc(var(--vvh) * 100);
+    min-height: calc(var(--vvh) * 100);
 }
 
 /* quando lo apri via JS: toggle aria-hidden="false" */
@@ -286,6 +289,10 @@
     overflow: hidden;
 
     position: relative;
+
+    max-height: calc(var(--vvh) * 100 - (2 * var(--sp-2)));
+    display: flex;
+    flex-direction: column;
 }
 
 .game-close {
@@ -319,6 +326,10 @@
 
 .game-stage {
     padding: clamp(1.2rem, 2vw, 2rem);
+
+    flex: 1;
+    display: grid;
+    place-items: center;
 }
 
 /* Canvas responsive */
@@ -326,7 +337,7 @@
     width: 100%;
     height: auto;
     aspect-ratio: 900 / 500;
-    max-height: min(70dvh, 520px);
+    max-height: 100%;
     display: block;
     touch-action: none;
 
@@ -373,7 +384,7 @@ body.game--invaders #canvas {
 /* Blocca lo scroll pagina quando un overlay è aperto */
 body.is-game-open {
     overflow: hidden;
-    height: 100vh;
+    height: calc(var(--vvh) * 100);
 }
 
 /* extra mobile: evita “scroll elastico” */
@@ -382,7 +393,7 @@ body.is-game-open {
 }
 
 /* ============ Responsive ============ */
-@media (min-width: 720px) {
+/* @media (min-width: 720px) {
     .games-grid {
         grid-template-columns: 1fr 1fr;
     }
@@ -400,4 +411,4 @@ body.is-game-open {
     .game-stage canvas {
         height: min(74vh, 620px);
     }
-}
+} */

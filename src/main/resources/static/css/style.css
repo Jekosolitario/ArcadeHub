@@ -83,6 +83,8 @@
     --bordo-1: var(--border-1);
 
     --ombra-1: var(--shadow-1);
+
+    --vvh: 1vh;
 }
 
 /* ============ Reset / Base ============ */
