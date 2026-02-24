@@ -611,7 +611,7 @@ a.btn {
 
 .btn-ghost {
     background: var(--surface-1);
-    color: var(--bg);
+    color: var(--text);
     border-color: var(--border-1);
 }
 
@@ -711,6 +711,23 @@ button[disabled] {
 
     text-align: center;
     border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.table thead {
+    position: relative;
+}
+
+.table thead::after {
+    content: "";
+    position: sticky;
+    top: calc(0px + 0px);
+    display: block;
+    height: 2px;
+    background: linear-gradient(90deg,
+            rgba(45, 226, 230, 0.85),
+            rgba(138, 43, 226, 0.70),
+            rgba(255, 46, 147, 0.70));
+    opacity: 0.65;
 }
 
 .table thead tr {
