@@ -18,7 +18,7 @@ public class SecurityConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        // 🔥 Static fuori dalla security chain => niente 403 su /assets/**
+        // Static fuori dalla security chain => niente 403 su /assets/**
         return (web) -> web.ignoring().requestMatchers(
                 PathRequest.toStaticResources().atCommonLocations()
         );
@@ -29,6 +29,7 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable())
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/health").permitAll()
                 // pagine + asset pubblici
                 .requestMatchers(
                         "/",
@@ -44,8 +45,7 @@ public class SecurityConfig {
                         "/partials/**",
                         "/favicon.ico",
                         "/site.webmanifest",
-                        "/audio/**",
-                        "/health"
+                        "/audio/**"
                 ).permitAll()
                 // auth pubbliche
                 .requestMatchers("/auth/login", "/auth/register", "/auth/me", "/auth/logout").permitAll()
