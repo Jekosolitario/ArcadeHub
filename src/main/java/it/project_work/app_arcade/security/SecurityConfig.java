@@ -26,8 +26,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(csrf -> csrf.disable())
+        http.csrf(csrf -> csrf.disable())
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
                 // pagine + asset pubblici
@@ -43,6 +42,8 @@ public class SecurityConfig {
                         "/assets/**",
                         "/images/**",
                         "/partials/**",
+                        "/favicon.ico",
+                        "/site.webmanifest",
                         "/audio/**"
                 ).permitAll()
                 // auth pubbliche
