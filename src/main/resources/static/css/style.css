@@ -668,7 +668,7 @@ button[disabled] {
     width: 100%;
     overflow-x: auto;
     border-radius: 1.6rem;
-    border: 1px solid rgba(255, 255, 255, 0.16);
+    border: 1px solid rgba(255, 255, 255, 0.14);
     background: rgba(7, 10, 18, 0.35);
     box-shadow: var(--shadow-1);
 }
@@ -697,17 +697,39 @@ button[disabled] {
 .table thead th {
     position: sticky;
     top: 0;
-    z-index: 1;
+    z-index: 2;
+
     background:
-        linear-gradient(90deg,
-            rgba(45, 226, 230, 0.92),
-            rgba(138, 43, 226, 0.82),
-            rgba(255, 46, 147, 0.82));
-    color: #070a12;
+        linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.03)),
+        rgba(7, 10, 18, 0.88);
+
+    color: rgba(234, 240, 255, 0.92);
     font-weight: 900;
-    letter-spacing: 0.2px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-size: clamp(1.1rem, 0.25vw + 1.0rem, 1.3rem);
 
     text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.table thead tr {
+    position: relative;
+}
+
+.table thead tr::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 2px;
+
+    background: linear-gradient(90deg,
+            rgba(45, 226, 230, 0.85),
+            rgba(138, 43, 226, 0.75),
+            rgba(255, 46, 147, 0.75));
+    opacity: 0.75;
 }
 
 .table tbody tr:nth-child(odd) {
