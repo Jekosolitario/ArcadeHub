@@ -61,19 +61,19 @@ function openOverlay(gameId) {
     rememberFocus();
     currentGame = gameId;
 
+    // refresh vvh PRIMA di mostrare l’overlay
+    const h = window.visualViewport?.height ?? window.innerHeight;
+    document.documentElement.style.setProperty("--vvh", `${h * 0.01}px`);
+
     document.body.classList.remove("game--flappy", "game--invaders");
     document.body.classList.add(`game--${gameId}`);
     document.body.classList.add("is-game-open");
 
-    overlay.classList.add("is-open");
     overlay.setAttribute("aria-hidden", "false");
 
-    const canvas = document.getElementById("canvas");
-    canvas?.focus?.();
+    document.getElementById("canvas")?.focus?.();
 
-    // Avvia gioco scelto (generic)
-    const api = getGameApi(gameId);
-    api?.start?.();
+    getGameApi(gameId)?.start?.();
 }
 
 function closeOverlay() {

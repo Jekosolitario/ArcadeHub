@@ -134,11 +134,22 @@ body::before {
 /* Mantieni sopra l’overlay */
 .header,
 .site-header,
-main,
 .footer {
     position: relative;
     z-index: 1;
 }
+
+main {
+    position: relative;
+    z-index: auto;
+}
+
+/* Scanlines sotto tutto */
+.layout {
+    position: relative;
+    z-index: 1;
+}
+
 
 button,
 input,

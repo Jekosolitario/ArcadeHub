@@ -34,3 +34,5 @@ public class HealthController {
         ));
     }
 }
+
+// https://arcadehub-jb2q.onrender.com/health

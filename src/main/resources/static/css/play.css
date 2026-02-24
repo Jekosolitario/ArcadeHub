@@ -258,23 +258,43 @@
 }
 
 /* ============ Overlay gioco (canvas) ============ */
+body.is-game-open .to-top { display: none !important; }
+/* Stack: overlay < rotate < modal */
+.game-overlay {
+    z-index: 99999;
+}
+
+.rotate {
+    z-index: 100000;
+}
+
+/* IMPORTANT: deve battere .modal:not(dialog) di style.css */
+.modal:not(dialog) {
+    z-index: 110000;
+}
+
+dialog.modal {
+    z-index: 110000;
+}
+
+/* Overlay vero e proprio */
 .game-overlay {
     position: fixed;
     inset: 0;
-    z-index: 2000;
-
     display: none;
     place-items: center;
 
     background: rgba(0, 0, 0, 0.72);
     backdrop-filter: blur(6px);
-    padding: var(--sp-2);
+
+    padding:
+        calc(var(--sp-2) + env(safe-area-inset-top)) calc(var(--sp-2) + env(safe-area-inset-right)) calc(var(--sp-2) + env(safe-area-inset-bottom)) calc(var(--sp-2) + env(safe-area-inset-left));
 
     height: calc(var(--vvh) * 100);
     min-height: calc(var(--vvh) * 100);
 }
 
-/* quando lo apri via JS: toggle aria-hidden="false" */
+/* quando lo apri via JS */
 .game-overlay[aria-hidden="false"] {
     display: grid;
 }
@@ -290,7 +310,7 @@
 
     position: relative;
 
-    max-height: calc(var(--vvh) * 100 - (2 * var(--sp-2)));
+    max-height: calc((var(--vvh) * 100) - (2 * var(--sp-2)) - env(safe-area-inset-top) - env(safe-area-inset-bottom));
     display: flex;
     flex-direction: column;
 }
@@ -379,6 +399,12 @@ body.game--invaders #canvas {
         aspect-ratio: auto;
         max-height: none;
     }
+}
+
+body.is-game-open #site-header,
+body.is-game-open #site-footer {
+    visibility: hidden;
+    pointer-events: none;
 }
 
 /* Blocca lo scroll pagina quando un overlay è aperto */
